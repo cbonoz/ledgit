@@ -78,13 +78,14 @@ function ActionCard({ action, topicId, etherscanUrl }: { action: Action; topicId
   const needsSig = action.riskLevel === "high" || action.riskLevel === "medium"
   const compliant = hasSig || action.riskLevel === "low"
   const unverified = needsSig && !hasSig
-  const bgColor = compliant ? "bg-emerald-50" : "bg-red-50"
-  const borderColor = compliant ? "border-emerald-400" : "border-red-400"
-  const dotColor = compliant ? "bg-emerald-400" : "bg-red-400"
+  const bgColor = compliant ? "bg-emerald-50" : action.riskLevel === "high" ? "bg-red-50" : "bg-amber-50"
+  const borderColor = compliant ? "border-emerald-400" : action.riskLevel === "high" ? "border-red-400" : "border-amber-400"
+  const dotColor = compliant ? "bg-emerald-400" : action.riskLevel === "high" ? "bg-red-400" : "bg-amber-400"
+  const badgeBg = compliant ? "bg-emerald-100 text-emerald-700" : action.riskLevel === "high" ? "bg-red-100 text-red-700" : "bg-amber-100 text-amber-700"
 
   return (
     <div className="relative pl-8 pb-8 last:pb-0">
-      <div className={`absolute -left-3 top-0 w-6 h-6 rounded-full ${bgColor} border-2 ${unverified ? `${borderColor} border-dashed` : borderColor} ring-4 ${unverified ? "ring-red-200" : "ring-emerald-200"} flex items-center justify-center`}>
+      <div className={`absolute -left-3 top-0 w-6 h-6 rounded-full ${bgColor} border-2 ${unverified ? `${borderColor} border-dashed` : borderColor} ring-4 ${compliant ? "ring-emerald-200" : action.riskLevel === "high" ? "ring-red-200" : "ring-amber-200"} flex items-center justify-center`}>
         <div className={`w-2 h-2 rounded-full ${dotColor}`} />
       </div>
       <div
@@ -94,7 +95,7 @@ function ActionCard({ action, topicId, etherscanUrl }: { action: Action; topicId
         <div className="flex items-center justify-between mb-1">
           <span className="text-xs font-mono text-gray-400">#{action.sequenceNumber}</span>
           <div className="flex gap-1.5 items-center">
-            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${compliant ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
+            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${badgeBg}`}>
               {action.riskLevel?.toUpperCase() || "LOW"}{unverified ? " ⚠️" : ""}
             </span>
           </div>
