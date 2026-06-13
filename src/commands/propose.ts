@@ -1,6 +1,16 @@
+import { writeFileSync, mkdirSync, existsSync } from "node:fs"
+import { join } from "node:path"
+import { createHash } from "node:crypto"
 import type { ActionProposal } from "../types.js"
 import { getActionConfig, fillTemplate, validateFields } from "../services/config.js"
 import * as out from "../services/output.js"
+
+const PROPOSALS_DIR = join(process.cwd(), ".ledgit", "proposals")
+
+function saveProposal(id: string, proposal: ActionProposal, riskLevel?: string): void {
+  if (!existsSync(PROPOSALS_DIR)) mkdirSync(PROPOSALS_DIR, { recursive: true })
+  writeFileSync(join(PROPOSALS_DIR, `${id}.json`), JSON.stringify({ ...proposal, riskLevel }, null, 2))
+}
 
 export async function propose(
   agent: string,
@@ -63,8 +73,8 @@ export async function propose(
   out.keyValue("Timestamp", new Date(proposal.timestamp).toISOString())
   out.divider()
 
-  const { createHash } = await import("node:crypto")
   const actionId = createHash("sha256").update(JSON.stringify(proposal)).digest("hex").slice(0, 16)
+  saveProposal(actionId, proposal, actionConfig?.riskLevel)
   out.keyValue("Action ID", actionId)
   out.hint("Next step: ledgit record " + actionId)
   out.divider()

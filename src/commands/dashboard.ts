@@ -3,6 +3,7 @@ import { join } from "node:path"
 import { spawn } from "node:child_process"
 import { queryTopicMessages } from "../services/hedera.js"
 import { getLatestHcsTopicId } from "../services/ens.js"
+import { decrypt } from "../services/crypto.js"
 import * as out from "../services/output.js"
 
 const DASHBOARD_HOSTED = "https://ledgitdash.vercel.app"
@@ -31,13 +32,30 @@ export async function dashboard(agentEns: string): Promise<void> {
       sequenceNumber: msg.sequenceNumber,
       consensusTimestamp: msg.consensusTimestamp,
     }
+    let rawMessage = msg.message
+    if (rawMessage.startsWith("ledgit:enc:")) {
+      const result = decrypt(rawMessage)
+      if (result.ok) rawMessage = result.text
+    }
     try {
-      const parsed = JSON.parse(msg.message) as Record<string, unknown>
+      const parsed = JSON.parse(rawMessage) as Record<string, unknown>
       if (parsed.actionId) entry.actionId = String(parsed.actionId)
       if (parsed.agent) entry.agent = String(parsed.agent)
       if (parsed.description) entry.description = String(parsed.description)
       if (parsed.type) entry.type = String(parsed.type)
       if (parsed.signature) entry.signature = String(parsed.signature)
+      if (parsed.riskLevel) entry.riskLevel = String(parsed.riskLevel)
+      // Fields may be nested inside the payload string
+      if (!entry.description || !entry.type && parsed.payload) {
+        try {
+          const inner = typeof parsed.payload === 'string'
+            ? JSON.parse(parsed.payload)
+            : parsed.payload as Record<string, unknown>
+          if (!entry.description && inner.description) entry.description = String(inner.description)
+          if (!entry.type && inner.type) entry.type = String(inner.type)
+          if (!entry.riskLevel && inner.riskLevel) entry.riskLevel = String(inner.riskLevel)
+        } catch { /* skip */ }
+      }
     } catch { /* skip */ }
     return entry
   })

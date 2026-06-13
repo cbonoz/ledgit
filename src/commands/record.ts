@@ -1,13 +1,30 @@
+import { readFileSync, existsSync } from "node:fs"
+import { join } from "node:path"
 import { submitMessage } from "../services/hedera.js"
 import { signWithLedger } from "../services/ledger.js"
 import { getLatestHcsTopicId, setEnsTextRecord } from "../services/ens.js"
 import { encrypt } from "../services/crypto.js"
 import * as out from "../services/output.js"
 
+function loadProposal(actionId: string): Record<string, unknown> | null {
+  const path = join(process.cwd(), ".ledgit", "proposals", `${actionId}.json`)
+  if (!existsSync(path)) return null
+  try {
+    return JSON.parse(readFileSync(path, "utf-8"))
+  } catch {
+    return null
+  }
+}
+
 export async function record(actionId: string): Promise<void> {
   out.heading("Recording Action: " + actionId)
 
-  const agent = process.env.LEDGIT_AGENT || "unknown.ledgit.eth"
+  const proposal = loadProposal(actionId)
+
+  const agent = proposal?.agent
+    ? String(proposal.agent)
+    : process.env.LEDGIT_AGENT || "unknown.ledgit.eth"
+
   const topicId =
     (await getLatestHcsTopicId(agent)) || process.env.LEDGIT_TOPIC_ID
 
@@ -19,6 +36,9 @@ export async function record(actionId: string): Promise<void> {
 
   out.keyValue("Agent", agent)
   out.keyValue("HCS Topic", topicId)
+  if (proposal?.description) out.keyValue("Description", String(proposal.description))
+  if (proposal?.type) out.keyValue("Type", String(proposal.type))
+  if (proposal?.riskLevel) out.keyValue("Risk", String(proposal.riskLevel))
   out.divider()
 
   const payload = JSON.stringify({ actionId, agent, timestamp: Date.now() })
@@ -33,7 +53,10 @@ export async function record(actionId: string): Promise<void> {
     actionId,
     agent,
     signature,
-    payload,
+    description: proposal?.description || null,
+    type: proposal?.type || null,
+    riskLevel: proposal?.riskLevel || null,
+    payload: proposal ? JSON.stringify(proposal.payload) : payload,
     recordedAt: Date.now(),
   })
 

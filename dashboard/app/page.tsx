@@ -17,9 +17,11 @@ export default function Home() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-16">
       <div className="max-w-lg mx-auto text-center">
-        <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl mx-auto mb-5 shadow-lg shadow-indigo-200">
-          L
-        </div>
+        <Link href="/" className="inline-block">
+          <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-xl mx-auto mb-5 shadow-lg shadow-indigo-200 hover:opacity-80 transition-opacity">
+            L
+          </div>
+        </Link>
         <h1 className="text-3xl font-bold mb-1 tracking-tight">LEDGIT</h1>
         <p className="text-gray-400 text-sm mb-6">
           Verifiable Human-Authorized Audit Trails for AI Agents

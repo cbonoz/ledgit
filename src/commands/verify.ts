@@ -60,12 +60,27 @@ export async function verify(agentEns: string): Promise<void> {
     if (parsed) {
       if (parsed.actionId) out.keyValue("Action ID", String(parsed.actionId))
       if (parsed.agent) out.keyValue("Agent", String(parsed.agent))
-      if (parsed.description) out.keyValue("Description", String(parsed.description))
-      if (parsed.type) out.keyValue("Type", String(parsed.type))
       if (parsed.signature) {
         const sig = String(parsed.signature)
         out.keyValue("Signature", sig.slice(0, 42) + "...")
       }
+      // Try top-level fields first, then look inside nested payload string
+      let desc = parsed.description ? String(parsed.description) : undefined
+      let type = parsed.type ? String(parsed.type) : undefined
+      let risk = parsed.riskLevel ? String(parsed.riskLevel) : undefined
+      if ((!desc || !type) && parsed.payload) {
+        try {
+          const inner = typeof parsed.payload === 'string'
+            ? JSON.parse(parsed.payload)
+            : parsed.payload as Record<string, unknown>
+          if (!desc && inner.description) desc = String(inner.description)
+          if (!type && inner.type) type = String(inner.type)
+          if (!risk && inner.riskLevel) risk = String(inner.riskLevel)
+        } catch { /* skip */ }
+      }
+      if (desc) out.keyValue("Description", desc)
+      if (type) out.keyValue("Type", type)
+      if (risk) out.keyValue("Risk", risk)
     }
     out.keyValue("View on HashScan", `https://hashscan.io/testnet/topic/${topicId}/${msg.sequenceNumber}`)
     out.divider()

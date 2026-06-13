@@ -1,0 +1,14 @@
+{
+  "agent": "alice.ledgit.eth",
+  "type": "token_swap",
+  "description": "Swap 10000 USDC for ETH on Uniswap",
+  "payload": {
+    "amountIn": "10000",
+    "tokenIn": "USDC",
+    "tokenOut": "ETH",
+    "dex": "Uniswap",
+    "type": "token_swap"
+  },
+  "timestamp": 1781323497695,
+  "riskLevel": "high"
+}

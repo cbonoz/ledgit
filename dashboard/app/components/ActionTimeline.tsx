@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 
 interface Action {
   sequenceNumber: number
@@ -109,10 +110,10 @@ export default function ActionTimeline({ data }: Props) {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
-      <div className="flex items-center gap-3 mb-1">
+      <Link href="/" className="inline-flex items-center gap-3 mb-1 hover:opacity-80 transition-opacity">
         <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">L</div>
         <h1 className="text-xl font-bold">LEDGIT</h1>
-      </div>
+      </Link>
       <p className="text-gray-400 text-sm mb-6">Verifiable Human-Authorized Audit Trails</p>
 
       <div className="mb-6">
@@ -145,7 +146,7 @@ export default function ActionTimeline({ data }: Props) {
       )}
 
       <div className="mt-12 pt-6 border-t border-gray-200 text-center text-xs text-gray-400">
-        LEDGIT · ETHGlobal New York 2026 · Ledger · Hedera · ENS
+        <Link href="/" className="hover:underline">LEDGIT</Link> · ETHGlobal New York 2026 · Ledger · Hedera · ENS
       </div>
     </div>
   )

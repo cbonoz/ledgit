@@ -55,9 +55,24 @@ async function fetchFromMirrorNode(topicId: string): Promise<Action[]> {
       const parsed = JSON.parse(decoded) as Record<string, unknown>
       if (parsed.actionId) entry.actionId = String(parsed.actionId)
       if (parsed.agent) entry.agent = String(parsed.agent)
-      if (parsed.description) entry.description = String(parsed.description)
-      if (parsed.type) entry.type = String(parsed.type)
       if (parsed.signature) entry.signature = String(parsed.signature)
+      // Check top-level fields, then fall back to nested payload
+      let desc = parsed.description ? String(parsed.description) : undefined
+      let type = parsed.type ? String(parsed.type) : undefined
+      let risk = parsed.riskLevel ? String(parsed.riskLevel) : undefined
+      if ((!desc || !type) && parsed.payload) {
+        try {
+          const inner = typeof parsed.payload === 'string'
+            ? JSON.parse(parsed.payload)
+            : parsed.payload as Record<string, unknown>
+          if (!desc && inner.description) desc = String(inner.description)
+          if (!type && inner.type) type = String(inner.type)
+          if (!risk && inner.riskLevel) risk = String(inner.riskLevel)
+        } catch { /* skip */ }
+      }
+      if (desc) entry.description = desc
+      if (type) entry.type = type
+      if (risk) entry.riskLevel = risk
     } catch { /* skip unparseable */ }
     return entry
   })
