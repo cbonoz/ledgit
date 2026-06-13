@@ -102,43 +102,63 @@ ledgit send 0.0.RECIPIENT 1
 
 ---
 
-## Step 3b — What If the Human Says No? (15s)
+## Step 3b — Smart Contract Interaction (30s)
 
-**You say:** *"What if Alice proposes something the human shouldn't approve?"*
+**You say:** *"Now Alice calls a smart contract to increment a counter. Same flow — propose, approve, execute."*
 
 ```bash
 ledgit propose \
-  --type usdc_transfer \
-  --fields '{"amount":"10000","to":"0xUnknown","reason":"suspicious"}'
+  --type token_swap \
+  --fields '{"action":"increment","contract":"Counter"}'
+```
+
+```bash
+ledgit record <action-id>
+
+# Then execute the contract call
+ledgit contract 0.0.9224072 increment '[]'
+```
+
+**On your Ledger Stax:** Review and **Approve.**
+
+**Expected output:**
+```
+  ✅ Signature obtained from Ledger
+  ✅ Recorded on Hedera HCS
+  Sequence:    7
+
+  ✅ Contract call executed
+  Status:      SUCCESS
+  View on HashScan https://hashscan.io/testnet/transaction/...
+```
+
+**You say:** *"HBAR transfer and a smart contract call — both went through the same human-in-the-loop flow, both recorded on HCS."*
+
+---
+
+## Step 3c — Low-Risk Actions Auto-Approved (15s)
+
+**You say:** *"Not every action needs hardware approval. Low-risk actions skip the Ledger entirely."*
+
+```bash
+ledgit propose \
+  --type read_logs \
+  --fields '{"count":"10"}'
+```
+
+```bash
+ledgit record <action-id>
 ```
 
 **Expected output:**
 ```
-  Action Proposal (HIGH RISK)
-  Action ID:   8a4f3e2c1b5d7e9f
+  Low risk action — no hardware signing required
+  Signature:   0x...
+  ✅ Recorded on Hedera HCS
+  Sequence:    8
 ```
 
-Now run record — **press Reject on your Ledger** when prompted:
-
-```bash
-ledgit record 8a4f3e2c1b5d7e9f
-```
-
-**Expected output:**
-```
-  ✖ User rejected the signing request on Ledger. Aborting.
-```
-
-**You say:** *"If the human rejects on the Ledger, the action doesn't execute. No HCS record, no payment, nothing. The hardware guarantees the human must actively approve — there's no 'auto-approve' bypass."*
-
-Verify it never appeared:
-
-```bash
-ledgit verify alice.ledgit.eth
-# Shows same actions as before. Rejected action is not recorded.
-```
-
-**You say:** *"Only approved actions make it to the immutable audit trail. Rejected actions leave no trace — exactly what compliance wants."*
+**You say:** *"Low-risk actions auto-approve. The human only touches the Ledger for high and medium risk actions — configurable per action type in the JSON config."*
 
 ---
 

@@ -36,6 +36,13 @@ const defaultConfig: LedgitConfig = {
       fields: ["parameter", "value"],
       riskLevel: "medium",
     },
+    {
+      type: "read_logs",
+      label: "Read Agent Logs",
+      descriptionTemplate: "Read {count} most recent log entries",
+      fields: ["count"],
+      riskLevel: "low",
+    },
   ],
 }
 
