@@ -137,6 +137,7 @@ export default function Home() {
                     { aspect: "Regulatory", bad: "Not viable", good: "Enterprise-ready" },
                     { aspect: "Accountability", bad: "Blame the AI", good: "Chain of custody" },
                     { aspect: "Safety", bad: "Rogue action risk", good: "Controlled & traceable" },
+                    { aspect: "Agent logging", bad: "Prompts & outputs only", good: "Hardware-proofed action trail" },
                   ].map((r) => (
                     <tr key={r.aspect}>
                       <td className="py-2 pr-3 font-medium text-gray-700">{r.aspect}</td>
