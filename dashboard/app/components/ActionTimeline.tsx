@@ -93,7 +93,7 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
               {action.riskLevel?.toUpperCase() || "LOW"}
             </span>
             {rogueHigh && (
-              <span className="text-xs font-semibold text-red-700 bg-red-200 px-2 py-0.5 rounded-full">⚠️ NO SIGNATURE</span>
+              <span className="text-xs">⚠️</span>
             )}
           </div>
         </div>
