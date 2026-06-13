@@ -13,8 +13,14 @@ has a human-readable ENS name, every high-risk action requires physical approval
 on a Ledger device, and the proof is stored immutably on Hedera HCS. Anyone
 resolves the name and sees the complete, verifiable history."*
 
-Click **"👤 I'm a Human"** → shows the setup flow.
-Click **"🤖 I'm an Agent"** → shows how agents discover and propose actions.
+**Point out the setup flow on the home page:**
+
+1. **Install instructions** are right on the page — `git clone`, `bun install`, `npm link`
+2. **"👤 I'm a Human"** tab — click it to show the getting-started steps: install → `ledgit setup` → (optional) link ENS → review actions → verify
+3. **"🤖 I'm an Agent"** tab — click it to show how agents self-discover actions via `ledgit tools schema` at startup
+4. **Scrolling down** — risk tier comparison table, install guide, agent config, and the "Powered By" section explaining each tool's role
+
+**Say:** *"The entire setup is documented on the page — clone, install, run one command, and your agent is ready to propose actions that require human approval."*
 
 ## 0:30 — Run the CLI Demo
 
