@@ -2,8 +2,9 @@ import {
   Client,
   TopicCreateTransaction,
   TopicMessageSubmitTransaction,
-  TopicMessageQuery,
-  TopicId,
+  TransferTransaction,
+  Hbar,
+  AccountId,
 } from "@hashgraph/sdk"
 
 const HEDERA_NETWORK = "testnet"
@@ -53,44 +54,51 @@ export async function submitMessage(
   return { sequenceNumber, timestamp: consensusTimestamp }
 }
 
+export async function transferHbar(
+  toAccountId: string,
+  amount: number
+): Promise<{ txId: string; status: string; timestamp: string }> {
+  const client = getClient()
+  const tx = new TransferTransaction()
+    .addHbarTransfer(client.operatorAccountId!, new Hbar(-amount))
+    .addHbarTransfer(AccountId.fromString(toAccountId), new Hbar(amount))
+    .setMaxTransactionFee(new Hbar(1))
+  const response = await tx.execute(client)
+  const receipt = await response.getReceipt(client)
+  const record = await response.getRecord(client)
+  client.close()
+  return {
+    txId: response.transactionId.toString(),
+    status: receipt.status.toString(),
+    timestamp: record.consensusTimestamp!.toString(),
+  }
+}
+
 export async function queryTopicMessages(
   topicId: string,
   limit = 50
 ): Promise<
   { sequenceNumber: number; consensusTimestamp: string; message: string }[]
 > {
-  const client = getClient()
-  const messages: {
-    sequenceNumber: number
-    consensusTimestamp: string
-    message: string
-  }[] = []
+  const network = HEDERA_NETWORK === "mainnet" ? "mainnet" : "testnet"
+  const url = `https://${network}.mirrornode.hedera.com/api/v1/topics/${topicId}/messages?limit=${limit}&order=asc`
 
-  await new Promise<void>((resolve, reject) => {
-    const query = new TopicMessageQuery()
-      .setTopicId(TopicId.fromString(topicId))
-      .setLimit(limit)
-      .setStartTime(new Date(0))
+  const res = await fetch(url)
+  if (!res.ok) {
+    throw new Error(`Mirror node returned ${res.status}: ${res.statusText}`)
+  }
 
-    query.subscribe(
-      client,
-      (response) => {
-        const message = Buffer.from(response.contents).toString("utf8")
-        messages.push({
-          sequenceNumber: response.sequenceNumber.toNumber(),
-          consensusTimestamp: response.consensusTimestamp.toString(),
-          message,
-        })
-      },
-      (error) => {
-        reject(error)
-      },
-      () => {
-        resolve()
-      }
-    )
-  })
+  const body = await res.json() as {
+    messages?: {
+      sequence_number: number
+      consensus_timestamp: string
+      message: string
+    }[]
+  }
 
-  client.close()
-  return messages
+  return (body.messages || []).map((m) => ({
+    sequenceNumber: m.sequence_number,
+    consensusTimestamp: m.consensus_timestamp,
+    message: atob(m.message),
+  }))
 }

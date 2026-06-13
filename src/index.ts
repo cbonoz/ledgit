@@ -2,7 +2,7 @@
 
 import "dotenv/config"
 import { Command } from "commander"
-import { createTopic } from "./services/hedera.js"
+import { createTopic, transferHbar } from "./services/hedera.js"
 import { propose } from "./commands/propose.js"
 import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
@@ -75,6 +75,26 @@ program
     out.divider()
     out.info("Then set ENS text record:")
     out.keyValue("ledgit.hcs.topic", topicId)
+    out.divider()
+  })
+
+program
+  .command("send")
+  .description("Send testnet HBAR to a Hedera account")
+  .argument("<to>", "Recipient Hedera account ID (e.g. 0.0.12345)")
+  .argument("<amount>", "Amount of HBAR to send (e.g. 1)")
+  .action(async (to: string, amount: string) => {
+    const hbar = parseFloat(amount)
+    if (isNaN(hbar) || hbar <= 0) {
+      out.error("Amount must be a positive number")
+      process.exit(1)
+    }
+    out.heading(`Sending ${hbar} HBAR to ${to}`)
+    const result = await transferHbar(to, hbar)
+    out.success("Transfer complete")
+    out.keyValue("Tx ID", result.txId)
+    out.keyValue("Status", result.status)
+    out.keyValue("Timestamp", result.timestamp)
     out.divider()
   })
 

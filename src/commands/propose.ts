@@ -63,7 +63,8 @@ export async function propose(
   out.keyValue("Timestamp", new Date(proposal.timestamp).toISOString())
   out.divider()
 
-  const actionId = Buffer.from(JSON.stringify(proposal)).toString("base64url").slice(0, 16)
+  const { createHash } = await import("node:crypto")
+  const actionId = createHash("sha256").update(JSON.stringify(proposal)).digest("hex").slice(0, 16)
   out.keyValue("Action ID", actionId)
   out.hint("Next step: ledgit record " + actionId)
   out.divider()

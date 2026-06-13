@@ -33,7 +33,8 @@ const riskColor = (level?: string) => {
 function ActionCard({ action, index }: { action: Action; index: number }) {
   const [open, setOpen] = useState(false)
   const color = riskColor(action.riskLevel)
-  const ts = new Date(action.consensusTimestamp).toLocaleString("en-US", {
+  const seconds = Number(action.consensusTimestamp.split(".")[0])
+  const ts = new Date(seconds * 1000).toLocaleString("en-US", {
     month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
   })
   const hasSig = action.signature && action.signature.length > 10

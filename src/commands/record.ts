@@ -25,7 +25,6 @@ export async function record(actionId: string): Promise<void> {
 
   out.step("Requesting signature on Ledger")
   const signature = await signWithLedger(messageHex)
-  out.success("Signature obtained")
   out.keyValue("Signature", signature.slice(0, 42) + "...")
   out.divider()
 
