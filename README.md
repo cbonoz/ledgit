@@ -6,6 +6,22 @@ A CLI-first tool that creates cryptographically verifiable audit trails for AI a
 
 ---
 
+## The Value
+
+| | Just Let Agents Run | With LEDGIT |
+|---|---|---|
+| **Human oversight** | None or weak (software prompt only) | Cryptographic human-in-the-loop via Ledger hardware |
+| **Auditability** | Basic logs (easy to fake, tamper, lose) | Immutable, ordered, cryptographically verifiable trail on Hedera HCS |
+| **Proof of authorization** | "The agent said it did X" | Provable: this specific human reviewed and signed on hardware |
+| **Regulatory readiness** | Almost impossible in regulated environments | Production-viable in banks, fintechs, and DAOs |
+| **Accountability** | Blame the model / prompt / "it's AI" | Clear chain of custody: Agent proposed → Human approved → Executed |
+| **Trust & safety** | High risk of rogue actions | Controlled, reviewed, fully traceable |
+| **Debugging** | Hard to reconstruct why something happened | Full timeline with signatures and context |
+
+**The bottom line:** Agents without LEDGIT are toys for experiments. Agents with LEDGIT become trustworthy enterprise tools.
+
+---
+
 ## Install
 
 **Prerequisites:** [Bun](https://bun.sh) or [Node.js](https://nodejs.org) 20+
@@ -126,13 +142,6 @@ Agents discover available types dynamically via `ledgit actions list --json`. Ad
 | `ledgit actions init-config` | Create a default `.ledgit/config.json` |
 
 ---
-
-## Why This Exists
-
-AI agents are moving real money, but regulated companies cannot deploy them without answering: *"Can you prove a human authorized this?"* LEDGIT provides the answer — every single time — with cryptographic proof, immutable ordering, and self-discoverable identity.
-
----
-
 ## Sponsors
 
 Built for **ETHGlobal New York 2026** — **Ledger**, **Hedera**, and **ENS** tracks.
