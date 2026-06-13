@@ -216,6 +216,11 @@ actionsCmd
       console.log(`     Fields: ${action.fields.join(", ")}`)
       console.log("")
     }
+    console.log("  ───────────────────────────────────")
+    console.log("  To add or edit action types, create or edit:")
+    console.log("  .ledgit/config.json")
+    console.log("  Or run: ledgit actions init-config")
+    console.log("")
   })
 
 actionsCmd
