@@ -67,9 +67,8 @@ function parseMessage(raw: string): Partial<Action> {
   return entry
 }
 
-function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
+function ActionCard({ action, topicId, etherscanUrl }: { action: Action; topicId: string; etherscanUrl: string }) {
   const [open, setOpen] = useState(false)
-  const color = riskColor(action.riskLevel)
   const seconds = Number(action.consensusTimestamp.split(".")[0])
   const ts = new Date(seconds * 1000).toLocaleString("en-US", {
     month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
@@ -95,12 +94,9 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
         <div className="flex items-center justify-between mb-1">
           <span className="text-xs font-mono text-gray-400">#{action.sequenceNumber}</span>
           <div className="flex gap-1.5 items-center">
-            <span className={`text-xs font-semibold ${color.label} ${color.labelBg} px-2 py-0.5 rounded-full`}>
-              {action.riskLevel?.toUpperCase() || "LOW"}
+            <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${compliant ? "bg-emerald-100 text-emerald-700" : "bg-red-100 text-red-700"}`}>
+              {action.riskLevel?.toUpperCase() || "LOW"}{unverified ? " ⚠️" : ""}
             </span>
-            {unverified && (
-              <span className="text-xs">⚠️</span>
-            )}
           </div>
         </div>
         <div className="text-sm text-gray-500 mb-1">{ts}</div>
@@ -302,7 +298,7 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
                 )}
                 <div>
                   {day.actions.map((action) => (
-                    <ActionCard key={action.sequenceNumber} action={action} topicId={topicId} />
+                    <ActionCard key={action.sequenceNumber} action={action} topicId={topicId} etherscanUrl={etherscanUrl} />
                   ))}
                 </div>
               </div>
