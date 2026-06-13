@@ -4,6 +4,7 @@ dist/
 *.log
 dashboard/data/
 dashboard/.next/
+dashboard/.ledgit/
 .ledgit/proposals/
 .ledgit/config.json
 docs/SPONSOR_SUBMISSIONS.md
