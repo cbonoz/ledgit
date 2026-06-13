@@ -130,10 +130,10 @@ export default function Home() {
                   {[
                     { aspect: "Human oversight", bad: "None or weak prompts", good: "Hardware-signed approval" },
                     { aspect: "Audit trail", bad: "Basic logs, easy to fake", good: "Immutable on Hedera HCS" },
-                    { aspect: "Proof", bad: "&ldquo;The agent said so&rdquo;", good: "Provable human signature" },
+                    { aspect: "Proof", bad: "\u201CThe agent said so\u201D", good: "Provable human signature" },
                     { aspect: "Regulatory", bad: "Not viable", good: "Enterprise-ready" },
                     { aspect: "Accountability", bad: "Blame the AI", good: "Chain of custody" },
-                    { aspect: "Safety", bad: "Rogue action risk", good: "Controlled &amp; traceable" },
+                    { aspect: "Safety", bad: "Rogue action risk", good: "Controlled & traceable" },
                   ].map((r) => (
                     <tr key={r.aspect}>
                       <td className="py-2 pr-3 font-medium text-gray-700">{r.aspect}</td>
