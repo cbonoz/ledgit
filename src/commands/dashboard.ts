@@ -23,8 +23,8 @@ export async function dashboard(agentEns: string): Promise<void> {
   out.divider()
 
   const slug = agentEns
-  const localUrl = `http://localhost:${DASHBOARD_PORT}/${slug}`
-  const hostedUrl = `${DASHBOARD_HOSTED}/${slug}`
+  const localUrl = `http://localhost:${DASHBOARD_PORT}/${slug}?topic=${topicId}`
+  const hostedUrl = `${DASHBOARD_HOSTED}/${slug}?topic=${topicId}`
 
   if (existsSync(join(DASHBOARD_DIR, "node_modules"))) {
     out.step("Starting local dashboard")

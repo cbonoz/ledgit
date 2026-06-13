@@ -11,7 +11,13 @@ export interface AgentConfig {
   topicId?: string
 }
 
+export interface NetworkConfig {
+  hedera?: "testnet" | "mainnet"
+  ens?: "sepolia" | "mainnet"
+}
+
 export interface LedgitConfig {
+  network?: NetworkConfig
   agents?: AgentConfig[]
   actions: ActionConfig[]
 }

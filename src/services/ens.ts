@@ -1,15 +1,28 @@
 import { http, createPublicClient, type Address } from "viem"
-import { sepolia } from "viem/chains"
+import { sepolia, mainnet } from "viem/chains"
+import { loadActionsConfig } from "./config.js"
 import * as out from "./output.js"
 
 let publicClient: ReturnType<typeof createPublicClient> | null = null
 
+function getChain() {
+  const config = loadActionsConfig()
+  const network = config.network?.ens || "sepolia"
+  return network === "mainnet" ? mainnet : sepolia
+}
+
+function getDefaultRpc() {
+  const config = loadActionsConfig()
+  const network = config.network?.ens || "sepolia"
+  if (process.env.ENS_RPC_URL) return process.env.ENS_RPC_URL
+  return network === "mainnet" ? "https://ethereum-rpc.publicnode.com" : "https://ethereum-sepolia-rpc.publicnode.com"
+}
+
 function getClient() {
   if (!publicClient) {
-    const rpcUrl = process.env.ENS_RPC_URL || "https://ethereum-sepolia-rpc.publicnode.com"
     publicClient = createPublicClient({
-      chain: sepolia,
-      transport: http(rpcUrl),
+      chain: getChain(),
+      transport: http(getDefaultRpc()),
     })
   }
   return publicClient
@@ -41,9 +54,6 @@ export async function setEnsTextRecord(
   _key: string,
   _value: string
 ): Promise<void> {
-  // NOTE: Requires wallet with ownership of the ENS name.
-  // For the hackathon, we log the intent and return.
-  // Implement with a signer (e.g., viem walletClient) for production.
   out.info(`[ENS] Would set text record ${_key}=${_value} on ${_name}`)
 }
 

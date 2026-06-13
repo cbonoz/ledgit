@@ -121,6 +121,7 @@ program
     if (topicId) {
       const execRecord = JSON.stringify({
         type: "hbar_transfer",
+        description: `Sent ${hbar} HBAR to ${to}`,
         agent,
         to,
         amount: hbar,
@@ -173,6 +174,7 @@ program
       const agent = getDefaultAgent() || process.env.LEDGIT_AGENT || "unknown"
       const execRecord = JSON.stringify({
         type: "contract_call",
+        description: `Called ${functionName} on ${contractId}`,
         agent,
         contractId,
         function: functionName,
