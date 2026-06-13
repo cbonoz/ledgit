@@ -11,33 +11,39 @@ They solve two different problems — LEDGIT needs both.
 | **Without it** | The audit trail could be tampered with or reordered | The audit trail exists but nobody can find it |
 | **How they connect** | — | Text record `ledgit.hcs.topic` points to the HCS topic ID |
 
-**Together:** ENS tells you *where* to look (`trader-a.ledgit.eth` → topic `0.0.1234567`). Hedera guarantees the data you find there is authentic, ordered, and immutable. Neither works without the other.
+**Together:** ENS tells you *where* to look (`alice.ledgit.eth` → topic `0.0.9219676`). Hedera guarantees the data you find there is authentic, ordered, and immutable. Neither works without the other.
+
+LEDGIT works with any ENS name you own — no subname service, no platform dependency.
 
 ---
 
-## Hedera HCS — Immutable Audit Trail
+## Hedera HCS — Immutable Audit Trail + Payments
 
-**File:** `src/services/hedera.ts` (96 lines)
+**File:** `src/services/hedera.ts` (104 lines)
 
-Hedera Consensus Service provides the core of the audit trail — immutable, ordered, timestamped records.
+Hedera Consensus Service provides the core of the audit trail — immutable, ordered, timestamped records. Hedera Token Service (`TransferTransaction`) enables agentic audited payments.
 
-| Command | HCS Interaction |
-|---------|----------------|
+| Command | Hedera Interaction |
+|---------|-------------------|
 | `ledgit init --agent <ens>` | Creates a new HCS topic via `TopicCreateTransaction`. Each agent gets one persistent topic. |
 | `ledgit record <action-id>` | Submits the human-signed action payload as an HCS message via `TopicMessageSubmitTransaction`. Returns the consensus timestamp and sequence number. |
-| `ledgit verify <agent-ens>` | Queries all messages from the agent's topic via `TopicMessageQuery`. Displays the ordered timeline with sequence numbers and timestamps. |
-| `ledgit dashboard <agent-ens>` | Same query, rendered as a visual HTML timeline. |
+| `ledgit verify <agent-ens>` | Queries the Hedera mirror node REST API for the agent's topic messages. Displays ordered timeline with sequence numbers and timestamps. |
+| `ledgit dashboard <agent-ens>` | Same query, rendered as a visual web timeline with monthly grouping and live polling. |
+| `ledgit send <to> <amount>` | Executes a real HBAR transfer on Hedera testnet via `TransferTransaction`. |
 
-HCS provides the chain of custody — every action has a unique sequence number and a network-verified consensus timestamp that cannot be tampered with.
+HCS provides the chain of custody — every action has a unique sequence number and a network-verified consensus timestamp that cannot be tampered with. Optional AES-256-GCM encryption keeps sensitive payload data private while preserving public verifiability.
 
 **Data stored per message:**
 ```json
 {
-  "actionId": "a1b2c3d4e5f6g7h8",
-  "agent": "trader-a.ledgit.eth",
-  "signature": "0xabcd...",
+  "actionId": "3a4fbca8a1f82615",
+  "agent": "alice.ledgit.eth",
+  "signature": "0x6bc6e9bff7de...",
+  "description": "Send 500 USDC to 0xAlice for bonus",
+  "type": "usdc_transfer",
+  "riskLevel": "high",
   "payload": "{...}",
-  "recordedAt": 1718200000000
+  "recordedAt": 1781359056000
 }
 ```
 
@@ -45,75 +51,80 @@ HCS provides the chain of custody — every action has a unique sequence number 
 
 ## Ledger — Human-in-the-Loop Signing
 
-**File:** `src/services/ledger.ts` (43 lines)
+**File:** `src/services/ledger.ts` (78 lines)
 
-Ledger provides the cryptographic proof that a human authorized the action. The signing step is the core differentiator of LEDGIT.
+Ledger provides the cryptographic proof that a human authorized the action. The signing step is the core differentiator of LEDGIT. Every high or medium risk action requires physical approval on a Ledger device — not a bot, not a replay, not a compromised API key.
 
 | Step | What Happens |
 |------|-------------|
-| `record` calls `connectLedger()` | Connects to Speculos emulator at `LEDGER_SPECULOS_URL` (default `http://127.0.0.1:5000`) |
-| Human reviews the action | The CLI displays the action details; on a real Ledger the human would see and confirm on-device |
-| `signWithLedger()` | Sends the action payload hash to the Ledger device via APDU `0xe0 0x04`. The device returns a signature. |
-| Signature embedded in HCS | The returned signature is included in the HCS message payload for on-chain verification |
+| Connects via USB | Tries physical Ledger via `@ledgerhq/hw-transport-node-hid` first, falls back to Speculos emulator |
+| Human reviews | The action description, type, and risk level are displayed on the Ledger device |
+| Signs via Ethereum app | Uses `@ledgerhq/hw-app-eth` `signPersonalMessage()` — the human approves with one button press |
+| Signature on HCS | The returned `{r, s, v}` signature is formatted and embedded in the HCS message |
 
-**Fallback:** If Speculos is not reachable, `signWithLedger()` falls back to SHA-256 hashing so the demo flow works end-to-end without hardware.
-
-The signature stored in HCS allows anyone to cryptographically verify that a specific human approved the action at a specific time.
+**Fallback:** If no Ledger is connected, falls back to SHA-256 software signing so the demo flow works end-to-end without hardware.
 
 ---
 
-## ENS — Agent Identity & Discovery
+## ENS — Bring Your Own Name
 
 **File:** `src/services/ens.ts` (60 lines)
 
-ENS turns a raw HCS topic ID into a human-readable, discoverable agent identity.
+ENS replaces opaque addresses with human-readable agent names. LEDGIT doesn't require a subname service — use any ENS name you already own.
 
 | ENS Record | Purpose |
 |------------|---------|
-| `ledgit.hcs.topic` | Maps an ENS name (e.g. `trader-a.ledgit.eth`) to its HCS topic ID. This is how `verify` and `dashboard` know which topic to query. |
+| `ledgit.hcs.topic` | Maps an ENS name (e.g. `alice.ledgit.eth`) to its HCS topic ID. This is how `verify` and `dashboard` know which topic to query. |
 | `ledgit.hcs.sequence` | Stores the latest HCS sequence number, enabling fast "is there new data?" checks. |
 
 **Resolution flow:**
 ```
-ledgit verify trader-a.ledgit.eth
-  → resolve ENS name
-  → read text record "ledgit.hcs.topic" → "0.0.1234567"
-  → query HCS topic 0.0.1234567
+ledgit verify alice.ledgit.eth
+  → resolve ENS name via viem (Sepolia)
+  → read text record "ledgit.hcs.topic" → "0.0.9219676"
+  → query HCS topic 0.0.9219676 via mirror node
   → display full audit history
 ```
 
 **Current implementation:** Read operations (`getEnsText`) work via viem against Sepolia. Write operations (`setEnsTextRecord`) log intent — production use requires a wallet signer with ENS ownership.
 
-This makes the audit trail self-discoverable: anyone who knows an agent's ENS name can pull their complete audit history without any centralized registry.
+---
+
+## Architecture
+
+```
+┌──────────────┐     ┌──────────┐     ┌─────────────┐
+│  AI Agent    │ ──> │  ledgit  │ ──> │   Ledger    │
+│  (propose)   │     │   CLI    │     │  hardware   │
+└──────────────┘     └────┬─────┘     └─────────────┘
+                          │
+                    ┌─────▼───────┐
+                    │  Hedera     │
+                    │  HCS + HTS  │
+                    │  (immutable │
+                    │   records + │
+                    │   payments) │
+                    └─────┬───────┘
+                          │
+                    ┌─────▼───────┐
+                    │  ENS text   │
+                    │  records    │
+                    │  (discovery)│
+                    └─────────────┘
+```
 
 ---
 
-## Data Flow Summary
+## Prize Eligibility (ETHGlobal New York 2026)
 
-```
-Agent CLI                          Ledger              Hedera HCS         ENS
-──────                             ──────              ──────────         ───
-ledgit propose
-  → action proposal created
-  → action ID returned
-        │
-ledgit record <id> ───────────────> connect
-        │                          display action
-        │                          human approves
-        │                          sign payload ─────> submitMessage()
-        │                                               consensus ts
-        │                          signature ────────> embedded in HCS
-        │                                                                    set 'ledgit.hcs.sequence'
-ledgit verify <ens> ──────────────────────────────────────────────────────> resolve ENS
-                                                                             read 'ledgit.hcs.topic'
-                                      <──── queryTopicMessages()
-  → display timeline
-
-ledgit dashboard <ens> ───────────────────────────────────────────────────> resolve ENS
-                                                                             read 'ledgit.hcs.topic'
-                                      <──── queryTopicMessages()
-  → open HTML timeline in browser
-```
+| Prize | Amount | Fit |
+|-------|--------|-----|
+| **AI & Agentic Payments on Hedera** | $6,000 | Strong — HCS audit trails + HBAR payments via `ledgit send` |
+| **No Solidity Allowed — Build with Hedera SDKs** | $3,000 | Qualifies — uses `@hashgraph/sdk`, HCS + HTS, no Solidity |
+| **Best ENS Integration for AI Agents** | $5,000 | Strong — ENS names as agent identity with text record resolution |
+| **Most Creative Use of ENS** | $5,000 | Possible — storing HCS topic pointers in text records for agent discovery |
+| **Integrate ENS** | $6,000 | Qualifies — any functional ENS integration is eligible |
+| **Ledger** | $10,000 | TBD — check Ledger prize requirements |
 
 ---
 
