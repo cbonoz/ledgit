@@ -5,12 +5,9 @@
 
 ## The Setup
 
-Acme Corp runs several AI agents to manage their treasury. Each agent has an ENS
-name — human-readable, traceable, tied to their role.
-
-**Alice** (`alice.ledgit.eth`) executes trades.
-**Bob** (`bob.ledgit.eth`) handles vendor payments.
-**Charlie** (`charlie.ledgit.eth`) manages permissions.
+**Alice** (`alice.ledgit.eth`) is a trading agent at Acme Corp. She executes
+trades and makes payments autonomously — but every high-risk action needs
+a human to review and approve on their Ledger before it executes.
 
 The compliance officer needs one thing: *proof that a human authorized every action.*
 Without LEDGIT, she gets inconsistent bot logs. With it, she gets a uniform,
