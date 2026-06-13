@@ -54,27 +54,27 @@ export default function Home() {
 
         {persona === "agent" && (
           <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 text-left mb-4 animate-[fade-in_0.2s_ease-out]">
-            <h2 className="font-bold text-sm text-indigo-900 mb-3">How to onboard your agent</h2>
+            <h2 className="font-bold text-sm text-indigo-900 mb-3">Claim your ENS identity</h2>
             <ol className="text-sm text-indigo-800 space-y-3">
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">1.</span>
-                <span>Run <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code> to discover available action types</span>
+                <span><strong>Claim a subname</strong> — request <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">your-name.ledgit.eth</code> from your human operator</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">2.</span>
-                <span>Call <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit propose --agent &lt;ens&gt; --type &lt;action&gt; --fields &apos;{&quot;key&quot;: &quot;value&quot;}&apos;</code></span>
+                <span>Operator creates the subname + HCS topic via <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit init</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">3.</span>
-                <span>The CLI validates fields against the schema and returns a unique action ID</span>
+                <span>Discover actions: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">4.</span>
-                <span>Wait for human approval — <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit record</code> signs and submits to HCS</span>
+                <span>Propose: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit propose --agent your-name.ledgit.eth --type &lt;action&gt; --fields &apos;&#123;...&#125;&apos;</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">5.</span>
-                <span>Verify the trail: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify &lt;ens&gt;</code></span>
+                <span>Wait for human approval, then verify: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify your-name.ledgit.eth</code></span>
               </li>
             </ol>
           </div>
@@ -86,23 +86,23 @@ export default function Home() {
             <ol className="text-sm text-amber-800 space-y-3">
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">1.</span>
-                <span><strong>Review</strong> — actions appear on your Ledger device with full details</span>
+                <span><strong>Issue subnames</strong> — create <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">agent-name.ledgit.eth</code> with its own HCS topic</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">2.</span>
-                <span><strong>Approve or reject</strong> with one button press on the hardware</span>
+                <span><strong>Review actions</strong> — they appear on your Ledger with full details</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">3.</span>
-                <span>Your signature is captured and stored immutably on Hedera HCS</span>
+                <span><strong>Approve or reject</strong> with one button press on the hardware</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">4.</span>
-                <span><strong>Verify any agent</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify alice.ledgit.eth</code></span>
+                <span>Signature stored immutably on Hedera HCS with consensus timestamp</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">5.</span>
-                <span><strong>Visual dashboard</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit dashboard alice.ledgit.eth</code></span>
+                <span><strong>Verify any agent</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify agent-name.ledgit.eth</code> or <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit dashboard agent-name.ledgit.eth</code></span>
               </li>
             </ol>
           </div>
