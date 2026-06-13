@@ -68,15 +68,13 @@ ledgit setup
 ## Quick Start
 
 ```bash
-# 1. Pick any ENS name you own (e.g., myname.eth)
-# 2. Set its text record via sepolia.ens.app:
-#    ledgit.hcs.topic = <your-new-topic-id>
-
-# Initialize your agent's HCS topic
+# 1. Initialize your agent — creates an HCS topic
 ledgit init --agent myname.eth
+# → Creates topic 0.0.XXXXX, saves to .env
 
-# Save the topic to your ENS text record (one-time setup)
+# 2. (Optional) Link your ENS name to the topic
 # sepolia.ens.app → myname.eth → Add Record → ledgit.hcs.topic = 0.0.XXXXX
+# Then 'ledgit verify myname.eth' resolves automatically
 
 # See available action types
 ledgit actions list
