@@ -94,6 +94,13 @@ export function getAgentTopic(name: string): string | undefined {
   return (config.agents || []).find((a) => a.name === name)?.topicId
 }
 
+export function getDefaultAgent(): string | undefined {
+  const config = loadActionsConfig()
+  const agents = config.agents || []
+  if (agents.length > 0) return agents[0].name
+  return process.env.LEDGIT_AGENT || undefined
+}
+
 export function fillTemplate(template: string, fields: Record<string, unknown>): string {
   return template.replace(/\{(\w+)\}/g, (_, key) => {
     return key in fields ? String(fields[key]) : `{${key}}`

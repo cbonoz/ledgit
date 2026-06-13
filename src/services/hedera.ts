@@ -5,6 +5,8 @@ import {
   TransferTransaction,
   Hbar,
   AccountId,
+  ContractExecuteTransaction,
+  ContractFunctionParameters,
 } from "@hashgraph/sdk"
 
 const HEDERA_NETWORK = process.env.HEDERA_NETWORK || "testnet"
@@ -22,9 +24,7 @@ function getClient(): Client {
   return client
 }
 
-export async function createTopic(
-  memo: string
-): Promise<string> {
+export async function createTopic(memo: string): Promise<string> {
   const client = getClient()
   const tx = new TopicCreateTransaction()
     .setTopicMemo(memo)
@@ -63,6 +63,33 @@ export async function transferHbar(
     .addHbarTransfer(client.operatorAccountId!, new Hbar(-amount))
     .addHbarTransfer(AccountId.fromString(toAccountId), new Hbar(amount))
     .setMaxTransactionFee(new Hbar(1))
+  const response = await tx.execute(client)
+  const receipt = await response.getReceipt(client)
+  const record = await response.getRecord(client)
+  client.close()
+  return {
+    txId: response.transactionId.toString(),
+    status: receipt.status.toString(),
+    timestamp: record.consensusTimestamp!.toString(),
+  }
+}
+
+export async function contractCall(
+  contractId: string,
+  functionName: string,
+  args: Record<string, unknown>[]
+): Promise<{ txId: string; status: string; timestamp: string }> {
+  const client = getClient()
+  const params = new ContractFunctionParameters()
+  for (const arg of args) {
+    if (typeof arg === "number") params.addUint256(arg)
+    else if (typeof arg === "boolean") params.addBool(arg)
+    else params.addString(String(arg))
+  }
+  const tx = new ContractExecuteTransaction()
+    .setContractId(contractId)
+    .setFunction(functionName, params)
+    .setMaxTransactionFee(new Hbar(2))
   const response = await tx.execute(client)
   const receipt = await response.getReceipt(client)
   const record = await response.getRecord(client)

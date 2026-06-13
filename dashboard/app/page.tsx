@@ -178,11 +178,15 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">View an audit trail</div>
+              <div className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Configure your agent</div>
               <div className="bg-gray-900 rounded-lg px-4 py-3 font-mono text-sm text-gray-100">
-                <div><span className="text-gray-500">$</span> ledgit dashboard{' '}<span className="text-indigo-300">alice.ledgit.eth</span></div>
+                <div><span className="text-gray-500">$</span> ledgit tools schema</div>
+                <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700">
+                  Outputs an OpenAI/Claude-compatible tool definition. Pipe this into your agent framework to give it access to propose actions that require human approval.
+                </div>
               </div>
             </div>
+            <div>
           </div>
         </div>
 

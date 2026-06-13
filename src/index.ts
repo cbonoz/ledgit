@@ -2,7 +2,7 @@
 
 import "dotenv/config"
 import { Command } from "commander"
-import { createTopic, transferHbar } from "./services/hedera.js"
+import { createTopic, transferHbar, contractCall } from "./services/hedera.js"
 import { propose } from "./commands/propose.js"
 import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
@@ -98,6 +98,35 @@ program
     out.heading(`Sending ${hbar} HBAR to ${to}`)
     const result = await transferHbar(to, hbar)
     out.success("Transfer complete")
+    out.keyValue("Tx ID", result.txId)
+    out.keyValue("Status", result.status)
+    out.keyValue("Timestamp", result.timestamp)
+    out.keyValue("View on HashScan", `https://hashscan.io/testnet/transaction/${result.timestamp}`)
+    out.divider()
+  })
+
+program
+  .command("contract")
+  .description("Call a smart contract function on Hedera (with Ledger approval)")
+  .argument("<contract-id>", "Hedera contract ID (e.g. 0.0.12345)")
+  .argument("<function>", "Function name (e.g. transfer)")
+  .argument("<args>", "JSON array of arguments")
+  .action(async (contractId: string, functionName: string, args: string) => {
+    let parsed: Record<string, unknown>[]
+    try {
+      parsed = JSON.parse(args)
+    } catch {
+      out.error("Args must be a valid JSON array")
+      process.exit(1)
+    }
+    if (!Array.isArray(parsed)) {
+      out.error("Args must be a JSON array")
+      process.exit(1)
+    }
+    out.heading(`Contract call: ${functionName} on ${contractId}`)
+    out.step("Calling contract")
+    const result = await contractCall(contractId, functionName, parsed)
+    out.success("Contract call executed")
     out.keyValue("Tx ID", result.txId)
     out.keyValue("Status", result.status)
     out.keyValue("Timestamp", result.timestamp)
