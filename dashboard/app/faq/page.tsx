@@ -49,6 +49,10 @@ const faqs = [
     q: "How does LEDGIT compare to the Hedera Agent Kit?",
     a: "The Hedera Agent Kit is a LangChain toolkit for Hedera operations (transfers, tokens, HCS messaging). LEDGIT is the human-in-the-loop audit layer. The Agent Kit returns unsigned bytes for human approval — you figure out signing. LEDGIT sends actions directly to a Ledger device for one-button hardware approval, then records the signed proof to HCS with risk levels and ENS identity. They're complementary: use the Agent Kit for agent framework integration and LEDGIT for hardware signing and audit. See the full comparison in the README.",
   },
+  {
+    q: "How does LEDGIT compare to existing audit approaches?",
+    a: <>Most audit approaches weren't designed for autonomous agents. Basic logs can be faked or deleted and provide no cryptographic proof. Software prompts ("Are you sure?") can be automated or bypassed by the agent. Multi-sig wallets are designed for humans, not agents, and provide no audit trail of why an action was approved. Blockchain explorers show raw transactions but not the human reasoning or approval context. LEDGIT addresses all of these: hardware-backed signing proves human intent, HCS provides immutable ordered records, and ENS names give agents human-readable, discoverable identities with full approval context.</>,
+  },
 ]
 
 export default function FAQPage() {
