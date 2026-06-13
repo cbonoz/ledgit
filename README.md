@@ -2,11 +2,15 @@
 
 > The auditability CLI for named agents. Prove a human authorized every action.
 
-Every agent is identified by an ENS name like `chrisb.acmeco.eth` instead of
-a cryptic address. The human who approves an action signs on their Ledger device,
-and the proof is stored immutably on Hedera HCS. Anyone resolves the ENS name
-and sees the complete, verifiable history — no config files, no databases, no
-centralized registry.
+LEDGIT is an **approval gateway** for AI agents. It sits between an agent's
+decision and its execution — every high or medium risk action must pass through
+before it happens. The human reviews on their Ledger, approves, and the
+cryptographic proof is stored immutably on Hedera HCS. Anyone resolves the
+agent's ENS name and sees the complete, verifiable history.
+
+No config files, no databases, no centralized registry. Agents are identified
+by ENS names like `chrisb.acmeco.eth` instead of cryptic addresses — the name
+*is* the audit trail lookup.
 
 Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
 **ENS** (bring your own name — no subname service needed).
@@ -146,14 +150,18 @@ Agents discover available types dynamically via `ledgit actions list --json`. Ad
 
 ## Agent Integration
 
-LEDGIT is designed to be called by agents autonomously. Add it as a tool
-in your agent framework using the generated schema:
+LEDGIT is an **approval gateway** — it sits in front of your agent's execution
+pipeline. The agent calls `ledgit propose` when it wants to execute a
+high-stakes action, the human reviews and approves on their Ledger, and the
+action is recorded immutably on HCS before it executes.
+
+Add LEDGIT as a tool in your agent framework using the generated schema:
 
 ```bash
 ledgit tools schema
 ```
 
-This outputs a tool definition your agent can use:
+This outputs an OpenAI/Claude-compatible tool definition:
 
 ```json
 {

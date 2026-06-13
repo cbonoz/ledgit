@@ -89,6 +89,7 @@ export async function contractCall(
   const tx = new ContractExecuteTransaction()
     .setContractId(contractId)
     .setFunction(functionName, params)
+    .setGas(500_000)
     .setMaxTransactionFee(new Hbar(2))
   const response = await tx.execute(client)
   const receipt = await response.getReceipt(client)
