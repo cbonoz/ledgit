@@ -173,6 +173,14 @@ public.
 
 ---
 
-## Sponsors
+## Prizes & Sponsors
 
-Built for **ETHGlobal New York 2026** — **Ledger**, **Hedera**, and **ENS** tracks.
+| Prize | Sponsor | Category | Our Fit |
+|-------|---------|----------|---------|
+| AI & Agentic Payments | **Hedera** ($6,000) | AI agent with HCS audit trail + HBAR payments | Agent proposes → human approves → recorded on HCS. `ledgit send` executes payments. |
+| No Solidity Allowed | **Hedera** ($3,000) | Hedera SDK only (no Solidity) | Uses `@hashgraph/sdk` with HCS + HTS. No smart contracts. |
+| AI Agents x Ledger | **Ledger** ($10,000) | Human-in-the-loop via hardware signing | `ledgit record` requires physical Ledger approval for high/medium risk actions. |
+| Best ENS for AI Agents | **ENS** ($5,000) | ENS as agent identity layer | Agents named by ENS (e.g. `chrisb.acmeco.eth`). Topic discovery via text records. |
+| Integrate ENS | **ENS** ($6,000) | Any functional ENS integration | Text record resolution for HCS topic lookup. Pool prize. |
+
+Built for **ETHGlobal New York 2026**.
