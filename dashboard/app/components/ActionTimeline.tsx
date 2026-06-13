@@ -185,6 +185,16 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
   const now = new Date()
   const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
 
+  const monthActions = showAll ? actions : actions.filter(a => {
+    const d = new Date(Number(a.consensusTimestamp.split(".")[0]) * 1000)
+    const mk = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`
+    return mk === currentMonthKey
+  })
+  const displayCount = monthActions.length
+  const high = monthActions.filter(a => (a.riskLevel || "low") === "high").length
+  const medium = monthActions.filter(a => (a.riskLevel || "low") === "medium").length
+  const low = monthActions.filter(a => (a.riskLevel || "low") === "low").length
+
   const selectDay = (dateKey: string) => {
     setSelectedDate(dateKey)
     window.history.replaceState(null, "", `?date=${dateKey}`)
@@ -261,7 +271,7 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
         <div className="flex items-center gap-2 mt-1 text-sm text-gray-400">
           <span>Topic: <span className="font-mono">{data.topicId}</span></span>
           <span className="text-gray-300">·</span>
-          <span>{actions.length} action{actions.length !== 1 ? "s" : ""}</span>
+          <span>{displayCount} action{displayCount !== 1 ? "s" : ""}</span>
         </div>
       </div>
 
@@ -351,6 +361,16 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
               </div>
             </div>
           ))}
+          {!showAll && actions.length > monthActions.length && (
+            <div className="text-center pt-4">
+              <button
+                onClick={() => setShowAll(true)}
+                className="text-xs text-indigo-600 hover:text-indigo-800 font-medium bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-full transition-colors cursor-pointer"
+              >
+                Load all {actions.length} actions
+              </button>
+            </div>
+          )}
         </div>
       )}
 
