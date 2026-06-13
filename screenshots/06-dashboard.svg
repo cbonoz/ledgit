@@ -1,66 +1,66 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
-  <rect width="1200" height="800" fill="#f9fafb"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750">
+  <rect width="1200" height="750" fill="#f9fafb"/>
 
   <!-- Header -->
-  <rect x="0" y="0" width="1200" height="60" fill="white" stroke="#e5e7eb" stroke-width="1"/>
-  <rect x="20" y="14" width="32" height="32" rx="8" fill="#4f46e5"/>
-  <text x="36" y="36" font-family="system-ui,sans-serif" font-size="16" font-weight="800" fill="white" text-anchor="middle">L</text>
-  <text x="62" y="35" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#111827">LEDGIT</text>
-  <text x="120" y="35" font-family="system-ui,sans-serif" font-size="12" fill="#9ca3af">Verifiable Human-Authorized Audit Trails</text>
+  <rect x="0" y="0" width="1200" height="56" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <rect x="16" y="12" width="32" height="32" rx="8" fill="#4f46e5"/>
+  <text x="32" y="34" font-family="system-ui,sans-serif" font-size="16" font-weight="800" fill="white" text-anchor="middle">L</text>
+  <text x="58" y="33" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#111827">LEDGIT</text>
+  <text x="116" y="33" font-family="system-ui,sans-serif" font-size="12" fill="#9ca3af">Verifiable Human-Authorized Audit Trails</text>
 
-  <!-- Agent header -->
-  <text x="30" y="100" font-family="system-ui,sans-serif" font-size="22" font-weight="700" fill="#111827">alice.ledgit.eth</text>
-  <text x="30" y="122" font-family="system-ui,sans-serif" font-size="13" fill="#9ca3af">Topic: </text><text x="72" y="122" font-family="monospace" font-size="13" fill="#9ca3af">0.0.9219676</text>
-  <text x="280" y="122" font-family="system-ui,sans-serif" font-size="12" fill="#d1d5db">·</text>
-  <text x="295" y="122" font-family="system-ui,sans-serif" font-size="13" fill="#9ca3af">15 actions</text>
+  <!-- Back link -->
+  <text x="30" y="85" font-family="system-ui,sans-serif" font-size="13" fill="#4f46e5" text-decoration="underline">&larr; All days</text>
 
-  <!-- Stats -->
-  <rect x="30" y="145" rx="999" width="60" height="24" fill="#fee2e2"/>
-  <text x="50" y="161" font-family="system-ui,sans-serif" font-size="11" font-weight="600" fill="#dc2626" text-anchor="middle">4 High</text>
-  <rect x="98" y="145" rx="999" width="68" height="24" fill="#fef3c7"/>
-  <text x="120" y="161" font-family="system-ui,sans-serif" font-size="11" font-weight="600" fill="#d97706" text-anchor="middle">2 Medium</text>
-  <rect x="174" y="145" rx="999" width="60" height="24" fill="#d1fae5"/>
-  <text x="194" y="161" font-family="system-ui,sans-serif" font-size="11" font-weight="600" fill="#059669" text-anchor="middle">9 Low</text>
+  <!-- Month + Day -->
+  <text x="30" y="118" font-family="system-ui,sans-serif" font-size="18" font-weight="700" fill="#374151">June 2026</text>
+  <text x="30" y="142" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="#6b7280">Saturday, June 13, 2026</text>
 
-  <!-- Enable Live Updates button -->
-  <rect x="1060" y="145" rx="999" width="120" height="24" fill="#f3f4f6"/>
-  <text x="1120" y="161" font-family="system-ui,sans-serif" font-size="11" font-weight="600" fill="#6b7280" text-anchor="middle">Enable Live Updates</text>
+  <!-- Action 11 — HIGH compliant (has sig), green border -->
+  <rect x="30" y="165" width="520" height="100" rx="12" fill="white" stroke="#34d399" stroke-width="2"/>
+  <rect x="30" y="165" width="6" height="100" rx="3" fill="#34d399"/>
+  <circle cx="50" cy="195" r="8" fill="#34d399" stroke="white" stroke-width="3"/>
+  <text x="50" y="190" font-family="monospace" font-size="11" fill="#6b7280" text-anchor="middle">#11</text>
+  <rect x="80" y="180" rx="999" width="55" height="22" fill="#fee2e2"/>
+  <text x="107" y="195" font-family="system-ui,sans-serif" font-size="10" font-weight="600" fill="#dc2626" text-anchor="middle">HIGH</text>
+  <text x="82" y="220" font-family="system-ui,sans-serif" font-size="12" fill="#6b7280">Jun 13, 2026, 01:08 PM</text>
+  <text x="82" y="240" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="#111827">Send 1 HBAR to 0.0.3568415 for demo</text>
+  <text x="82" y="258" font-family="system-ui,sans-serif" font-size="12" fill="#9ca3af">hbar_transfer · 03b825ce72ecb513</text>
+  <text x="82" y="275" font-family="system-ui,sans-serif" font-size="12" fill="#059669" font-weight="600">✓ Ledger Signature Verified</text>
 
-  <!-- Month header -->
-  <text x="30" y="205" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#374151">June 2026</text>
-  <line x1="30" y1="215" x2="600" y2="215" stroke="#e5e7eb" stroke-width="1"/>
+  <!-- Expanded detail for action 11 -->
+  <rect x="48" y="270" width="484" height="85" rx="8" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="66" y="292" font-family="system-ui,sans-serif" font-size="10" font-weight="600" fill="#9ca3af" letter-spacing="1">SIGNATURE</text>
+  <text x="66" y="307" font-family="monospace" font-size="11" fill="#6b7280">0x071ab67e24f8...</text>
+  <text x="66" y="325" font-family="system-ui,sans-serif" font-size="11" fill="#4f46e5" text-decoration="underline">Verify on Etherscan ↗</text>
+  <text x="300" y="292" font-family="system-ui,sans-serif" font-size="10" font-weight="600" fill="#9ca3af" letter-spacing="1">HCS TIMESTAMP</text>
+  <text x="300" y="307" font-family="monospace" font-size="11" fill="#6b7280">1781370528.552971039</text>
+  <text x="300" y="325" font-family="system-ui,sans-serif" font-size="11" fill="#4f46e5" text-decoration="underline">View on HashScan ↗</text>
 
-  <!-- Day card -->
-  <rect x="30" y="235" width="500" height="55" rx="12" fill="white" stroke="#e5e7eb" stroke-width="1"/>
-  <text x="50" y="262" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="#1f2937">Saturday, June 13, 2026</text>
-  <text x="460" y="262" font-family="system-ui,sans-serif" font-size="12" fill="#9ca3af">15 actions</text>
-  <rect x="50" y="272" rx="999" width="42" height="16" fill="#fee2e2"/>
-  <text x="62" y="284" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="#dc2626" text-anchor="middle">4 high</text>
-  <rect x="96" y="272" rx="999" width="52" height="16" fill="#fef3c7"/>
-  <text x="112" y="284" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="#d97706" text-anchor="middle">2 medium</text>
-  <rect x="152" y="272" rx="999" width="42" height="16" fill="#d1fae5"/>
-  <text x="164" y="284" font-family="system-ui,sans-serif" font-size="9" font-weight="600" fill="#059669" text-anchor="middle">9 low</text>
+  <!-- Action 14 — HIGH unverified (no sig), red dashed border + ⚠️ -->
+  <rect x="30" y="375" width="520" height="100" rx="12" fill="white" stroke="#f87171" stroke-width="2" stroke-dasharray="6,3"/>
+  <rect x="30" y="375" width="6" height="100" rx="3" fill="#f87171"/>
+  <circle cx="50" cy="405" r="8" fill="#f87171" stroke="white" stroke-width="3"/>
+  <text x="50" y="400" font-family="monospace" font-size="11" fill="#6b7280" text-anchor="middle">#14</text>
+  <rect x="80" y="390" rx="999" width="72" height="22" fill="#fee2e2"/>
+  <text x="116" y="405" font-family="system-ui,sans-serif" font-size="10" font-weight="600" fill="#dc2626" text-anchor="middle">HIGH ⚠️</text>
+  <text x="82" y="430" font-family="system-ui,sans-serif" font-size="12" fill="#6b7280">Jun 13, 2026, 01:10 PM</text>
+  <text x="82" y="450" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="#111827">Sent 0.01 HBAR to 0.0.3568415</text>
+  <text x="82" y="468" font-family="system-ui,sans-serif" font-size="12" fill="#9ca3af">hbar_transfer</text>
+  <text x="82" y="485" font-family="system-ui,sans-serif" font-size="12" fill="#dc2626" font-weight="600">⚠ Missing Signature</text>
 
-  <!-- Action card 11 (compliant high) -->
-  <rect x="60" y="310" width="460" height="90" rx="12" fill="white" stroke="#34d399" stroke-width="2" stroke-dasharray="0"/>
-  <rect x="60" y="310" width="6" height="90" rx="3" fill="#34d399"/>
-  <rect x="60" y="310" width="6" height="90" fill="#34d399"/>
-  <circle cx="80" cy="340" r="8" fill="#34d399"/>
-  <text x="80" y="335" font-family="monospace" font-size="11" fill="#9ca3af">#11</text>
-  <rect x="110" y="325" rx="999" width="55" height="20" fill="#fee2e2"/>
-  <text x="130" y="338" font-family="system-ui,sans-serif" font-size="10" font-weight="600" fill="#dc2626" text-anchor="middle">HIGH</text>
-  <text x="82" y="370" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#111827">Send 1 HBAR to 0.0.3568415 for demo</text>
-  <text x="82" y="388" font-family="system-ui,sans-serif" font-size="11" fill="#9ca3af">hbar_transfer · 03b825ce72ecb513</text>
-  <text x="82" y="408" font-family="system-ui,sans-serif" font-size="12" fill="#059669" font-weight="600">✅ Ledger Signature Verified</text>
+  <!-- Action 15 — MEDIUM compliant (has sig), green border -->
+  <rect x="30" y="490" width="520" height="100" rx="12" fill="white" stroke="#34d399" stroke-width="2"/>
+  <rect x="30" y="490" width="6" height="100" rx="3" fill="#34d399"/>
+  <circle cx="50" cy="520" r="8" fill="#34d399" stroke="white" stroke-width="3"/>
+  <text x="50" y="515" font-family="monospace" font-size="11" fill="#6b7280" text-anchor="middle">#15</text>
+  <rect x="80" y="505" rx="999" width="65" height="22" fill="#fef3c7"/>
+  <text x="112" y="520" font-family="system-ui,sans-serif" font-size="10" font-weight="600" fill="#d97706" text-anchor="middle">MEDIUM</text>
+  <text x="82" y="545" font-family="system-ui,sans-serif" font-size="12" fill="#6b7280">Jun 13, 2026, 01:12 PM</text>
+  <text x="82" y="565" font-family="system-ui,sans-serif" font-size="14" font-weight="600" fill="#111827">Called increment on 0.0.9224072</text>
+  <text x="82" y="583" font-family="system-ui,sans-serif" font-size="12" fill="#9ca3af">contract_call</text>
+  <text x="82" y="598" font-family="system-ui,sans-serif" font-size="12" fill="#059669" font-weight="600">✓ Ledger Signature Verified</text>
 
-  <!-- Action card 12 (compliant medium) -->
-  <rect x="60" y="420" width="460" height="90" rx="12" fill="white" stroke="#34d399" stroke-width="2"/>
-  <rect x="60" y="420" width="6" height="90" rx="3" fill="#34d399"/>
-  <circle cx="80" cy="450" r="8" fill="#34d399"/>
-  <text x="80" y="445" font-family="monospace" font-size="11" fill="#9ca3af">#15</text>
-  <rect x="110" y="435" rx="999" width="65" height="20" fill="#fef3c7"/>
-  <text x="136" y="448" font-family="system-ui,sans-serif" font-size="10" font-weight="600" fill="#d97706" text-anchor="middle">MEDIUM</text>
-  <text x="82" y="480" font-family="system-ui,sans-serif" font-size="13" font-weight="600" fill="#111827">Called increment on 0.0.9224072</text>
-  <text x="82" y="498" font-family="system-ui,sans-serif" font-size="11" fill="#9ca3af">contract_call</text>
-  <text x="82" y="515" font-family="system-ui,sans-serif" font-size="12" fill="#059669" font-weight="600">✅ Ledger Signature Verified</text>
+  <!-- Footer -->
+  <rect x="0" y="710" width="1200" height="40" fill="white" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="600" y="735" font-family="system-ui,sans-serif" font-size="11" fill="#9ca3af" text-anchor="middle">LEDGIT · ETHGlobal New York 2026 · Ledger · Hedera · ENS</text>
 </svg>
