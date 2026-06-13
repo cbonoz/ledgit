@@ -60,28 +60,34 @@
   <text x="180" y="315" class="sub" text-anchor="middle">Consensus timestamps</text>
 
   <!-- HBAR Payment Box -->
-  <rect x="340" y="250" width="240" height="90" class="box"/>
-  <text x="460" y="280" class="label" text-anchor="middle">💸 HBAR Transfer</text>
-  <text x="460" y="300" class="sub" text-anchor="middle">TransferTransaction</text>
-  <text x="460" y="315" class="sub" text-anchor="middle">Sub-second finality</text>
+  <rect x="340" y="250" width="170" height="90" class="box"/>
+  <text x="425" y="280" class="label" text-anchor="middle">💸 HBAR Transfer</text>
+  <text x="425" y="300" class="sub" text-anchor="middle">TransferTransaction</text>
+  <text x="425" y="315" class="sub" text-anchor="middle">Sub-second finality</text>
+
+  <!-- Custom Action Box (new) -->
+  <rect x="530" y="250" width="170" height="90" class="box" stroke="#f59e0b" stroke-dasharray="5,3"/>
+  <text x="615" y="278" class="label" text-anchor="middle" fill="#d97706">⚙️ Custom Action</text>
+  <text x="615" y="296" class="sub" text-anchor="middle">Configurable in</text>
+  <text x="615" y="313" class="sub" text-anchor="middle">.ledgit/config.json</text>
 
   <!-- Destination Contract Box (generic) -->
-  <rect x="620" y="250" width="220" height="90" class="box"/>
-  <text x="730" y="278" class="label" text-anchor="middle">📄 Any Smart Contract</text>
-  <text x="730" y="296" class="sub" text-anchor="middle">EVM or native</text>
-  <text x="730" y="313" class="sub" text-anchor="middle">ContractExecuteTransaction</text>
-
-  <!-- Arrow CLI → HCS -->
-  <line x1="380" y1="170" x2="160" y2="245" class="arrow-bold"/>
-  <text x="240" y="210" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">submitMessage()</text>
+  <rect x="720" y="250" width="150" height="90" class="box"/>
+  <text x="795" y="278" class="label" text-anchor="middle">📄 Any Contract</text>
+  <text x="795" y="296" class="sub" text-anchor="middle">EVM or native</text>
+  <text x="795" y="313" class="sub" text-anchor="middle">ContractExecuteTx</text>
 
   <!-- Arrow CLI → HBAR -->
-  <line x1="430" y1="170" x2="460" y2="245" class="arrow-bold"/>
-  <text x="480" y="210" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">transferHbar()</text>
+  <line x1="430" y1="170" x2="425" y2="245" class="arrow-bold"/>
+  <text x="470" y="210" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">transferHbar()</text>
+
+  <!-- Arrow CLI → Custom Action -->
+  <line x1="440" y1="170" x2="580" y2="245" class="arrow"/>
+  <text x="515" y="210" class="sub" font-size="10" text-anchor="middle">propose</text>
 
   <!-- Arrow CLI → Contract -->
-  <line x1="480" y1="170" x2="700" y2="245" class="arrow"/>
-  <text x="595" y="210" class="sub" font-size="10" text-anchor="middle">contractCall()</text>
+  <line x1="470" y1="170" x2="770" y2="245" class="arrow"/>
+  <text x="625" y="195" class="sub" font-size="10" text-anchor="middle">contractCall()</text>
 
   <!-- Mirror Node Box -->
   <rect x="340" y="420" width="240" height="80" class="box"/>
@@ -101,15 +107,6 @@
 
   <!-- Arrow HCS → Mirror Node -->
   <line x1="180" y1="340" x2="400" y2="415" class="arrow"/>
-
-  <!-- Arrow Mirror Node → Dashboard -->
-  <line x1="340" y1="460" x2="285" y2="460" class="arrow"/>
-
-  <!-- Arrow Mirror Node → ENS (fixed alignment) -->
-  <line x1="585" y1="460" x2="615" y2="460" class="arrow"/>
-
-  <!-- Arrow ENS → Mirror Node (ENS resolves topic, mirror queries it) -->
-  <path d="M 730 420 L 730 395 L 460 395 L 460 415" class="arrow" stroke-dasharray="4,3"/>
 
   <!-- Verified badge - wider and taller -->
   <rect x="200" y="555" width="500" height="50" rx="10" fill="#d1fae5" stroke="#34d399" stroke-width="1.5"/>
