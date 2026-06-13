@@ -1,201 +1,246 @@
-# LEDGIT · Demo Script
+# LEDGIT · Live Demo Script
 
-> One of your AI agents just moved real money… can you prove a human authorized it?
+> Follow this on your machine. The AI runs the CLI autonomously — you just
+> review and approve on your Ledger when prompted.
 
-## The Scenario
+## The Setup
 
-A fintech runs 3 trading agents — `alice`, `bob`, and `charlie` — each managing
-different portfolios. The compliance officer needs to prove to auditors that
-*every* trade was human-authorized.
+Acme Corp runs several AI agents to manage their treasury. Each agent has an ENS
+name — human-readable, traceable, tied to their role.
 
-Without LEDGIT, she'd sift through 3 separate bot logs with inconsistent
-formats, missing signatures, and no way to prove the records weren't tampered
-with. With LEDGIT, every agent produces a uniform, verifiable, self-discoverable
-audit trail. Agents use the ENS name their operator assigned them — LEDGIT works
-with any ENS name you own, no subname service needed.
+**Alice** (`alice.ledgit.eth`) executes trades.
+**Bob** (`bob.ledgit.eth`) handles vendor payments.
+**Charlie** (`charlie.ledgit.eth`) manages permissions.
+
+The compliance officer needs one thing: *proof that a human authorized every action.*
+Without LEDGIT, she gets inconsistent bot logs. With it, she gets a uniform,
+verifiable trail for every agent.
 
 ---
 
-## Step 1: See Available Actions (15 sec)
+## Before Judges Arrive
+
+```bash
+# Terminal 1: Start the dashboard
+cd dashboard && bun run dev
+
+# Terminal 2: Confirm CLI is installed
+ledgit --version
+```
+
+---
+
+## Step 1 — See What's Available (30s)
+
+**You say:** *"Let's see what actions agents can perform."*
 
 ```bash
 ledgit actions list
 ```
 
+**Expected output:**
 ```
   🔴 USDC Transfer (usdc_transfer)
-     Send {amount} USDC to {to} for {reason}
-     Fields: amount, to, reason
-
   🔴 Token Swap (token_swap)
-     Swap {amountIn} {tokenIn} for {tokenOut} on {dex}
-     Fields: amountIn, tokenIn, tokenOut, dex
-
   🟡 Grant Role (grant_role)
-     ...
+  🟡 Update Agent Config (update_agent_config)
 ```
 
-**Say:** *"Each action type is defined in a config file — required fields,
-templates, risk levels. Agents discover available actions dynamically. Adding a
-new action type is a JSON change, not a code change."*
+**You say:** *"Each action type has required fields, a description template, and a risk level. The config file defines them — adding a new action type is a JSON change, not a code change."*
 
 ---
 
-## Step 2: Agent Proposes (20 sec)
+## Step 2 — Agent Proposes an Action (30s)
+
+**Set the scene:** *"Alice — one of our trading agents — wants to send 1 testnet HBAR to a vendor. She calls propose to log the intent for the audit trail."*
 
 ```bash
 ledgit propose \
-  --agent alice.ledgit.eth \
-  --type token_swap \
-  --fields '{"amountIn":"10000","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
+  --type usdc_transfer \
+  --fields '{"amount":"1","to":"0.0.RECIPIENT","reason":"test payment"}'
 ```
 
+**Expected output:**
 ```
   Action Proposal (HIGH RISK)
   ───────────────────────────────
   Agent:       alice.ledgit.eth
-  Type:        token_swap
-  Description: Swap 10000 USDC for ETH on Uniswap
-  Payload:     {"amountIn":"10000",...}
-  Timestamp:   2026-06-13T13:52:40.000Z
-
-  Action ID: 7b8a94dc767086fc
+  Type:        usdc_transfer
+  Description: Send 1 testnet HBAR to 0.0.RECIPIENT for test payment
+  Action ID:   df1caafa99360951
 ```
 
-**Say:** *"The agent proposes a specific trade. The CLI auto-generates the
-description from the config template, validates every required field is present,
-and flags the risk level. The human sees exactly what they're approving."*
+**You say:** *"The propose step logs the intent for the compliance trail. The actual HBAR transfer will happen when the human approves."*
 
 ---
 
-## Step 3: Human Approves on Ledger (20 sec)
+## Step 3 — Human Approves & HBAR Moves (30s)
+
+**You say:** *"The proposal is logged. Now I approve on my Ledger, and the HBAR transfer executes."*
 
 ```bash
-ledgit record 7b8a94dc767086fc
+# Record the action → human signs on Ledger
+ledgit record df1caafa99360951
+
+# Then execute the real HBAR transfer
+ledgit send 0.0.RECIPIENT 1
 ```
 
-```
-  ✅ Connected to Ledger (USB)
-  Agent:       alice.ledgit.eth
-  HCS Topic:   0.0.9219676
-  Description: Swap 10000 USDC for ETH on Uniswap
-  Type:        token_swap
-  Risk:        high
+**On your Ledger Stax:** Review the action details. **Press Approve.**
 
-  ⏳ Requesting signature on Ledger...
+**Expected output:**
+```
   ✅ Signature obtained from Ledger
-  Signature:   0xead9209f36ca017f46237e2b50da385f...
+  Signature:   0xf126cb285d68...
 
-  ⏳ Submitting to Hedera HCS...
   ✅ Recorded on Hedera HCS
-  Sequence:    2
-  Timestamp:   2026-06-13T13:51:45.000Z
+  Sequence:    6
+
+  ✅ Transfer complete
+  Status:      SUCCESS
+  View on HashScan https://hashscan.io/testnet/transaction/...
 ```
 
-**Say (hold up the Ledger):** *"The human reviews the action *on the device* and
-presses approve. The cryptographic signature proves a real person authorized
-this — not a bot, not a replay. The signed action is then submitted to Hedera
-HCS with a network-verified timestamp and sequence number."*
+**You say:** *"The signature is captured, the action is recorded on HCS, and the HBAR actually moved. Two proofs in one flow — the audit trail and the execution."*
 
 ---
 
-## Step 4: Verify Any Agent's Trail (15 sec)
+## Step 3b — What If the Human Says No? (15s)
+
+**You say:** *"What if Alice proposes something the human shouldn't approve?"*
+
+```bash
+ledgit propose \
+  --type usdc_transfer \
+  --fields '{"amount":"10000","to":"0xUnknown","reason":"suspicious"}'
+```
+
+**Expected output:**
+```
+  Action Proposal (HIGH RISK)
+  Action ID:   8a4f3e2c1b5d7e9f
+```
+
+Now run record — **press Reject on your Ledger** when prompted:
+
+```bash
+ledgit record 8a4f3e2c1b5d7e9f
+```
+
+**Expected output:**
+```
+  ✖ User rejected the signing request on Ledger. Aborting.
+```
+
+**You say:** *"If the human rejects on the Ledger, the action doesn't execute. No HCS record, no payment, nothing. The hardware guarantees the human must actively approve — there's no 'auto-approve' bypass."*
+
+Verify it never appeared:
+
+```bash
+ledgit verify alice.ledgit.eth
+# Shows same actions as before. Rejected action is not recorded.
+```
+
+**You say:** *"Only approved actions make it to the immutable audit trail. Rejected actions leave no trace — exactly what compliance wants."*
+
+---
+
+## Step 4 — View the Audit Trail (30s)
 
 ```bash
 ledgit verify alice.ledgit.eth
 ```
 
+**Expected output:**
 ```
   Audit Trail: alice.ledgit.eth
-  ───────────────────────────────
   Topic:       0.0.9219676
+
+  ── Action #2 ──  🔴 HIGH
+  Description: Swap 10000 USDC for ETH on Uniswap
+  Signature:   0xead9209f36ca... ✅ Ledger Signed
+
+  ── Action #1 ──
+  Signature:   0x760c44bec2...
 
   Links:
   HashScan     https://hashscan.io/testnet/topic/0.0.9219676
   Dashboard    https://ledgitdash.vercel.app/alice-ledgit-eth
 
-  ── Action #3 ──  🔴 HIGH
-  Timestamp:   2026-06-13T13:55:45
-  Description: Send 2500 USDC to 0xVendor for invoice payment
-  Type:        usdc_transfer
-  Signature:   0x30c71ccb3787... ✅ Ledger Signed
-
-  ── Action #2 ──  🔴 HIGH
-  Timestamp:   2026-06-13T13:51:45
-  Description: Swap 10000 USDC for ETH on Uniswap
-  Type:        token_swap
-  Signature:   0xead9209f36ca... ✅ Ledger Signed
-
-  ✅ 3 action(s) recorded
+  ✅ 2 action(s) recorded
 ```
 
-**Say:** *"Same command, same format, every agent. Whether you have 3 agents or
-300, the compliance officer gets a uniform, ordered, verifiable trail for every
-single one. The ENS text record points to the HCS topic — no config needed."*
+**You say:** *"Every action is ordered by sequence number with a consensus timestamp. Each entry includes the cryptographic signature from the Ledger. You can click the links to see the raw data on HashScan or the visual dashboard."*
 
 ---
 
-## Step 5: Dashboard (15 sec)
+## Step 5 — Dashboard (30s)
 
 ```bash
 ledgit dashboard alice.ledgit.eth
 ```
 
-Opens `https://ledgitdash.vercel.app` — a visual timeline with
-color-coded risk levels, clickable payload details, and signature badges.
+Opens your browser. Click on **Saturday, June 13** to see today's actions.
 
-**Say:** *"Same data, two views — terminal for agents, browser for stakeholders.
-Both pull from the same immutable HCS topic."*
+**You say:** *"Same data, two views — terminal for agents, browser for stakeholders. Both pull from the same immutable HCS topic. The "Go Live" button polls for new actions in real-time."*
 
 ---
 
-## Step 6: Send Real Value (15 sec)
+## Step 6 — Send Real Value (15s)
 
 ```bash
-ledgit send 0.0.5698412 1
+ledgit send 0.0.3568415 1
 ```
 
+**Expected output:**
 ```
   ✅ Transfer complete
   Tx ID:     0.0.3568415@1781314810.626823782
   Status:    SUCCESS
+  View on HashScan https://hashscan.io/testnet/transaction/...
 ```
 
-**Say:** *"LEDGIT doesn't just record actions — it executes them on Hedera.
-The same flow handles the audit trail AND the actual payment."*
+**You say:** *"LEDGIT doesn't just record actions — it executes them on Hedera. The audit trail AND the payment in one flow."*
 
 ---
 
-## 90-Second Demo Flow
+## Step 7 — The Rogue Action (optional, 30s)
 
-| Time | Step | Visual |
-|------|------|--------|
-| :00 | `ledgit actions list` | Configurable action types |
-| :15 | `ledgit propose --type token_swap --fields '{...}'` | Proposal with risk badge |
-| :35 | `ledgit record <id>` | Ledger approval → HCS submission |
-| :55 | `ledgit verify alice.ledgit.eth` | Ordered trail with signatures |
-| :70 | `ledgit dashboard alice.ledgit.eth` | Browser opens visual timeline |
-| :85 | `ledgit send 0.0.5698412 1` | Real HBAR payment executes |
-| :90 | Wrap — *"Prove a human authorized every action."* |
+**You say:** *"What happens if an agent acts without human approval?"*
+
+```bash
+# This sends HBAR directly — no proposal, no Ledger
+ledgit send 0.0.EVIL_ADDRESS 10000
+```
+
+**You say:** *"Now look at the audit trail — there's no record of this on HCS because it skipped LEDGIT entirely. The compliance officer sees the legitimate actions with signatures and this payment doesn't appear at all. That's the red flag."*
+
+```bash
+ledgit verify alice.ledgit.eth
+# Shows: only the 2 approved actions. Rogue payment is invisible.
+```
+
+**You say:** *"Every action not recorded on HCS is invisible to auditors. That's why you want every action going through LEDGIT — so nothing slips through."*
 
 ---
 
 ## Judge Talking Points
 
-**The problem is real and growing:**
-- AI agents are moving real money. Regulated companies cannot deploy them
-  without proving human oversight.
-- Existing audit trails are ad-hoc, inconsistent, and missing critical data.
-- Every agent team will need this — it's a $0 market today.
+**The problem:**
+- AI agents are moving real money. Regulated companies need to prove human oversight.
+- Existing logs are ad-hoc, easy to tamper, and inconsistent across agents.
 
-**Why LEDGIT wins:**
-- **Ledger:** Hardware proof of human approval, not just a log line
-- **Hedera HCS:** Immutable ordering with network-verified timestamps
-- **ENS:** Bring your own name — no subname service or platform dependency
+**The solution in 3 sentences:**
+- Agent proposes → human approves on Ledger → proof stored immutably on Hedera HCS.
+- Anyone resolves the ENS name to see the complete, verifiable history.
+- No config needed — the name IS the lookup.
+
+**Why we win:**
+- **Ledger:** Hardware proof of human approval — not a log line, not a checkbox
+- **Hedera:** Immutable ordering with sub-second finality and sub-cent fees
+- **ENS:** Bring your own name — no platform dependency, no subname service
 - **Configurable schemas:** Standardized audit format regardless of action type
-- **CLI-first:** Designed for agents to call, humans to review
+- **CLI-first:** Agents call it, humans review it, judges see it in 90 seconds
 
 **Scale argument:**
-*"Without LEDGIT, 10 agents means 10 different audit formats. With LEDGIT, 300
-agents means 300 uniform, verifiable, self-discoverable trails — one command
-away."*
+*"Without LEDGIT, 10 agents means 10 different audit formats. With LEDGIT, 300 agents means 300 uniform, verifiable trails — one command away."*
