@@ -86,6 +86,32 @@ ledgit send 0.0.RECIPIENT 1
 
 ---
 
+## Configuration
+
+Action types are defined in `.ledgit/config.json`. The defaults include USDC Transfer, Token Swap, Grant Role, and Update Agent Config — each with required fields, risk level, and a description template.
+
+To create the file:
+```bash
+ledgit actions init-config
+```
+
+To add or modify types, edit `.ledgit/config.json`:
+```json
+{
+  "actions": [
+    {
+      "type": "my_custom_action",
+      "label": "My Custom Action",
+      "descriptionTemplate": "Execute {param} on {target}",
+      "fields": ["param", "target"],
+      "riskLevel": "medium"
+    }
+  ]
+}
+```
+
+Agents discover available types dynamically via `ledgit actions list --json`. Adding a new action type is a JSON change, not a code change.
+
 ## Commands
 
 | Command | Description |

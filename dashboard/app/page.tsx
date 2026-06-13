@@ -66,7 +66,7 @@ export default function Home() {
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">3.</span>
-                <span>Discover actions: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code></span>
+                <span>Discover actions: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code> returns the available types, required fields, and risk levels</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">4.</span>
@@ -75,6 +75,9 @@ export default function Home() {
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">5.</span>
                 <span>Wait for human approval, then verify: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify your-name.ledgit.eth</code></span>
+              </li>
+              <li className="mt-3 pt-3 border-t border-indigo-200 text-xs text-indigo-600">
+                <strong>Config note:</strong> Action types are defined in <code className="bg-indigo-100 px-1 rounded text-xs">.ledgit/config.json</code>. Your operator edits this file to add or modify types — no code changes needed.
               </li>
             </ol>
           </div>
