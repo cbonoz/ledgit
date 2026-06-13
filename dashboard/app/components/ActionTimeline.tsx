@@ -23,6 +23,7 @@ interface Props {
     generatedAt: string
     actions: Action[]
   }
+  etherscanUrl?: string
 }
 
 const riskColor = (level?: string) => {
@@ -83,7 +84,7 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
         <div className={`w-2 h-2 rounded-full ${color.dot}`} />
       </div>
       <div
-        className={`${color.bg} border-l-4 ${rogueHigh ? "border-red-500 border-dashed" : color.border} rounded-r-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer`}
+        className={`${color.bg} border-l-4 ${rogueHigh ? `${color.border} border-dashed` : color.border} rounded-r-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer`}
         onClick={() => setOpen(!open)}
       >
         <div className="flex items-center justify-between mb-1">
@@ -132,7 +133,7 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">Signature</span>
               <p className="font-mono text-xs text-gray-600 break-all mt-0.5">{sigShort}</p>
               {hasSig && (
-                <a href={`https://etherscan.io/verifiedSignatures?q=${action.signature}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block">
+                <a href={`${etherscanUrl}/verifiedSignatures?q=${action.signature}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block">
                   Verify on Etherscan ↗
                 </a>
               )}
@@ -159,7 +160,7 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
   )
 }
 
-export default function ActionTimeline({ data }: Props) {
+export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.etherscan.io" }: Props) {
   const [live, setLive] = useState(false)
   const [actions, setActions] = useState<Action[]>(data.actions)
   const [selectedDate, setSelectedDate] = useState<string | null>(() => {
