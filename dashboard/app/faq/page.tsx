@@ -45,6 +45,10 @@ const faqs = [
     q: "How is encryption handled?",
     a: "Set ENCRYPTION_KEY (64 hex chars) in your .env. Actions submitted after that are encrypted with AES-256-GCM before HCS submission. Sequence numbers and timestamps remain public; content is private to key holders. The dashboard shows 🔒 Encrypted if the key isn't available.",
   },
+  {
+    q: "How does LEDGIT compare to the Hedera Agent Kit?",
+    a: "The Hedera Agent Kit is a LangChain toolkit for Hedera operations (transfers, tokens, HCS messaging). LEDGIT is the human-in-the-loop audit layer. The Agent Kit returns unsigned bytes for human approval — you figure out signing. LEDGIT sends actions directly to a Ledger device for one-button hardware approval, then records the signed proof to HCS with risk levels and ENS identity. They're complementary: use the Agent Kit for agent framework integration and LEDGIT for hardware signing and audit. See the full comparison in the README.",
+  },
 ]
 
 export default function FAQPage() {
