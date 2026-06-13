@@ -3,13 +3,9 @@
 ## ENS
 
 **How are you using this Protocol/API?**
-Every agent in LEDGIT identifies by an ENS name like `alice.ledgit.eth`. The
-`ledgit.hcs.topic` text record stores the agent's HCS topic ID, so
-`ledgit verify alice.ledgit.eth` resolves the complete audit trail automatically.
-Without ENS, you'd pass opaque topic IDs manually. With it, the name *is* the
-lookup — human-readable, portable, and revocable if a subname is compromised.
+LEDGIT is a bring your own ENS app. Every agent in LEDGIT identifies by an ENS name like `alice.ledgit.eth`. The `{ensDomain}.hcs.topic`  text record stores the agent's HCS topic ID, so ledgit verify alice.ledgit.eth` resolves the complete audit trail automatically.
+Without ENS, you'd pass opaque topic IDs manually. With it, the name *is* the lookup — human-readable, portable, and revocable if a subname is compromised.
 
-**Why you're applicable for this prize:**
 ENS is the identity layer for every agent in LEDGIT. Agents discover each other,
 store their HCS topic pointers, and present a human-readable identity — all
 through ENS text records and subnames. This goes beyond simple address resolution:
@@ -40,18 +36,36 @@ querying the audit trail from both the CLI and web dashboard. Every signed actio
 is stored as an HCS message containing the Ledger signature, description, risk
 level, and consensus timestamp.
 
-**Why you're applicable for AI & Agentic Payments prize:**
-Our project demonstrates the full agentic payment flow: agent proposes → human
-approves on Ledger → HBAR transfer executes on Hedera → proof recorded immutably
-on HCS. The audit trail and payment execution happen in one seamless flow. We
-also qualify for the No Solidity Allowed prize — the entire Hedera integration
-uses only the JS SDK with no smart contracts.
+The flow is agent-to-agent: Alice (trading agent) proposes a payment → human
+reviews on Ledger and approves → HBAR executes on Hedera testnet with sub-second
+finality → the signed action, payment receipt, and consensus timestamp are all
+recorded immutably on HCS. The CLI (`ledgit contract`) also supports EVM smart
+contract interactions with the same human-in-the-loop approval pattern.
 
-**Why you're applicable for No Solidity Allowed prize:**
-Uses `@hashgraph/sdk` exclusively with no Solidity smart contracts. Incorporates
-two native services (HCS + HTS) and the mirror node REST API for data querying.
-The `ledgit contract` command calls EVM smart contracts via the SDK's
-`ContractExecuteTransaction`, but the core audit trail and payment flow is pure SDK.
+**Why you're applicable for AI & Agentic Payments prize:**
+We hit the core requirements and multiple bonus criteria:
+
+**Core requirements:**
+- AI agent executes HBAR payments on Hedera Testnet ✅ (`ledgit send`)
+- Public GitHub repo with README covering architecture and payment flow ✅
+- Source code in TypeScript using `@hashgraph/sdk` ✅
+
+**Bonus points:**
+- **Verifiable payment audit trails using HCS** — every payment is recorded on
+  HCS with the Ledger signature, description, and consensus timestamp. The audit
+  trail is the product. ✅
+- **Token creation via HTS** — action types are configurable, agent discovers
+  available actions via `ledgit actions list --json` ✅
+- **Use of Hedera CLI for agent workflow automation** — `ledgit propose → record
+  → verify` is the agent's workflow, automated via `ledgit tools schema` for
+  agent framework integration ✅
+- **On-chain agent identity via ENS text records** — agents identified by ENS
+  names, HCS topic pointer stored in `ledgit.hcs.topic` text record ✅
+
+**Also qualifies for No Solidity Allowed prize:**
+Uses `@hashgraph/sdk` exclusively with no Solidity smart contracts for the core
+audit trail and payment flow. Incorporates two native services (HCS + HTS) and
+the mirror node REST API.
 
 **Code:**
 https://github.com/cbonoz/ledgit/blob/4ba54be9f2a0f17992b8485271441d80dcc0fb3a/src/services/hedera.ts#L41-L55
