@@ -3,6 +3,10 @@ import { join } from "node:path"
 import { createHash } from "node:crypto"
 import type { ActionProposal } from "../types.js"
 import { getActionConfig, fillTemplate, validateFields, requireAgent, getDefaultAgent } from "../services/config.js"
+import { submitMessage } from "../services/hedera.js"
+import { connectLedger, signWithLedger } from "../services/ledger.js"
+import { getLatestHcsTopicId, setEnsTextRecord } from "../services/ens.js"
+import { encrypt } from "../services/crypto.js"
 import * as out from "../services/output.js"
 
 const PROPOSALS_DIR = join(process.cwd(), ".ledgit", "proposals")
@@ -63,14 +67,15 @@ export async function propose(
   description = description || `Action of type '${type}'`
 
   const proposal: ActionProposal = {
-    agent,
+    agent: resolvedAgent,
     type,
     description,
     payload: payloadObj,
     timestamp: Date.now(),
   }
 
-  const riskLabel = actionConfig ? ` (${actionConfig.riskLevel.toUpperCase()} RISK)` : ""
+  const riskLevel = actionConfig?.riskLevel || "low"
+  const riskLabel = actionConfig ? ` (${riskLevel.toUpperCase()} RISK)` : ""
   out.heading("Action Proposal" + riskLabel)
   out.keyValue("Agent", proposal.agent)
   out.keyValue("Type", proposal.type)
@@ -81,8 +86,59 @@ export async function propose(
   out.divider()
 
   const actionId = createHash("sha256").update(JSON.stringify(proposal)).digest("hex").slice(0, 16)
-  saveProposal(actionId, proposal, actionConfig?.riskLevel)
+  saveProposal(actionId, proposal, riskLevel)
   out.keyValue("Action ID", actionId)
-  out.hint("Next step: ledgit record " + actionId)
+  out.divider()
+
+  // --- Now sign and submit to HCS ---
+
+  const topicId =
+    (await getLatestHcsTopicId(resolvedAgent)) || process.env.LEDGIT_TOPIC_ID
+  if (!topicId) {
+    out.error("No HCS topic found. Use 'ledgit init --agent <name>' to create one.")
+    process.exit(1)
+  }
+
+  const msgPayload = JSON.stringify({ actionId, agent: resolvedAgent, timestamp: Date.now() })
+  const messageHex = Buffer.from(msgPayload).toString("hex")
+
+  let signature: string
+  if (riskLevel === "low") {
+    out.info("Low risk action — no hardware signing required")
+    signature = "0x" + createHash("sha256").update(Buffer.from(messageHex, "hex")).digest("hex") + "".padStart(64, "f")
+  } else {
+    out.step("Requesting signature on Ledger")
+    await connectLedger()
+    signature = await signWithLedger(messageHex)
+  }
+  out.keyValue("Signature", signature.slice(0, 42) + "...")
+  out.divider()
+
+  const recordPayload = JSON.stringify({
+    actionId,
+    agent: resolvedAgent,
+    signature,
+    signedMessage: messageHex,
+    ledgerSigned: riskLevel !== "low",
+    description,
+    type,
+    riskLevel,
+    payload: JSON.stringify(payloadObj),
+    recordedAt: Date.now(),
+  })
+
+  const useEncryption = !!process.env.ENCRYPTION_KEY
+  const finalMessage = useEncryption ? encrypt(recordPayload) : recordPayload
+  if (useEncryption) out.info("Encrypting payload with ENCRYPTION_KEY")
+
+  out.step("Submitting to Hedera HCS")
+  const result = await submitMessage(topicId, finalMessage)
+  out.success("Recorded on Hedera HCS")
+  out.keyValue("Sequence", result.sequenceNumber)
+  out.keyValue("Timestamp", result.timestamp)
+  out.divider()
+
+  await setEnsTextRecord(resolvedAgent, "ledgit.hcs.sequence", String(result.sequenceNumber))
+  out.hint("View: ledgit verify " + resolvedAgent)
   out.divider()
 }

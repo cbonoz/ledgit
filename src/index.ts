@@ -38,7 +38,7 @@ program
 
 program
   .command("propose")
-  .description("Propose a new agent action for human review")
+  .description("Propose an action, sign on Ledger, and record to HCS (all-in-one)")
   .option("--agent <ens>", "Agent ENS name (defaults to LEDGIT_AGENT in .env)")
   .requiredOption("--type <type>", "Action type (e.g. hbar_transfer, token_swap)")
   .option("--description <text>", "Human-readable description (auto-generated from template if omitted)")
@@ -50,8 +50,8 @@ program
 
 program
   .command("record")
-  .description("Sign a proposed action and record it on Hedera HCS")
-  .argument("[action-id]", "Action ID from propose (auto-detects latest if omitted)")
+  .description("Manually record a previously proposed action")
+  .argument("[action-id]", "Action ID (auto-detects latest if omitted)")
   .action(async (actionId) => {
     await record(actionId)
   })
@@ -175,6 +175,7 @@ program
       const execRecord = JSON.stringify({
         type: "contract_call",
         description: `Called ${functionName} on ${contractId}`,
+        riskLevel: "medium",
         agent,
         contractId,
         function: functionName,
