@@ -162,12 +162,12 @@ are metadata captured for the audit record. Actual value transfer happens via
 Default types include USDC Transfer, Token Swap, Grant Role, and Update Agent
 Config — each with required fields, risk level, and a description template.
 
-To create the file:
+To create the file (writes to `~/.ledgit/config.json`):
 ```bash
 ledgit actions init-config
 ```
 
-To add or modify types, edit `.ledgit/config.json`:
+To add or modify types, edit `~/.ledgit/config.json`:
 ```json
 {
   "actions": [
