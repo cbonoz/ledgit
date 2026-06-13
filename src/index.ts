@@ -74,7 +74,7 @@ program
   .action(async (actionId: string, opts) => {
     const agent = opts.agent || getDefaultAgent()
     if (!agent) {
-      out.error("No agent configured. Pass --agent <name> or set LEDGIT_AGENT in .env")
+      out.error("No agent configured. Pass --agent <name>, add one to .ledgit/config.json, or set LEDGIT_AGENT in .env")
       process.exit(1)
     }
     await verifySig(agent, actionId)
