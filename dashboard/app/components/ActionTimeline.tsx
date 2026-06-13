@@ -67,7 +67,7 @@ function parseMessage(raw: string): Partial<Action> {
   return entry
 }
 
-function ActionCard({ action, topicId, etherscanUrl }: { action: Action; topicId: string; etherscanUrl: string }) {
+function ActionCard({ action }: { action: Action }) {
   const [open, setOpen] = useState(false)
   const seconds = Number(action.consensusTimestamp.split(".")[0])
   const ts = new Date(seconds * 1000).toLocaleString("en-US", {
@@ -134,16 +134,11 @@ function ActionCard({ action, topicId, etherscanUrl }: { action: Action; topicId
             <div>
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">Signature</span>
               <p className="font-mono text-xs text-gray-600 break-all mt-0.5">{sigShort}</p>
-              {hasSig && (
-                <a href={`${etherscanUrl}/verifiedSignatures?q=${action.signature}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block">
-                  Verify on Etherscan ↗
-                </a>
-              )}
             </div>
             <div>
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">HCS Timestamp</span>
               <p className="font-mono text-xs text-gray-600 mt-0.5">{action.consensusTimestamp}</p>
-              <a href={`https://hashscan.io/testnet/topic/${topicId}/${action.sequenceNumber}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block">
+              <a href={`https://hashscan.io/testnet/transaction/${action.consensusTimestamp}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block">
                 View on HashScan ↗
               </a>
             </div>
@@ -299,7 +294,7 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
                 )}
                 <div>
                   {day.actions.map((action) => (
-                    <ActionCard key={action.sequenceNumber} action={action} topicId={topicId} etherscanUrl={etherscanUrl} />
+                    <ActionCard key={action.sequenceNumber} action={action} />
                   ))}
                 </div>
               </div>

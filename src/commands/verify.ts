@@ -19,7 +19,7 @@ export async function verify(agentEns: string): Promise<void> {
 
   out.keyValue("Topic", topicId)
   out.info("Links:")
-  out.keyValue("HashScan Topic", `${getHashscanUrl()}/topic/${topicId}`)
+  out.keyValue("HashScan Topic", `${getHashscanUrl()}/topic/${topicId}/messages`)
   out.keyValue("Mirror Node", `${getMirrorNodeUrl()}/api/v1/topics/${topicId}/messages`)
   out.keyValue("ENS Profile", getEnsAppUrl(agentEns))
   out.keyValue("Dashboard", `https://ledgitdash.vercel.app/${agentEns}`)
@@ -88,7 +88,7 @@ export async function verify(agentEns: string): Promise<void> {
       if (type) out.keyValue("Type", type)
       out.keyValue("Risk", (risk || (type && DEFAULT_RISK[type]) || "low").toUpperCase())
     }
-    out.keyValue("View on HashScan", `${getHashscanUrl()}/topic/${topicId}/${msg.sequenceNumber}`)
+    out.keyValue("View on HashScan", `${getHashscanUrl()}/transaction/${msg.consensusTimestamp}`)
     out.divider()
   }
 
