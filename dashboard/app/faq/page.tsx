@@ -51,7 +51,7 @@ const faqs = [
   },
   {
     q: "How does LEDGIT compare to existing audit approaches?",
-    a: <>Most audit approaches weren't designed for autonomous agents. Basic logs can be faked or deleted and provide no cryptographic proof. Software prompts ("Are you sure?") can be automated or bypassed by the agent. Multi-sig wallets are designed for humans, not agents, and provide no audit trail of why an action was approved. Blockchain explorers show raw transactions but not the human reasoning or approval context. LEDGIT addresses all of these: hardware-backed signing proves human intent, HCS provides immutable ordered records, and ENS names give agents human-readable, discoverable identities with full approval context.</>,
+    a: <>Most audit approaches weren't designed for autonomous agents. Basic logs can be faked or deleted and provide no cryptographic proof. Software prompts ("Are you sure?") can be automated or bypassed by the agent. Multi-sig wallets are designed for humans, not agents, and provide no audit trail of why an action was approved. Blockchain explorers show raw transactions but not the human reasoning or approval context. Agentic logging platforms (LangSmith, Weights and Biases, MLflow) track prompt inputs and outputs but don't provide hardware-backed human approval, immutable record-keeping, or on-chain agent identity. LEDGIT addresses all of these: hardware-backed signing proves human intent, HCS provides immutable ordered records, and ENS names give agents human-readable, discoverable identities with full approval context.</>,
   },
 ]
 
