@@ -1,6 +1,7 @@
 import { submitMessage } from "../services/hedera.js"
 import { signWithLedger } from "../services/ledger.js"
 import { getLatestHcsTopicId, setEnsTextRecord } from "../services/ens.js"
+import { encrypt } from "../services/crypto.js"
 import * as out from "../services/output.js"
 
 export async function record(actionId: string): Promise<void> {
@@ -36,8 +37,12 @@ export async function record(actionId: string): Promise<void> {
     recordedAt: Date.now(),
   })
 
+  const useEncryption = !!process.env.ENCRYPTION_KEY
+  const finalMessage = useEncryption ? encrypt(recordPayload) : recordPayload
+  if (useEncryption) out.info("Encrypting payload with ENCRYPTION_KEY")
+
   out.step("Submitting to Hedera HCS")
-  const result = await submitMessage(topicId, recordPayload)
+  const result = await submitMessage(topicId, finalMessage)
   out.success("Recorded on Hedera HCS")
   out.keyValue("Sequence", result.sequenceNumber)
   out.keyValue("Timestamp", result.timestamp)

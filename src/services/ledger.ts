@@ -11,7 +11,10 @@ let transport: Transport | null = null
 export async function connectLedger(): Promise<void> {
   try {
     const { default: HidTransport } = await import("@ledgerhq/hw-transport-node-hid")
-    transport = await HidTransport.create()
+    transport = await Promise.race([
+      HidTransport.create(),
+      new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timeout")), 3000)),
+    ])
     out.success("Connected to Ledger (USB)")
     return
   } catch {

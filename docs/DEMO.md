@@ -1,5 +1,7 @@
 # LEDGIT · Demo Script
 
+One of your AI agents just moved real money… can you prove a human authorized it?
+
 ## The Scenario
 
 A fintech runs 3 trading agents — `alice`, `bob`, and `charlie` — each managing

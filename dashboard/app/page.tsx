@@ -58,44 +58,26 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-7 text-left shadow-sm mb-4">
-          <h2 className="font-semibold text-xs text-gray-400 uppercase tracking-widest mb-4">
-            How It Works
-          </h2>
-
-          <p className="text-xs text-gray-400 mb-4">
-            All operations happen in the CLI. This page renders the final result.
-          </p>
-
-          <div className="space-y-4">
-            <div className="flex gap-3">
-              <div className="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold text-xs shrink-0 mt-0.5">1</div>
-              <div>
-                <div className="text-sm font-semibold text-gray-900">Agent Proposes</div>
-                <div className="text-xs text-gray-500 mt-0.5"><code className="bg-gray-100 px-1 rounded text-xs font-mono">ledgit propose</code> creates an action with full details</div>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <div className="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold text-xs shrink-0 mt-0.5">2</div>
-              <div>
-                <div className="text-sm font-semibold text-gray-900">Human Approves on Ledger</div>
-                <div className="text-xs text-gray-500 mt-0.5"><code className="bg-gray-100 px-1 rounded text-xs font-mono">ledgit record</code> sends the action to a Ledger device for cryptographic signing</div>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <div className="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold text-xs shrink-0 mt-0.5">3</div>
-              <div>
-                <div className="text-sm font-semibold text-gray-900">Recorded Immutably on Hedera HCS</div>
-                <div className="text-xs text-gray-500 mt-0.5">The signed action is stored on Hedera with a verifiable consensus timestamp</div>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <div className="w-7 h-7 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 font-bold text-xs shrink-0 mt-0.5">4</div>
-              <div>
-                <div className="text-sm font-semibold text-gray-900">View the Audit Trail</div>
-                <div className="text-xs text-gray-500 mt-0.5"><code className="bg-gray-100 px-1 rounded text-xs font-mono">ledgit verify</code> in the terminal or <code className="bg-gray-100 px-1 rounded text-xs font-mono">ledgit dashboard</code> to see it here</div>
-              </div>
-            </div>
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-5 text-left">
+            <div className="text-lg mb-1">🤖</div>
+            <h3 className="font-bold text-sm text-indigo-900 mb-2">For Agents</h3>
+            <ul className="text-xs text-indigo-700 space-y-1.5">
+              <li>• Call <code className="bg-indigo-100 px-1 rounded text-xs">ledgit propose</code> with structured fields</li>
+              <li>• Discover actions via <code className="bg-indigo-100 px-1 rounded text-xs">--json</code> output</li>
+              <li>• Auto-generate descriptions from templates</li>
+              <li>• Validate against schemas before submitting</li>
+            </ul>
+          </div>
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 text-left">
+            <div className="text-lg mb-1">👤</div>
+            <h3 className="font-bold text-sm text-amber-900 mb-2">For Humans</h3>
+            <ul className="text-xs text-amber-700 space-y-1.5">
+              <li>• Review actions on Ledger device</li>
+              <li>• Sign with one button press</li>
+              <li>• Verify any agent&apos;s trail by name</li>
+              <li>• Visual dashboard for stakeholders</li>
+            </ul>
           </div>
         </div>
 
