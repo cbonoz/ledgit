@@ -107,7 +107,7 @@ function ActionCard({ action }: { action: Action }) {
         </div>
         <div className="mt-2 flex items-center gap-1.5 text-xs">
           {hasSig ? (
-            <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
+            <span className="inline-flex items-center gap-1 text-emerald-600 font-medium" title={`Signature: ${action.signature}`}>
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
@@ -133,7 +133,10 @@ function ActionCard({ action }: { action: Action }) {
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">Signature</span>
-              <p className="font-mono text-xs text-gray-600 break-all mt-0.5">{sigShort}</p>
+              <p className="font-mono text-xs text-gray-600 break-all mt-0.5 cursor-pointer" title={action.signature} onClick={() => navigator.clipboard.writeText(action.signature || "")}>{sigShort}</p>
+              <div className="text-xs text-gray-400 mt-1">
+                Verify via CLI: <code className="bg-gray-100 px-1 rounded text-xs font-mono">ledgit verify-sig {action.actionId}</code>
+              </div>
             </div>
             <div>
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">HCS Timestamp</span>

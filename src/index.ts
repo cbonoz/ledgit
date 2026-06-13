@@ -7,6 +7,7 @@ import { propose } from "./commands/propose.js"
 import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
 import { dashboard } from "./commands/dashboard.js"
+import { verifySig } from "./commands/verify-sig.js"
 import { setup as runSetup } from "./commands/setup.js"
 import { getLatestHcsTopicId } from "./services/ens.js"
 import { getDefaultAgent } from "./services/config.js"
@@ -63,6 +64,20 @@ program
   .argument("<agent-ens>", "Agent ENS name to verify")
   .action(async (agentEns) => {
     await verify(agentEns)
+  })
+
+program
+  .command("verify-sig")
+  .description("Recover the signer address from a Ledger signature to verify authenticity")
+  .argument("<action-id>", "Action ID from the propose step")
+  .option("--agent <ens>", "Agent ENS name (defaults to config or env)")
+  .action(async (actionId: string, opts) => {
+    const agent = opts.agent || getDefaultAgent()
+    if (!agent) {
+      out.error("No agent configured. Pass --agent <name> or set LEDGIT_AGENT in .env")
+      process.exit(1)
+    }
+    await verifySig(agent, actionId)
   })
 
 program
