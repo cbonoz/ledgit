@@ -51,15 +51,14 @@ bun install
 bun src/index.ts --help
 ```
 
-### Option 3: From another project
+### Quick setup
 
 ```bash
-cd your-project
-bun add -d ledgit@link:../path/to/ledgit
-bun run ledgit --help
+ledgit setup
+# Interactive: creates .env, prompts for Hedera creds, creates action config, creates first HCS topic
 ```
 
-### Quick start with your own ENS name
+## Quick Start
 
 ```bash
 # 1. Pick any ENS name you own (e.g., myname.eth)
@@ -96,31 +95,6 @@ ledgit send 0.0.RECIPIENT 1
 
 LEDGIT doesn't require a subname service. Use any ENS name you already own.
 
-## Quick Demo
-
-```bash
-# See available action types
-ledgit actions list
-
-# Agent proposes a trade
-ledgit propose \
-  --agent trader-a.ledgit.eth \
-  --type token_swap \
-  --fields '{"amountIn":"5000","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
-
-# Human approves on Ledger → recorded to HCS
-ledgit record <action-id>
-
-# View the audit trail
-ledgit verify trader-a.ledgit.eth
-
-# Open web dashboard
-ledgit dashboard trader-a.ledgit.eth
-
-# Send real HBAR
-ledgit send 0.0.RECIPIENT 1
-```
-
 ---
 
 ## Configuration
@@ -153,14 +127,14 @@ Agents discover available types dynamically via `ledgit actions list --json`. Ad
 
 | Command | Description |
 |---------|-------------|
+| `ledgit setup` | Interactive first-run: creates env, config, topic |
 | `ledgit propose` | Agent proposes an action with structured, validated fields |
 | `ledgit record` | Human signs on Ledger, action recorded immutably on HCS |
-| `ledgit verify` | Display ordered audit trail from HCS |
+| `ledgit verify` | Display ordered audit trail from HCS — resolves via ENS |
 | `ledgit dashboard` | Open visual timeline in browser |
 | `ledgit init` | Create a new HCS topic for an agent |
 | `ledgit send` | Execute a real HBAR transfer on Hedera testnet |
 | `ledgit actions list` | Discover available action types (supports `--json`) |
-| `ledgit actions init-config` | Create a default `.ledgit/config.json` |
 
 ---
 ## Sponsors
