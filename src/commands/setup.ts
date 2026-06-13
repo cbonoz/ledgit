@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, appendFileSync, copyFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
+import { homedir } from "node:os"
 import { createInterface } from "node:readline"
 import { createTopic } from "../services/hedera.js"
 import { writeDefaultConfig } from "../services/config.js"
@@ -58,9 +59,9 @@ export async function setup(): Promise<void> {
     }
   }
 
-  // Step 3: Create action config in project directory
+  // Step 3: Create action config in home directory
   console.log("")
-  writeDefaultConfig(cwd)
+  writeDefaultConfig()
 
   // Step 4: Prompt for agent name and create topic
   console.log("")
@@ -72,8 +73,9 @@ export async function setup(): Promise<void> {
   if (agentName) {
     const topicId = await createTopic(`ledgit:${agentName}`)
     appendFileSync(envPath, `\nLEDGIT_AGENT=${agentName}\nLEDGIT_TOPIC_ID=${topicId}`)
-    // Register agent in config file
-    const configPath = join(cwd, ".ledgit", "config.json")
+    // Register agent in home config file
+    const configDir = join(homedir(), ".ledgit")
+    const configPath = join(configDir, "config.json")
     if (existsSync(configPath)) {
       try {
         const cfg = JSON.parse(readFileSync(configPath, "utf-8"))

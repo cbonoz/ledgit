@@ -47,15 +47,8 @@ const defaultConfig: LedgitConfig = {
 }
 
 function findConfigFile(): string | null {
-  const candidates = [
-    join(process.cwd(), ".ledgit", "config.json"),
-    join(process.cwd(), "ledgit.config.json"),
-    join(process.cwd(), ".ledgitrc"),
-    join(homedir(), ".ledgit", "config.json"),
-  ]
-  for (const path of candidates) {
-    if (existsSync(path)) return path
-  }
+  const homePath = join(homedir(), ".ledgit", "config.json")
+  return existsSync(homePath) ? homePath : null
   return null
 }
 
@@ -131,8 +124,8 @@ export function validateFields(
   return missing
 }
 
-export function writeDefaultConfig(root?: string): void {
-  const dir = join(root || process.cwd(), ".ledgit")
+export function writeDefaultConfig(_root?: string): void {
+  const dir = join(homedir(), ".ledgit")
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true })
   }
