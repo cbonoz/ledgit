@@ -108,6 +108,22 @@ export default function ActionTimeline({ data }: Props) {
   const medium = data.actions.filter(a => a.riskLevel === "medium").length
   const low = data.actions.filter(a => a.riskLevel === "low").length
 
+  // Group actions by day
+  const groups: { date: string; label: string; actions: Action[] }[] = []
+  const reversed = [...data.actions].toReversed()
+  for (const action of reversed) {
+    const seconds = Number(action.consensusTimestamp.split(".")[0])
+    const d = new Date(seconds * 1000)
+    const dateKey = d.toISOString().split("T")[0]
+    const label = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
+    const existing = groups.find(g => g.date === dateKey)
+    if (existing) {
+      existing.actions.push(action)
+    } else {
+      groups.push({ date: dateKey, label, actions: [action] })
+    }
+  }
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <Link href="/" className="inline-flex items-center gap-3 mb-1 hover:opacity-80 transition-opacity">
@@ -138,9 +154,18 @@ export default function ActionTimeline({ data }: Props) {
           <p className="text-sm mt-1">Propose and record an action to see it here</p>
         </div>
       ) : (
-        <div>
-          {data.actions.toReversed().map((action, i) => (
-            <ActionCard key={action.sequenceNumber} action={action} index={i} />
+        <div className="space-y-8">
+          {groups.map(group => (
+            <div key={group.date}>
+              <h3 className="text-sm font-semibold text-gray-500 mb-3 sticky top-0 bg-gray-50 py-2 z-10 border-b border-gray-100">
+                {group.label}
+              </h3>
+              <div>
+                {group.actions.map((action, i) => (
+                  <ActionCard key={action.sequenceNumber} action={action} index={i} />
+                ))}
+              </div>
+            </div>
           ))}
         </div>
       )}
