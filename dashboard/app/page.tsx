@@ -30,18 +30,6 @@ export default function Home() {
 
         <div className="grid grid-cols-2 gap-3 mb-6">
           <button
-            onClick={() => setPersona(persona === "agent" ? null : "agent")}
-            className={`rounded-2xl border-2 p-5 text-left transition-all cursor-pointer ${
-              persona === "agent"
-                ? "border-indigo-400 bg-indigo-50 shadow-md"
-                : "border-gray-200 bg-white hover:border-indigo-200 hover:bg-indigo-50/30"
-            }`}
-          >
-            <div className="text-2xl mb-1">🤖</div>
-            <div className="font-bold text-sm">I&apos;m an Agent</div>
-            <div className="text-xs text-gray-400 mt-0.5">Propose actions, discover schemas</div>
-          </button>
-          <button
             onClick={() => setPersona(persona === "human" ? null : "human")}
             className={`rounded-2xl border-2 p-5 text-left transition-all cursor-pointer ${
               persona === "human"
@@ -53,7 +41,47 @@ export default function Home() {
             <div className="font-bold text-sm">I&apos;m a Human</div>
             <div className="text-xs text-gray-400 mt-0.5">Review, approve, verify</div>
           </button>
+          <button
+            onClick={() => setPersona(persona === "agent" ? null : "agent")}
+            className={`rounded-2xl border-2 p-5 text-left transition-all cursor-pointer ${
+              persona === "agent"
+                ? "border-indigo-400 bg-indigo-50 shadow-md"
+                : "border-gray-200 bg-white hover:border-indigo-200 hover:bg-indigo-50/30"
+            }`}
+          >
+            <div className="text-2xl mb-1">🤖</div>
+            <div className="font-bold text-sm">I&apos;m an Agent</div>
+            <div className="text-xs text-gray-400 mt-0.5">Propose actions, discover schemas</div>
+          </button>
         </div>
+
+        {persona === "human" && (
+          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-left mb-4 animate-[fade-in_0.2s_ease-out]">
+            <h2 className="font-bold text-sm text-amber-900 mb-3">Your role in the loop</h2>
+            <ol className="text-sm text-amber-800 space-y-3">
+              <li className="flex gap-2">
+                <span className="font-bold text-amber-400">1.</span>
+                <span><strong>Issue subnames</strong> — create <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">agent-name.ledgit.eth</code> with its own HCS topic</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-bold text-amber-400">2.</span>
+                <span><strong>Review actions</strong> — they appear on your Ledger with full details</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-bold text-amber-400">3.</span>
+                <span><strong>Approve or reject</strong> with one button press on the hardware</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-bold text-amber-400">4.</span>
+                <span>Signature stored immutably on Hedera HCS with consensus timestamp</span>
+              </li>
+              <li className="flex gap-2">
+                <span className="font-bold text-amber-400">5.</span>
+                <span><strong>Verify any agent</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify agent-name.ledgit.eth</code> or <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit dashboard agent-name.ledgit.eth</code></span>
+              </li>
+            </ol>
+          </div>
+        )}
 
         {persona === "agent" && (
           <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 text-left mb-4 animate-[fade-in_0.2s_ease-out]">
@@ -81,34 +109,6 @@ export default function Home() {
               </li>
               <li className="mt-3 pt-3 border-t border-indigo-200 text-xs text-indigo-600">
                 <strong>Config note:</strong> Action types are defined in <code className="bg-indigo-100 px-1 rounded text-xs">.ledgit/config.json</code>. Your operator edits this file to add or modify types — no code changes needed.
-              </li>
-            </ol>
-          </div>
-        )}
-
-        {persona === "human" && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-left mb-4 animate-[fade-in_0.2s_ease-out]">
-            <h2 className="font-bold text-sm text-amber-900 mb-3">Your role in the loop</h2>
-            <ol className="text-sm text-amber-800 space-y-3">
-              <li className="flex gap-2">
-                <span className="font-bold text-amber-400">1.</span>
-                <span><strong>Issue subnames</strong> — create <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">agent-name.ledgit.eth</code> with its own HCS topic</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="font-bold text-amber-400">2.</span>
-                <span><strong>Review actions</strong> — they appear on your Ledger with full details</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="font-bold text-amber-400">3.</span>
-                <span><strong>Approve or reject</strong> with one button press on the hardware</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="font-bold text-amber-400">4.</span>
-                <span>Signature stored immutably on Hedera HCS with consensus timestamp</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="font-bold text-amber-400">5.</span>
-                <span><strong>Verify any agent</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify agent-name.ledgit.eth</code> or <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit dashboard agent-name.ledgit.eth</code></span>
               </li>
             </ol>
           </div>
