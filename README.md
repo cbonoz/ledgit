@@ -108,7 +108,13 @@ LEDGIT doesn't require a subname service. Use any ENS name you already own.
 
 ## Configuration
 
-Action types are defined in `.ledgit/config.json`. The defaults include USDC Transfer, Token Swap, Grant Role, and Update Agent Config — each with required fields, risk level, and a description template.
+Action types define what the agent logs to the audit trail — they're descriptive
+labels for human review, not execution commands. The numbers (amounts, recipients)
+are metadata captured for the audit record. Actual value transfer happens via
+`ledgit send` (HBAR) or `ledgit contract` (smart contracts).
+
+Default types include USDC Transfer, Token Swap, Grant Role, and Update Agent
+Config — each with required fields, risk level, and a description template.
 
 To create the file:
 ```bash
