@@ -57,55 +57,58 @@ export default function Home() {
 
         {persona === "human" && (
           <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 text-left mb-4 animate-[fade-in_0.2s_ease-out]">
-            <h2 className="font-bold text-sm text-amber-900 mb-3">Your role in the loop</h2>
+            <h2 className="font-bold text-sm text-amber-900 mb-3">Getting started</h2>
             <ol className="text-sm text-amber-800 space-y-3">
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">1.</span>
-                <span><strong>Bring your own ENS name</strong> — LEDGIT works with any ENS name you already own. Set text record <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit.hcs.topic</code> to your HCS topic.</span>
+                <span>Install: <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">git clone &amp;&amp; bun install &amp;&amp; npm link</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">2.</span>
-                <span><strong>Create agents</strong> — run <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit init --agent your-name.eth</code> to create a topic</span>
+                <span>Run <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit setup</code> — creates environment, action config, and your first HCS topic</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">3.</span>
-                <span><strong>Review actions</strong> — they appear on your Ledger with full details</span>
+                <span>(Optional) Point your ENS name at the topic — set <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit.hcs.topic</code> text record to your topic ID on sepolia.ens.app</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">4.</span>
-                <span><strong>Approve or reject</strong> with one button press on the hardware</span>
+                <span><strong>Review actions</strong> on your Ledger — approve or reject with one button press</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">5.</span>
-                <span><strong>Verify any agent</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify your-name.eth</code> resolves automatically</span>
+                <span><strong>Verify</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify your-name.eth</code> or <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify</code> with the topic ID from your .env</span>
               </li>
             </ol>
+            <div className="mt-3 pt-3 border-t border-amber-200 text-xs text-amber-600">
+              <strong>Don't have an ENS name?</strong> No problem — LEDGIT works without one. Use the <code className="bg-amber-100 px-1 rounded text-xs font-mono">LEDGIT_TOPIC_ID</code> from your .env and skip step 3.
+            </div>
           </div>
         )}
 
         {persona === "agent" && (
           <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 text-left mb-4 animate-[fade-in_0.2s_ease-out]">
-            <h2 className="font-bold text-sm text-indigo-900 mb-3">Agent onboarding</h2>
+            <h2 className="font-bold text-sm text-indigo-900 mb-3">How agents use LEDGIT</h2>
             <ol className="text-sm text-indigo-800 space-y-3">
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">1.</span>
-                <span>Your operator assigns you an ENS name (any name they own, like <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">trader-1.acme-corp.eth</code>)</span>
+                <span>Your operator assigns you an identifier — either an ENS name they own or a local name</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">2.</span>
-                <span>Discover actions: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code></span>
+                <span>Discover actions: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code> returns types, fields, risk levels</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">3.</span>
-                <span>Propose: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit propose --agent your-name.eth --type &lt;action&gt; --fields &apos;&#123;...&#125;&apos;</code></span>
+                <span>Propose: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit propose --agent &lt;name&gt; --type &lt;action&gt; --fields &apos;&#123;...&#125;&apos;</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">4.</span>
-                <span>Wait for human approval on Ledger</span>
+                <span>Wait for human approval on Ledger (high/medium risk) or auto-approved (low risk)</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">5.</span>
-                <span>Verify the trail: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify your-name.eth</code></span>
+                <span>Verify the trail: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify &lt;name&gt;</code> or <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit dashboard &lt;name&gt;</code></span>
               </li>
               <li className="mt-3 pt-3 border-t border-indigo-200 text-xs text-indigo-600">
                 <strong>Config note:</strong> Action types are defined in <code className="bg-indigo-100 px-1 rounded text-xs">.ledgit/config.json</code>. Your operator edits this file — no code changes needed.
