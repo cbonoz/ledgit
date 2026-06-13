@@ -52,12 +52,9 @@ ledgit actions list
 
 ## Step 2 — Agent Proposes an Action (30s)
 
-**Set the scene:** *"Meet Alice — one of our trading agents at Acme Corp. She's been monitoring the markets and decides to execute a trade. She calls the CLI autonomously."*
-
-The agent runs this — you just watch:
+**Set the scene:** *"Alice — one of our trading agents at Acme Corp — decides to execute a trade. In production, she'd call the CLI autonomously. I'll run it to show what that looks like."*
 
 ```bash
-# (The agent runs this, not you)
 ledgit propose \
   --agent alice.ledgit.eth \
   --type token_swap \

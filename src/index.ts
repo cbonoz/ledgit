@@ -27,7 +27,7 @@ program
 program
   .command("propose")
   .description("Propose a new agent action for human review")
-  .requiredOption("--agent <ens>", "Agent ENS name (e.g. trader-a.ledgit.eth)")
+  .option("--agent <ens>", "Agent ENS name (defaults to LEDGIT_AGENT in .env)")
   .requiredOption("--type <type>", "Action type (e.g. usdc_transfer, token_swap)")
   .option("--description <text>", "Human-readable description (auto-generated from template if omitted)")
   .option("--payload <json>", "JSON payload with action details")
@@ -134,6 +134,35 @@ actionsCmd
   .description("Create a default .ledgit/config.json file")
   .action(async () => {
     writeDefaultConfig()
+  })
+
+const toolsCmd = program
+  .command("tools")
+  .description("Generate agent tool definitions for Claude, OpenAI, LangChain, etc.")
+
+toolsCmd
+  .command("schema")
+  .description("Output an OpenAI/Claude-compatible tool definition for LEDGIT")
+  .action(async () => {
+    const config = loadActionsConfig()
+    const properties: Record<string, unknown> = {
+      agent: { type: "string", description: "Your ENS name (e.g. alice.ledgit.eth). Defaults to LEDGIT_AGENT env var." },
+      type: { type: "string", description: "Action type", enum: config.actions.map(a => a.type) },
+      description: { type: "string", description: "Human-readable description (auto-generated if omitted)" },
+      fields: { type: "string", description: "JSON object of field values matching the action type's schema" },
+    }
+
+    const schema = {
+      name: "ledgit_propose",
+      description: "Propose an action that requires human review and approval on a Ledger hardware device. The human reviews details on their Ledger and approves or rejects. All approved actions are recorded immutably on Hedera HCS for audit.",
+      parameters: {
+        type: "object",
+        properties,
+        required: ["type"],
+      },
+    }
+
+    console.log(JSON.stringify(schema, null, 2))
   })
 
 program.parse(process.argv)

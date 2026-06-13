@@ -6,7 +6,13 @@ export interface ActionConfig {
   riskLevel: "low" | "medium" | "high"
 }
 
+export interface AgentConfig {
+  name: string
+  topicId?: string
+}
+
 export interface LedgitConfig {
+  agents?: AgentConfig[]
   actions: ActionConfig[]
 }
 

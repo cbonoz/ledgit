@@ -92,15 +92,15 @@ export default function Home() {
             <ol className="text-sm text-indigo-800 space-y-3">
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">1.</span>
-                <span>Your operator assigns you an identifier — either an ENS name they own or a local name</span>
+                <span>Your operator installs LEDGIT and registers you as an agent in <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">.ledgit/config.json</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">2.</span>
-                <span>Discover actions: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code> returns types, fields, risk levels</span>
+                <span>Your agent framework calls <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit tools schema</code> to discover available actions and their parameters</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">3.</span>
-                <span>Propose: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit propose --agent &lt;name&gt; --type &lt;action&gt; --fields &apos;&#123;...&#125;&apos;</code></span>
+                <span>When you need to execute an action, call <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit propose --type &lt;action&gt; --fields &apos;&#123;...&#125;&apos;</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">4.</span>
@@ -108,10 +108,10 @@ export default function Home() {
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">5.</span>
-                <span>Verify the trail: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify &lt;name&gt;</code> or <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit dashboard &lt;name&gt;</code></span>
+                <span>Verify the trail: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify &lt;name&gt;</code></span>
               </li>
               <li className="mt-3 pt-3 border-t border-indigo-200 text-xs text-indigo-600">
-                <strong>Config note:</strong> Action types are defined in <code className="bg-indigo-100 px-1 rounded text-xs">.ledgit/config.json</code>. Your operator edits this file — no code changes needed.
+                <strong>Config note:</strong> Action types are defined in <code className="bg-indigo-100 px-1 rounded text-xs">.ledgit/config.json</code>. The <code className="bg-indigo-100 px-1 rounded text-xs">ledgit tools schema</code> output updates automatically.
               </li>
             </ol>
           </div>

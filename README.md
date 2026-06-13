@@ -140,6 +140,38 @@ Agents discover available types dynamically via `ledgit actions list --json`. Ad
 | `ledgit init` | Create a new HCS topic for an agent |
 | `ledgit send` | Execute a real HBAR transfer on Hedera testnet |
 | `ledgit actions list` | Discover available action types (supports `--json`) |
+| `ledgit tools schema` | Generate an OpenAI/Claude-compatible tool definition for your agent |
+
+---
+
+## Agent Integration
+
+LEDGIT is designed to be called by agents autonomously. Add it as a tool
+in your agent framework using the generated schema:
+
+```bash
+ledgit tools schema
+```
+
+This outputs a tool definition your agent can use:
+
+```json
+{
+  "name": "ledgit_propose",
+  "description": "Propose an action for human review on a Ledger device...",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "type": { "enum": ["usdc_transfer", "token_swap", "grant_role", "update_agent_config"] },
+      "fields": { "type": "string" }
+    }
+  }
+}
+```
+
+Agents discover available actions dynamically via `ledgit actions list --json`.
+The schema auto-updates when you add new action types — no code change needed.
+
 ---
 
 ## Encryption

@@ -5,6 +5,7 @@ import type { LedgitConfig, ActionConfig } from "../types.js"
 import * as out from "./output.js"
 
 const defaultConfig: LedgitConfig = {
+  agents: [],
   actions: [
     {
       type: "usdc_transfer",
@@ -74,6 +75,23 @@ export function loadActionsConfig(): LedgitConfig {
 
 export function getActionConfig(type: string): ActionConfig | undefined {
   return loadActionsConfig().actions.find((a) => a.type === type)
+}
+
+export function requireAgent(name: string): void {
+  const config = loadActionsConfig()
+  const agents = config.agents || []
+  if (agents.length === 0) return // no restrictions
+  const match = agents.find((a) => a.name === name)
+  if (!match) {
+    console.error(`  Error: Agent "${name}" is not registered in .ledgit/config.json`)
+    console.error(`  Registered agents: ${agents.map((a) => a.name).join(", ") || "(none)"}`)
+    process.exit(1)
+  }
+}
+
+export function getAgentTopic(name: string): string | undefined {
+  const config = loadActionsConfig()
+  return (config.agents || []).find((a) => a.name === name)?.topicId
 }
 
 export function fillTemplate(template: string, fields: Record<string, unknown>): string {

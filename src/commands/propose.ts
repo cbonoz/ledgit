@@ -2,7 +2,7 @@ import { writeFileSync, mkdirSync, existsSync } from "node:fs"
 import { join } from "node:path"
 import { createHash } from "node:crypto"
 import type { ActionProposal } from "../types.js"
-import { getActionConfig, fillTemplate, validateFields } from "../services/config.js"
+import { getActionConfig, fillTemplate, validateFields, requireAgent } from "../services/config.js"
 import * as out from "../services/output.js"
 
 const PROPOSALS_DIR = join(process.cwd(), ".ledgit", "proposals")
@@ -19,6 +19,13 @@ export async function propose(
   payload: string | undefined,
   fields: string | undefined
 ): Promise<void> {
+  const resolvedAgent = agent || process.env.LEDGIT_AGENT
+  if (!resolvedAgent) {
+    out.error("No agent specified. Use --agent <name> or set LEDGIT_AGENT in .env")
+    process.exit(1)
+  }
+  requireAgent(resolvedAgent)
+
   let payloadObj: Record<string, unknown>
 
   if (fields) {
