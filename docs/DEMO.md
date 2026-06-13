@@ -3,6 +3,15 @@
 > Follow this on your machine. The AI runs the CLI autonomously — you just
 > review and approve on your Ledger when prompted.
 
+## At a Glance
+
+| | Action | Ledger? |
+|---|---|---|
+| 🔴 | Propose → approve on Ledger → send HBAR → HCS | ✅ Required |
+| 🔴 | Propose → approve on Ledger → call contract → HCS | ✅ Required |
+| 🟢 | Propose → auto-approved → HCS | ❌ Skipped |
+| 💀 | Send HBAR directly (no LEDGIT) | Invisible to auditors |
+
 ## The Setup
 
 **Alice** (`alice.ledgit.eth`) is a trading agent at Acme Corp. She executes

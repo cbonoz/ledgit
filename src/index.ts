@@ -8,6 +8,7 @@ import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
 import { dashboard } from "./commands/dashboard.js"
 import { setup as runSetup } from "./commands/setup.js"
+import { connectLedger, signWithLedger } from "./services/ledger.js"
 import { loadActionsConfig, writeDefaultConfig } from "./services/config.js"
 import * as out from "./services/output.js"
 
@@ -143,6 +144,11 @@ program
       process.exit(1)
     }
     out.heading(`Contract call: ${functionName} on ${contractId}`)
+    out.step("Requesting Ledger approval")
+    await connectLedger()
+    const msgHex = Buffer.from(JSON.stringify({ contractId, function: functionName, args: parsed })).toString("hex")
+    const signature = await signWithLedger(msgHex)
+    out.keyValue("Signature", signature.slice(0, 42) + "...")
     out.step("Calling contract")
     const result = await contractCall(contractId, functionName, parsed)
     out.success("Contract call executed")
