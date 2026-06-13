@@ -12,7 +12,7 @@ export async function connectLedger(): Promise<void> {
   try {
     const { default: HidTransport } = await import("@ledgerhq/hw-transport-node-hid")
     transport = await Promise.race([
-      HidTransport.create(),
+      (HidTransport as any).create(),
       new Promise<never>((_, reject) => setTimeout(() => reject(new Error("timeout")), 3000)),
     ])
     out.success("Connected to Ledger (USB)")
@@ -26,7 +26,7 @@ export async function connectLedger(): Promise<void> {
     const { default: SpeculosTransport } = await import(
       "@ledgerhq/hw-transport-node-speculos-http"
     )
-    transport = await SpeculosTransport.open(speculosUrl)
+    transport = await (SpeculosTransport as any).open(speculosUrl)
     out.success("Connected to Ledger Speculos emulator")
     return
   } catch {
@@ -44,8 +44,8 @@ export async function signWithLedger(
   }
 
   try {
-    const Eth = (await import("@ledgerhq/hw-app-eth")).default
-    const eth = new Eth(transport as never)
+    const Eth = (await import("@ledgerhq/hw-app-eth")).default as any
+    const eth = new Eth(transport)
     const result = await eth.signPersonalMessage(ETH_DERIVATION_PATH, messageHex)
     out.success("Signature obtained from Ledger")
     // result = { r, s, v } — combine into 0x-prefixed hex signature

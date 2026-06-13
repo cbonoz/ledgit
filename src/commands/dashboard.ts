@@ -83,7 +83,7 @@ export async function dashboard(agentEns: string): Promise<void> {
     } else if (process.platform === "linux") {
       execSync(`xdg-open "${localUrl}" 2>/dev/null || echo ""`)
     } else {
-      execSync(`start "" "${localUrl}"`, { shell: true })
+      execSync(`start "" "${localUrl}"`, { shell: "true" } as any)
     }
     out.success("Opened at " + localUrl)
   } catch {

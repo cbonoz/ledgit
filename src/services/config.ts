@@ -95,8 +95,8 @@ export function validateFields(
   return missing
 }
 
-export function writeDefaultConfig(): void {
-  const dir = join(process.cwd(), ".ledgit")
+export function writeDefaultConfig(root?: string): void {
+  const dir = join(root || process.cwd(), ".ledgit")
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true })
   }

@@ -5,6 +5,8 @@ import { createTopic } from "../services/hedera.js"
 import { writeDefaultConfig } from "../services/config.js"
 import * as out from "../services/output.js"
 
+const ROOT = join(import.meta.dirname, "..", "..")
+
 function prompt(query: string): Promise<string> {
   const rl = createInterface({ input: process.stdin, output: process.stdout })
   return new Promise((resolve) => rl.question(query, (a) => { rl.close(); resolve(a) }))
@@ -18,11 +20,19 @@ export async function setup(): Promise<void> {
   console.log("  ╚══════════════════════════════════════════╝")
   console.log("")
 
+  const cwd = process.cwd()
+  const examplePath = join(ROOT, ".env.example")
+  const envPath = join(cwd, ".env")
+
   // Step 1: .env
-  const envPath = join(process.cwd(), ".env")
   if (!existsSync(envPath)) {
+    if (!existsSync(examplePath)) {
+      out.error(".env.example not found at " + examplePath)
+      out.info("Run setup from the LEDGIT project directory")
+      process.exit(1)
+    }
     out.step("Creating .env")
-    copyFileSync(join(process.cwd(), ".env.example"), envPath)
+    copyFileSync(examplePath, envPath)
     out.success("Created .env")
   } else {
     out.success(".env found")
@@ -48,9 +58,9 @@ export async function setup(): Promise<void> {
     }
   }
 
-  // Step 3: Create action config
+  // Step 3: Create action config in project directory
   console.log("")
-  writeDefaultConfig()
+  writeDefaultConfig(cwd)
 
   // Step 4: Prompt for agent name and create topic
   console.log("")
