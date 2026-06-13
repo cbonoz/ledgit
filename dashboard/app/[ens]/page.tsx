@@ -19,6 +19,7 @@ interface Action {
   signature?: string
   riskLevel?: string
   encrypted?: boolean
+  hashscan?: string
 }
 
 const DEFAULT_RISK: Record<string, string> = {
@@ -60,6 +61,7 @@ async function fetchFromMirrorNode(topicId: string): Promise<Action[]> {
       if (parsed.actionId) entry.actionId = String(parsed.actionId)
       if (parsed.agent) entry.agent = String(parsed.agent)
       if (parsed.signature) entry.signature = String(parsed.signature)
+      if (parsed.hashscan) entry.hashscan = String(parsed.hashscan)
       let desc = parsed.description ? String(parsed.description) : undefined
       let type = parsed.type ? String(parsed.type) : undefined
       let risk = parsed.riskLevel ? String(parsed.riskLevel) : undefined

@@ -14,6 +14,7 @@ interface Action {
   riskLevel?: string
   encrypted?: boolean
   payload?: Record<string, unknown>
+  hashscan?: string
 }
 
 interface Props {
@@ -61,8 +62,8 @@ function parseMessage(raw: string): Partial<Action> {
     }
     if (desc) entry.description = desc
     if (type) entry.type = type
-    // Fall back to default risk by type if not explicitly set
     entry.riskLevel = risk || (type && DEFAULT_RISK[type]) || "low"
+    if (parsed.hashscan) entry.hashscan = String(parsed.hashscan)
   } catch { /* skip */ }
   return entry
 }
@@ -142,8 +143,13 @@ function ActionCard({ action }: { action: Action }) {
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">HCS Timestamp</span>
               <p className="font-mono text-xs text-gray-600 mt-0.5">{action.consensusTimestamp}</p>
               <a href={`https://hashscan.io/testnet/transaction/${action.consensusTimestamp}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block">
-                View on HashScan ↗
+                HCS Record ↗
               </a>
+              {action.hashscan && (
+                <a href={action.hashscan} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block ml-3">
+                  Execution Tx ↗
+                </a>
+              )}
             </div>
           </div>
           {action.payload && (
