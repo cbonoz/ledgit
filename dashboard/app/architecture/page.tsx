@@ -1,4 +1,6 @@
+"use client"
 import Link from "next/link"
+import { useState } from "react"
 
 const steps = [
   { id: 1, title: "Agent Proposes", desc: "The AI agent calls ledgit propose with the action type and structured fields (amount, recipient, reason). The CLI validates against the configurable action schema.", icon: "🤖" },
@@ -10,6 +12,8 @@ const steps = [
 ]
 
 export default function ArchitecturePage() {
+  const [fullscreen, setFullscreen] = useState(false)
+
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <Link href="/" className="inline-flex items-center gap-3 mb-6 hover:opacity-80 transition-opacity">
@@ -41,9 +45,20 @@ export default function ArchitecturePage() {
       </div>
 
       {/* Architecture SVG diagram */}
-      <div className="mb-8 bg-white rounded-2xl border border-gray-200 p-4">
+      <div className="mb-8 bg-white rounded-2xl border border-gray-200 p-4 cursor-pointer" onClick={() => setFullscreen(true)}>
         <img src="/architecture.svg" alt="LEDGIT Architecture Diagram" className="w-full h-auto" />
       </div>
+
+      {fullscreen && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setFullscreen(false)}>
+          <div className="relative max-w-5xl w-full max-h-[90vh] overflow-auto bg-white rounded-2xl p-4">
+            <button onClick={() => setFullscreen(false)} className="absolute top-3 right-3 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors z-10 cursor-pointer">
+              ✕
+            </button>
+            <img src="/architecture.svg" alt="LEDGIT Architecture Diagram" className="w-full h-auto" />
+          </div>
+        </div>
+      )}
 
       {/* Steps */}
       <div className="space-y-6">
