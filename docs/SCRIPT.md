@@ -38,6 +38,14 @@ resolves the name and sees the complete, verifiable history."*
 
 **Say:** *"The entire setup is documented on the page — clone, install, run one command, and your agent is ready to propose actions that require human approval."*
 
+**Optionally, open the architecture diagram:**
+
+```
+https://ledgitdash.vercel.app/architecture
+```
+
+**Say:** *"Here's how the flow works: the agent proposes → CLI validates → human approves on Ledger → action executes on Hedera → proof stored immutably on HCS → discoverable via ENS. Every action type is configurable."*
+
 ## 0:15 — Risk Tiers at a Glance
 
 Run this in the terminal to show the color-coded risk system:
