@@ -87,8 +87,10 @@ export async function verify(agentEns: string): Promise<void> {
       if (desc) out.keyValue("Description", desc)
       if (type) out.keyValue("Type", type)
       out.keyValue("Risk", (risk || (type && DEFAULT_RISK[type]) || "low").toUpperCase())
+      // Show execution tx link if available (from send/contract execution proofs)
+      if (parsed?.hashscan) out.keyValue("Execution Tx", String(parsed.hashscan))
     }
-    out.keyValue("View on HashScan", `${getHashscanUrl()}/transaction/${msg.consensusTimestamp}`)
+    out.keyValue("HCS Record", `${getHashscanUrl()}/transaction/${msg.consensusTimestamp}`)
     out.divider()
   }
 
