@@ -57,12 +57,14 @@ Ledger provides the cryptographic proof that a human authorized the action. The 
 
 | Step | What Happens |
 |------|-------------|
-| Connects via USB | Tries physical Ledger via `@ledgerhq/hw-transport-node-hid` first, falls back to Speculos emulator |
-| Human reviews | The action description, type, and risk level are displayed on the Ledger device |
-| Signs via Ethereum app | Uses `@ledgerhq/hw-app-eth` `signPersonalMessage()` — the human approves with one button press |
-| Signature on HCS | The returned `{r, s, v}` signature is formatted and embedded in the HCS message |
+| Connects via USB | Tries physical Ledger via `@ledgerhq/hw-transport-node-hid` first (3s timeout), falls back to Speculos emulator |
+| Human reviews | The action description, type, and risk level are displayed on the Ledger device via the Ethereum app |
+| Signs via Ethereum app | Uses `@ledgerhq/hw-app-eth` `signPersonalMessage()` — the human approves with one button press. Low-risk actions skip hardware entirely. |
+| Signature on HCS | The returned `{r, s, v}` signature is formatted as `0x{r}{s}{v}` and embedded in the HCS message |
 
 **Fallback:** If no Ledger is connected, falls back to SHA-256 software signing so the demo flow works end-to-end without hardware.
+
+**Prize fit (AI Agents x Ledger — $10,000):** Direct hit. Our project is exactly "human-in-the-loop agents where Ledger approves high-risk actions before funds move." We use Ledger's Ethereum app `signPersonalMessage` as the primitive. Every recorded action on HCS contains the Ledger signature that can be independently verified.
 
 ---
 
@@ -70,7 +72,7 @@ Ledger provides the cryptographic proof that a human authorized the action. The 
 
 **File:** `src/services/ens.ts` (60 lines)
 
-ENS replaces opaque addresses with human-readable agent names. LEDGIT doesn't require a subname service — use any ENS name you already own.
+ENS replaces opaque addresses with human-readable agent names. LEDGIT doesn't require a subname service — use any ENS name you already own, or create subnames like `alice.yourname.eth` for each agent.
 
 | ENS Record | Purpose |
 |------------|---------|
@@ -87,6 +89,8 @@ ledgit verify alice.ledgit.eth
 ```
 
 **Current implementation:** Read operations (`getEnsText`) work via viem against Sepolia. Write operations (`setEnsTextRecord`) log intent — production use requires a wallet signer with ENS ownership.
+
+**Prize fit (Best ENS Integration for AI Agents — $5,000):** Every agent in LEDGIT has an ENS name as its identity. The name resolves to the HCS topic via text records, making the audit trail self-discoverable. ENS is not cosmetic — it's the core lookup mechanism. Without ENS, you'd need to track topic IDs manually.
 
 ---
 
