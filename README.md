@@ -2,7 +2,14 @@
 
 > The auditability CLI for named agents. Prove a human authorized every action.
 
-A CLI-first tool that creates cryptographically verifiable audit trails for AI agent actions using **Ledger** (signing), **Hedera HCS** (immutable records), and **ENS** (bring your own name — no subname service, no dependency on us).
+Every agent is identified by an ENS name like `chrisb.acmeco.eth` instead of
+a cryptic address. The human who approves an action signs on their Ledger device,
+and the proof is stored immutably on Hedera HCS. Anyone resolves the ENS name
+and sees the complete, verifiable history — no config files, no databases, no
+centralized registry.
+
+Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
+**ENS** (bring your own name — no subname service needed).
 
 ---
 

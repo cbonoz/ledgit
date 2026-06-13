@@ -11,9 +11,9 @@ They solve two different problems — LEDGIT needs both.
 | **Without it** | The audit trail could be tampered with or reordered | The audit trail exists but nobody can find it |
 | **How they connect** | — | Text record `ledgit.hcs.topic` points to the HCS topic ID |
 
-**Together:** ENS tells you *where* to look (`alice.ledgit.eth` → topic `0.0.9219676`). Hedera guarantees the data you find there is authentic, ordered, and immutable. Neither works without the other.
+**Together:** ENS tells you *where* to look (`chrisb.acmeco.eth` → topic `0.0.9219676`). Hedera guarantees the data you find there is authentic, ordered, and immutable. Neither works without the other.
 
-LEDGIT works with any ENS name you own — no subname service, no platform dependency.
+LEDGIT works with any ENS name you own — companies create subnames like `chrisb.acmeco.eth` for each employee, giving every agent a human-readable, traceable identity.
 
 ---
 

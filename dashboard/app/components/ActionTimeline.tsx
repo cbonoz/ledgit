@@ -65,7 +65,7 @@ function parseMessage(raw: string): Partial<Action> {
   return entry
 }
 
-function ActionCard({ action }: { action: Action }) {
+function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
   const [open, setOpen] = useState(false)
   const color = riskColor(action.riskLevel)
   const seconds = Number(action.consensusTimestamp.split(".")[0])
@@ -117,10 +117,18 @@ function ActionCard({ action }: { action: Action }) {
             <div>
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">Signature</span>
               <p className="font-mono text-xs text-gray-600 break-all mt-0.5">{sigShort}</p>
+              {hasSig && (
+                <a href={`https://etherscan.io/verifiedSignatures?q=${action.signature}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block">
+                  Verify on Etherscan ↗
+                </a>
+              )}
             </div>
             <div>
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">HCS Timestamp</span>
               <p className="font-mono text-xs text-gray-600 mt-0.5">{action.consensusTimestamp}</p>
+              <a href={`https://hashscan.io/testnet/topic/${topicId}/${action.sequenceNumber}`} target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline text-xs mt-1 inline-block">
+                View on HashScan ↗
+              </a>
             </div>
           </div>
           {action.payload && (
@@ -274,7 +282,7 @@ export default function ActionTimeline({ data }: Props) {
                 )}
                 <div>
                   {day.actions.map((action) => (
-                    <ActionCard key={action.sequenceNumber} action={action} />
+                    <ActionCard key={action.sequenceNumber} action={action} topicId={topicId} />
                   ))}
                 </div>
               </div>

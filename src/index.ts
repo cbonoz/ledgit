@@ -101,6 +101,7 @@ program
     out.keyValue("Tx ID", result.txId)
     out.keyValue("Status", result.status)
     out.keyValue("Timestamp", result.timestamp)
+    out.keyValue("View on HashScan", `https://hashscan.io/testnet/transaction/${result.timestamp}`)
     out.divider()
   })
 
