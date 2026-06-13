@@ -5,3 +5,4 @@ dist/
 dashboard/data/
 dashboard/.next/
 .ledgit/proposals/
+.ledgit/config.json
