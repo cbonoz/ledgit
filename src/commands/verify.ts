@@ -16,7 +16,13 @@ export async function verify(agentEns: string): Promise<void> {
     process.exit(1)
   }
 
+  const slug = agentEns.replace(/[^a-zA-Z0-9-]/g, "-")
   out.keyValue("Topic", topicId)
+  out.info("Links:")
+  out.keyValue("HashScan Topic", `https://hashscan.io/testnet/topic/${topicId}`)
+  out.keyValue("Mirror Node", `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages`)
+  out.keyValue("ENS Profile", `https://sepolia.ens.app/name/${agentEns}`)
+  out.keyValue("Dashboard", `https://ledgitdash.vercel.app/${slug}`)
   out.divider()
 
   const messages = await queryTopicMessages(topicId)
@@ -31,14 +37,13 @@ export async function verify(agentEns: string): Promise<void> {
     let raw = msg.message
     let encrypted = false
 
-    // Attempt decryption if message is encrypted
     if (raw.startsWith("ledgit:enc:")) {
       encrypted = true
       const result = decrypt(raw)
       if (result.ok) {
         raw = result.text
       } else {
-        raw = "" // will be handled as unparseable below
+        raw = ""
       }
     }
 
@@ -62,14 +67,9 @@ export async function verify(agentEns: string): Promise<void> {
         out.keyValue("Signature", sig.slice(0, 42) + "...")
       }
     }
+    out.keyValue("View on HashScan", `https://hashscan.io/testnet/topic/${topicId}/${msg.sequenceNumber}`)
     out.divider()
   }
-
-  const slug = agentEns.replace(/[^a-zA-Z0-9-]/g, "-")
-  out.info("Links:")
-  out.keyValue("HashScan", `https://hashscan.io/testnet/topic/${topicId}`)
-  out.keyValue("Dashboard", `https://ledgitdash.vercel.app/${slug}`)
-  out.divider()
 
   out.success(`${messages.length} action(s) recorded`)
   out.divider()
