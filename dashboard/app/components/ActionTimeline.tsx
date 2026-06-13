@@ -350,6 +350,10 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
           GitHub
         </a>
         <span>·</span>
+        <a href="/architecture" className="hover:text-gray-600 transition-colors">Architecture</a>
+        <span>·</span>
+        <a href="/faq" className="hover:text-gray-600 transition-colors">FAQ</a>
+        <span>·</span>
         ETHGlobal New York 2026
       </div>
     </div>

@@ -227,6 +227,8 @@ export default function Home() {
           <span>·</span>
           <a href="/faq" className="hover:text-gray-600 transition-colors">FAQ</a>
           <span>·</span>
+          <a href="/architecture" className="hover:text-gray-600 transition-colors">Architecture</a>
+          <span>·</span>
           <span>ETHGlobal New York 2026</span>
         </p>
       </div>
