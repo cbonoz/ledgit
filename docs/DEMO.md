@@ -38,11 +38,13 @@ ledgit --version
 
 ## Step 1 — See What's Available (30s)
 
-**You say:** *"Let's see what actions agents can perform."*
+**You say:** *"Alice starts up and runs `ledgit tools schema` to discover what she can do. The CLI returns the available actions with their fields and risk levels. She now knows she can transfer funds, swap tokens, manage roles, and more."*
 
 ```bash
 ledgit actions list
 ```
+
+(She could also call `ledgit tools schema` for the exact JSON tool definition.)
 
 **Expected output:**
 ```

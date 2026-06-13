@@ -96,7 +96,7 @@ export default function Home() {
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">2.</span>
-                <span>Your agent framework calls <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit tools schema</code> to discover available actions and their parameters</span>
+                <span>At startup, your agent calls <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit tools schema</code> to discover available actions and their parameters — no manual configuration needed</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">3.</span>
