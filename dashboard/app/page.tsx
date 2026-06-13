@@ -149,7 +149,7 @@ export default function Home() {
               </table>
             </div>
             <p className="text-xs text-gray-400 mt-4 pt-3 border-t border-gray-100">
-              Agents <span className="text-red-400">without</span> LEDGIT run on trust. Agents <span className="text-emerald-600 font-medium">with</span> LEDGIT run on proof.
+              Agents <span className="text-red-400">without</span> LEDGIT run on trust. Agents <span className="text-emerald-600 font-medium">with</span> LEDGIT run on proof. Existing logging platforms track prompts or logs — LEDGIT provides cryptographically verifiable human proof at ~$1/mo for 10k actions.
             </p>
           </div>
         )}

@@ -47,6 +47,17 @@ Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
 
 **The bottom line:** Agents without LEDGIT run on trust. Agents with LEDGIT run on proof.
 
+**Where existing platforms fall short:**
+
+| Platform | What it tracks | Cost at 10k actions | Has hardware signing? | Immutable? |
+|---|---|---|---|---|
+| LangSmith, W&B, MLflow | Prompts, models, outputs | $5k–$10k+/yr | ❌ | ❌ |
+| DataDog, Splunk | Logs, metrics | ~$0–$100/mo (log ingest) | ❌ | ❌ |
+| Multi-sig (Gnosis Safe) | Human tx approvals | ~$0–$1k/mo | ✅ (wallet) | ✅ (on-chain) |
+| **LEDGIT** | **Agent actions + human proof** | **~$1/mo (HCS fees)** | **✅ (Ledger hardware)** | **✅ (Hedera HCS)** |
+
+Existing platforms track what the LLM said or store unstructured logs — they don't capture cryptographically verifiable proof of human intent at sub-cent cost.
+
 ---
 
 ## Install
