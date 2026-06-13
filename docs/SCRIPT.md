@@ -3,9 +3,22 @@
 > Follow this on your machine. I'll be the agent running the CLI commands.
 > You're the human reviewing and approving on your Ledger.
 
+## The Setup
+
+Acme Corp runs several AI agents to manage their treasury. Each agent has an ENS
+name — human-readable, traceable, tied to their role.
+
+**Alice** (`alice.ledgit.eth`) executes trades.
+**Bob** (`bob.ledgit.eth`) handles vendor payments.
+**Charlie** (`charlie.ledgit.eth`) manages permissions.
+
+The compliance officer needs one thing: *proof that a human authorized every action.*
+Without LEDGIT, she gets inconsistent bot logs. With it, she gets a uniform,
+verifiable trail for every agent.
+
 ---
 
-## Setup (before judges arrive)
+## Before Judges Arrive
 
 ```bash
 # Terminal 1: Start the dashboard
@@ -39,7 +52,7 @@ ledgit actions list
 
 ## Step 2 — Agent Proposes an Action (30s)
 
-**You say:** *"The agent wants to swap 10,000 USDC for ETH. It proposes the action with all the details."*
+**Set the scene:** *"Meet Alice. She's one of our trading agents at Acme Corp — alice.ledgit.eth. She's been monitoring the markets and wants to execute a trade. Her ENS name is her identity, and every action she takes will be logged under it. Let's see what she proposes."*
 
 ```bash
 ledgit propose \
