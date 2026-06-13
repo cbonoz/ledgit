@@ -226,10 +226,10 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
   for (const action of reversed) {
     const seconds = Number(action.consensusTimestamp.split(".")[0])
     const d = new Date(seconds * 1000)
-    const monthKey = d.toISOString().slice(0, 7)
-    const monthLabel = d.toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
-    const dateKey = d.toISOString().split("T")[0]
-    const dayLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })
+    const monthKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`
+    const monthLabel = d.toLocaleDateString("en-US", { month: "long", year: "numeric" })
+    const dateKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
+    const dayLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
 
     let month = byMonth.find(m => m.monthKey === monthKey)
     if (!month) {
