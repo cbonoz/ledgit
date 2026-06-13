@@ -111,12 +111,12 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
               Ledger Signature Verified
             </span>
           ) : rogueHigh ? (
-            <span className="inline-flex items-center gap-1 text-red-600 font-semibold">
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-1.134 0-2.042-.536-2.682-1.374a2.2 2.2 0 01-.33-1.86l.46-1.15a.737.737 0 000-.588l-.46-1.15a2.2 2.2 0 01.33-1.86c.64-.838 1.548-1.374 2.682-1.374h14.606c1.134 0 2.042.536 2.682 1.374a2.2 2.2 0 01.33 1.86l-.46 1.15a.737.737 0 000 .588l.46 1.15a2.2 2.2 0 01-.33 1.86c-.64.838-1.548 1.374-2.682 1.374H5.697" />
-              </svg>
-              No Ledger Signature — Not Verified
-            </span>
+              <span className="inline-flex items-center gap-1 text-red-600 font-semibold">
+                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-1.134 0-2.042-.536-2.682-1.374a2.2 2.2 0 01-.33-1.86l.46-1.15a.737.737 0 000-.588l-.46-1.15a2.2 2.2 0 01.33-1.86c.64-.838 1.548-1.374 2.682-1.374h14.606c1.134 0 2.042.536 2.682 1.374a2.2 2.2 0 01.33 1.86l-.46 1.15a.737.737 0 000 .588l.46 1.15a2.2 2.2 0 01-.33 1.86c-.64.838-1.548 1.374-2.682 1.374H5.697" />
+                </svg>
+                Missing Signature
+              </span>
           ) : (
             <span className="text-gray-400">No signature</span>
           )}
