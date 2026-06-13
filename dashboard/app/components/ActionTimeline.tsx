@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import Link from "next/link"
 
 interface Action {
@@ -31,7 +31,32 @@ const riskColor = (level?: string) => {
   }
 }
 
-function ActionCard({ action, index }: { action: Action; index: number }) {
+function parseMessage(raw: string): Partial<Action> {
+  const entry: Partial<Action> = {}
+  try {
+    const parsed = JSON.parse(raw) as Record<string, unknown>
+    if (parsed.actionId) entry.actionId = String(parsed.actionId)
+    if (parsed.agent) entry.agent = String(parsed.agent)
+    if (parsed.signature) entry.signature = String(parsed.signature)
+    let desc = parsed.description ? String(parsed.description) : undefined
+    let type = parsed.type ? String(parsed.type) : undefined
+    let risk = parsed.riskLevel ? String(parsed.riskLevel) : undefined
+    if ((!desc || !type) && parsed.payload) {
+      try {
+        const inner = typeof parsed.payload === "string" ? JSON.parse(parsed.payload) : parsed.payload as Record<string, unknown>
+        if (!desc && inner.description) desc = String(inner.description)
+        if (!type && inner.type) type = String(inner.type)
+        if (!risk && inner.riskLevel) risk = String(inner.riskLevel)
+      } catch { /* skip */ }
+    }
+    if (desc) entry.description = desc
+    if (type) entry.type = type
+    if (risk) entry.riskLevel = risk
+  } catch { /* skip */ }
+  return entry
+}
+
+function ActionCard({ action }: { action: Action }) {
   const [open, setOpen] = useState(false)
   const color = riskColor(action.riskLevel)
   const seconds = Number(action.consensusTimestamp.split(".")[0])
@@ -104,24 +129,66 @@ function ActionCard({ action, index }: { action: Action; index: number }) {
 }
 
 export default function ActionTimeline({ data }: Props) {
-  const high = data.actions.filter(a => a.riskLevel === "high").length
-  const medium = data.actions.filter(a => a.riskLevel === "medium").length
-  const low = data.actions.filter(a => a.riskLevel === "low").length
+  const [live, setLive] = useState(false)
+  const [actions, setActions] = useState<Action[]>(data.actions)
+  const lastTs = useRef(actions.length > 0 ? actions[actions.length - 1].consensusTimestamp : "0")
+  const topicId = data.topicId
 
-  // Group actions by day
-  const groups: { date: string; label: string; actions: Action[] }[] = []
-  const reversed = [...data.actions].toReversed()
+  const high = actions.filter(a => a.riskLevel === "high").length
+  const medium = actions.filter(a => a.riskLevel === "medium").length
+  const low = actions.filter(a => a.riskLevel === "low").length
+
+  const poll = useCallback(async () => {
+    try {
+      const url = `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages?timestamp=gt:${lastTs.current}&limit=5&order=asc`
+      const res = await fetch(url)
+      if (!res.ok) return
+      const body = await res.json() as { messages?: { sequence_number: number; consensus_timestamp: string; message: string }[] }
+      if (!body.messages?.length) return
+      const newActions: Action[] = body.messages.map(m => ({
+        sequenceNumber: m.sequence_number,
+        consensusTimestamp: m.consensus_timestamp,
+        ...parseMessage(atob(m.message)),
+      }))
+      if (newActions.length > 0) {
+        lastTs.current = newActions[newActions.length - 1].consensusTimestamp
+        setActions(prev => {
+          const existing = new Set(prev.map(a => a.sequenceNumber))
+          const unique = newActions.filter(a => !existing.has(a.sequenceNumber))
+          return unique.length > 0 ? [...prev, ...unique] : prev
+        })
+      }
+    } catch { /* ignore */ }
+  }, [topicId])
+
+  useEffect(() => {
+    if (!live) return
+    const interval = setInterval(poll, 5000)
+    return () => clearInterval(interval)
+  }, [live, poll])
+
+  // Group by month → day
+  const byMonth: { monthKey: string; monthLabel: string; days: { dateKey: string; label: string; actions: Action[] }[] }[] = []
+  const reversed = [...actions].toReversed()
   for (const action of reversed) {
     const seconds = Number(action.consensusTimestamp.split(".")[0])
     const d = new Date(seconds * 1000)
+    const monthKey = d.toISOString().slice(0, 7) // "2026-06"
+    const monthLabel = d.toLocaleDateString("en-US", { month: "long", year: "numeric" })
     const dateKey = d.toISOString().split("T")[0]
-    const label = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
-    const existing = groups.find(g => g.date === dateKey)
-    if (existing) {
-      existing.actions.push(action)
-    } else {
-      groups.push({ date: dateKey, label, actions: [action] })
+    const dayLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
+
+    let month = byMonth.find(m => m.monthKey === monthKey)
+    if (!month) {
+      month = { monthKey, monthLabel, days: [] }
+      byMonth.push(month)
     }
+    let day = month.days.find(d => d.dateKey === dateKey)
+    if (!day) {
+      day = { dateKey, label: dayLabel, actions: [] }
+      month.days.push(day)
+    }
+    day.actions.push(action)
   }
 
   return (
@@ -137,32 +204,50 @@ export default function ActionTimeline({ data }: Props) {
         <div className="flex items-center gap-2 mt-1 text-sm text-gray-400">
           <span>Topic: <span className="font-mono">{data.topicId}</span></span>
           <span className="text-gray-300">·</span>
-          <span>{data.actions.length} action{data.actions.length !== 1 ? "s" : ""}</span>
+          <span>{actions.length} action{actions.length !== 1 ? "s" : ""}</span>
         </div>
       </div>
 
-      <div className="flex gap-2 mb-8">
+      <div className="flex gap-2 mb-8 items-center">
         <span className="text-xs bg-red-100 text-red-700 px-2.5 py-1 rounded-full font-medium">{high} High</span>
         <span className="text-xs bg-amber-100 text-amber-700 px-2.5 py-1 rounded-full font-medium">{medium} Medium</span>
         <span className="text-xs bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full font-medium">{low} Low</span>
+        <button
+          onClick={() => setLive(!live)}
+          className={`ml-auto flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full font-medium transition-all cursor-pointer ${
+            live ? "bg-red-100 text-red-700" : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+          }`}
+        >
+          {live && <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
+          {live ? "Live" : "Go Live"}
+        </button>
       </div>
 
-      {data.actions.length === 0 ? (
+      {actions.length === 0 ? (
         <div className="text-center py-20 text-gray-400">
           <div className="text-4xl mb-4">📭</div>
           <p className="font-medium">No actions recorded yet</p>
           <p className="text-sm mt-1">Propose and record an action to see it here</p>
         </div>
       ) : (
-        <div className="space-y-8">
-          {groups.map(group => (
-            <div key={group.date}>
-              <h3 className="text-sm font-semibold text-gray-500 mb-3 sticky top-0 bg-gray-50 py-2 z-10 border-b border-gray-100">
-                {group.label}
-              </h3>
-              <div>
-                {group.actions.map((action, i) => (
-                  <ActionCard key={action.sequenceNumber} action={action} index={i} />
+        <div className="space-y-10">
+          {byMonth.map(month => (
+            <div key={month.monthKey}>
+              <h2 className="text-lg font-bold text-gray-700 mb-4 sticky top-0 bg-gray-50 py-3 z-10 border-b border-gray-200">
+                {month.monthLabel}
+              </h2>
+              <div className="space-y-6">
+                {month.days.map(day => (
+                  <div key={day.dateKey}>
+                    <h3 className="text-sm font-semibold text-gray-500 mb-3">
+                      {day.label}
+                    </h3>
+                    <div>
+                      {day.actions.map((action) => (
+                        <ActionCard key={action.sequenceNumber} action={action} />
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
