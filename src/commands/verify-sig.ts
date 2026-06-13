@@ -11,6 +11,8 @@ export async function verifySig(agentEns: string, actionId: string): Promise<voi
   }
 
   const messages = await queryTopicMessages(topicId)
+  const seqNum = parseInt(actionId)
+  const useSeqNum = !isNaN(seqNum) && String(seqNum) === actionId
   let found: { message: string; sequenceNumber: number } | null = null
   for (const msg of messages) {
     let raw = msg.message
@@ -21,7 +23,10 @@ export async function verifySig(agentEns: string, actionId: string): Promise<voi
     }
     try {
       const parsed = JSON.parse(raw) as Record<string, unknown>
-      if (parsed.actionId === actionId) {
+      const match = useSeqNum
+        ? msg.sequenceNumber === seqNum
+        : parsed.actionId === actionId
+      if (match) {
         found = { message: raw, sequenceNumber: msg.sequenceNumber }
         break
       }

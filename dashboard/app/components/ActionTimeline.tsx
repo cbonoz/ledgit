@@ -135,7 +135,7 @@ function ActionCard({ action }: { action: Action }) {
               <span className="text-xs text-gray-400 font-medium uppercase tracking-wide">Signature</span>
               <p className="font-mono text-xs text-gray-600 break-all mt-0.5 cursor-pointer" title={action.signature} onClick={() => navigator.clipboard.writeText(action.signature || "")}>{sigShort}</p>
               <div className="text-xs text-gray-400 mt-1">
-                Verify via CLI: <code className="bg-gray-100 px-1 rounded text-xs font-mono">ledgit verify-sig {action.actionId}</code>
+                Verify via CLI: <code className="bg-gray-100 px-1 rounded text-xs font-mono">ledgit verify-sig {action.actionId || action.sequenceNumber}</code>
               </div>
             </div>
             <div>
