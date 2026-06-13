@@ -76,15 +76,20 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
   })
   const hasSig = action.signature && action.signature.length > 10
   const sigShort = hasSig ? action.signature!.slice(0, 10) + "..." + action.signature!.slice(-6) : "—"
-  const rogueHigh = !hasSig && (action.riskLevel === "high" || action.riskLevel === "medium")
+  const needsSig = action.riskLevel === "high" || action.riskLevel === "medium"
+  const compliant = hasSig || action.riskLevel === "low"
+  const unverified = needsSig && !hasSig
+  const bgColor = compliant ? "bg-emerald-50" : "bg-red-50"
+  const borderColor = compliant ? "border-emerald-400" : "border-red-400"
+  const dotColor = compliant ? "bg-emerald-400" : "bg-red-400"
 
   return (
     <div className="relative pl-8 pb-8 last:pb-0">
-      <div className={`absolute -left-3 top-0 w-6 h-6 rounded-full ${color.bg} border-2 ${color.border} ring-4 ${color.ring} flex items-center justify-center`}>
-        <div className={`w-2 h-2 rounded-full ${color.dot}`} />
+      <div className={`absolute -left-3 top-0 w-6 h-6 rounded-full ${bgColor} border-2 ${unverified ? `${borderColor} border-dashed` : borderColor} ring-4 ${unverified ? "ring-red-200" : "ring-emerald-200"} flex items-center justify-center`}>
+        <div className={`w-2 h-2 rounded-full ${dotColor}`} />
       </div>
       <div
-        className={`${color.bg} border-l-4 ${rogueHigh ? `${color.border} border-dashed` : color.border} rounded-r-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer`}
+        className={`${bgColor} border-l-4 ${unverified ? `${borderColor} border-dashed` : borderColor} rounded-r-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer`}
         onClick={() => setOpen(!open)}
       >
         <div className="flex items-center justify-between mb-1">
@@ -93,7 +98,7 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
             <span className={`text-xs font-semibold ${color.label} ${color.labelBg} px-2 py-0.5 rounded-full`}>
               {action.riskLevel?.toUpperCase() || "LOW"}
             </span>
-            {rogueHigh && (
+            {unverified && (
               <span className="text-xs">⚠️</span>
             )}
           </div>
@@ -111,7 +116,7 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
               </svg>
               Ledger Signature Verified
             </span>
-          ) : rogueHigh ? (
+          ) : unverified ? (
               <span className="inline-flex items-center gap-1 text-red-600 font-semibold">
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-1.134 0-2.042-.536-2.682-1.374a2.2 2.2 0 01-.33-1.86l.46-1.15a.737.737 0 000-.588l-.46-1.15a2.2 2.2 0 01.33-1.86c.64-.838 1.548-1.374 2.682-1.374h14.606c1.134 0 2.042.536 2.682 1.374a2.2 2.2 0 01.33 1.86l-.46 1.15a.737.737 0 000 .588l.46 1.15a2.2 2.2 0 01-.33 1.86c-.64.838-1.548 1.374-2.682 1.374H5.697" />
