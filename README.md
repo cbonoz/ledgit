@@ -19,7 +19,7 @@ Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
 
 | | Flow | Ledger? |
 |---|---|---|
-| 🔴 **High risk** (HBAR transfer, swap) | Propose → approve on Ledger → execute → HCS | ✅ Required |
+| 🔴 **High risk** (transfer, swap, contract call) | Propose → approve on Ledger → execute → HCS | ✅ Required |
 | 🟡 **Medium risk** (grant role, update config) | Propose → approve on Ledger → execute → HCS | ✅ Required |
 | 🟢 **Low risk** (read logs, check balance) | Propose → auto-approved → HCS | ❌ Skipped |
 | 💀 **Rogue action** (outside LEDGIT) | Sent directly, no audit trail | ❌ Invisible to auditors |
