@@ -5,8 +5,15 @@ import Link from "next/link"
 
 type Persona = "agent" | "human" | null
 
+const sponsors = [
+  { name: "Ledger", role: "Hardware signing", desc: "Every action must be reviewed and approved on a Ledger device. The cryptographic signature proves a real human authorized it — not a bot, not a replay." },
+  { name: "Hedera", role: "Immutable ordering", desc: "Signed actions are recorded on Hedera HCS with a network-verified consensus timestamp and sequence number. The trail cannot be tampered with or reordered." },
+  { name: "ENS", role: "Self-discoverability", desc: "Agents are identified by ENS names like alice.ledgit.eth. The name resolves to the HCS topic — anyone can verify the trail without prior access." },
+]
+
 export default function Home() {
   const [persona, setPersona] = useState<Persona>(null)
+  const [openSponsor, setOpenSponsor] = useState<string | null>(null)
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-16">
@@ -152,6 +159,33 @@ export default function Home() {
                 <div><span className="text-gray-500">$</span> ledgit dashboard{' '}<span className="text-indigo-300">alice.ledgit.eth</span></div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-gray-200 p-7 text-left shadow-sm mb-6">
+          <h2 className="font-semibold text-xs text-gray-400 uppercase tracking-widest mb-3">Sponsors</h2>
+          <div className="space-y-2">
+            {sponsors.map((s) => (
+              <div key={s.name}>
+                <button
+                  onClick={() => setOpenSponsor(openSponsor === s.name ? null : s.name)}
+                  className="w-full flex items-center justify-between bg-gray-50 hover:bg-gray-100 rounded-lg px-4 py-3 text-left transition-colors cursor-pointer"
+                >
+                  <div>
+                    <div className="text-sm font-semibold text-gray-900">{s.name}</div>
+                    <div className="text-xs text-gray-400">{s.role}</div>
+                  </div>
+                  <svg className={`w-4 h-4 text-gray-300 transition-transform ${openSponsor === s.name ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
+                </button>
+                {openSponsor === s.name && (
+                  <div className="px-4 py-3 text-xs text-gray-600 leading-relaxed">
+                    {s.desc}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
