@@ -1,7 +1,7 @@
 # LEDGIT · Live Demo Script
 
-> Follow this on your machine. I'll be the agent running the CLI commands.
-> You're the human reviewing and approving on your Ledger.
+> Follow this on your machine. The AI runs the CLI autonomously — you just
+> review and approve on your Ledger when prompted.
 
 ## The Setup
 
@@ -52,9 +52,12 @@ ledgit actions list
 
 ## Step 2 — Agent Proposes an Action (30s)
 
-**Set the scene:** *"Meet Alice. She's one of our trading agents at Acme Corp — alice.ledgit.eth. She's been monitoring the markets and wants to execute a trade. Her ENS name is her identity, and every action she takes will be logged under it. Let's see what she proposes."*
+**Set the scene:** *"Meet Alice — one of our trading agents at Acme Corp. She's been monitoring the markets and decides to execute a trade. She calls the CLI autonomously."*
+
+The agent runs this — you just watch:
 
 ```bash
+# (The agent runs this, not you)
 ledgit propose \
   --agent alice.ledgit.eth \
   --type token_swap \
@@ -77,13 +80,13 @@ ledgit propose \
 
 ## Step 3 — Human Approves on Ledger (30s)
 
-**You say:** *"I'm sending this to my Ledger for review."*
+**You say:** *"The proposal is submitted. Now it's waiting for me."*
 
 ```bash
 ledgit record 7b8a94dc767086fc
 ```
 
-**On your Ledger Stax:** You'll see the action details. **Press Approve.**
+**On your Ledger Stax:** Review the action details. **Press Approve.**
 
 **Expected output:**
 ```
