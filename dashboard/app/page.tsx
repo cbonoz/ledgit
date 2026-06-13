@@ -7,7 +7,7 @@ type Persona = "agent" | "human" | null
 
 const sponsors = [
   { name: "Ledger", role: "Hardware signing", desc: "Every action must be reviewed and approved on a Ledger device. The cryptographic signature proves a real human authorized it — not a bot, not a replay." },
-  { name: "Hedera", role: "Immutable ordering", desc: "Signed actions are recorded on Hedera HCS with a network-verified consensus timestamp and sequence number. The trail cannot be tampered with or reordered. Optional encryption keeps sensitive payload data private while preserving public verifiability." },
+  { name: "Hedera", role: "Immutable records + payments", desc: "Signed actions are recorded on Hedera HCS with a network-verified consensus timestamp and sequence number. The trail cannot be tampered with or reordered. Also enables agentic audited payments — send HBAR directly from the CLI with full audit trail attached. Optional encryption keeps sensitive payload data private while preserving public verifiability." },
   { name: "ENS", role: "Human-readable identities", desc: "Agents are identified by names like alice.ledgit.eth instead of cryptic addresses. The name resolves to the HCS topic — anyone can verify the trail without prior access. No more copying and pasting hex strings." },
 ]
 
@@ -163,7 +163,7 @@ export default function Home() {
         </div>
 
         <div className="bg-white rounded-2xl border border-gray-200 p-7 text-left shadow-sm mb-6">
-          <h2 className="font-semibold text-xs text-gray-400 uppercase tracking-widest mb-3">Sponsors</h2>
+          <h2 className="font-semibold text-xs text-gray-400 uppercase tracking-widest mb-3">Tools</h2>
           <div className="space-y-2">
             {sponsors.map((s) => (
               <div key={s.name}>
