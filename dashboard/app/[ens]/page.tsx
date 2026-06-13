@@ -18,6 +18,7 @@ interface Action {
   type?: string
   signature?: string
   riskLevel?: string
+  encrypted?: boolean
 }
 
 const DEFAULT_RISK: Record<string, string> = {
@@ -50,6 +51,11 @@ async function fetchFromMirrorNode(topicId: string): Promise<Action[]> {
     }
     try {
       const decoded = atob(m.message)
+      // Check if message is encrypted
+      if (decoded.startsWith("ledgit:enc:")) {
+        entry.encrypted = true
+        return entry
+      }
       const parsed = JSON.parse(decoded) as Record<string, unknown>
       if (parsed.actionId) entry.actionId = String(parsed.actionId)
       if (parsed.agent) entry.agent = String(parsed.agent)
