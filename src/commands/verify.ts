@@ -54,6 +54,13 @@ export async function verify(agentEns: string): Promise<void> {
       parsed = null
     }
 
+    const DEFAULT_RISK: Record<string, string> = {
+      usdc_transfer: "high",
+      token_swap: "high",
+      grant_role: "medium",
+      update_agent_config: "medium",
+    }
+
     out.separator(`Action #${msg.sequenceNumber}`)
     out.keyValue("Timestamp", msg.consensusTimestamp)
     if (encrypted) out.keyValue("Privacy", parsed ? "🔓 Decrypted" : "🔒 Encrypted (key needed)")
@@ -64,7 +71,6 @@ export async function verify(agentEns: string): Promise<void> {
         const sig = String(parsed.signature)
         out.keyValue("Signature", sig.slice(0, 42) + "...")
       }
-      // Try top-level fields first, then look inside nested payload string
       let desc = parsed.description ? String(parsed.description) : undefined
       let type = parsed.type ? String(parsed.type) : undefined
       let risk = parsed.riskLevel ? String(parsed.riskLevel) : undefined
@@ -80,7 +86,7 @@ export async function verify(agentEns: string): Promise<void> {
       }
       if (desc) out.keyValue("Description", desc)
       if (type) out.keyValue("Type", type)
-      if (risk) out.keyValue("Risk", risk)
+      out.keyValue("Risk", (risk || (type && DEFAULT_RISK[type]) || "low").toUpperCase())
     }
     out.keyValue("View on HashScan", `https://hashscan.io/testnet/topic/${topicId}/${msg.sequenceNumber}`)
     out.divider()
