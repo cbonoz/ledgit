@@ -51,7 +51,7 @@ program
 
 program
   .command("record")
-  .description("Manually record a previously proposed action")
+  .description("Record a previously proposed action (propose does this automatically)")
   .argument("[action-id]", "Action ID (auto-detects latest if omitted)")
   .action(async (actionId) => {
     await record(actionId)
@@ -59,7 +59,7 @@ program
 
 program
   .command("verify")
-  .description("Verify an agent's audit trail from HCS")
+  .description("Verify an agent's audit trail — resolves via ENS automatically")
   .argument("<agent-ens>", "Agent ENS name to verify")
   .action(async (agentEns) => {
     await verify(agentEns)
