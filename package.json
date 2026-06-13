@@ -4,13 +4,14 @@
   "description": "Verifiable Human-Authorized Audit Trails for AI Agents",
   "type": "module",
   "bin": {
-    "ledgit": "./dist/index.js"
+    "ledgit": "./src/index.ts"
   },
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
     "start": "node dist/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "ledgit": "bun src/index.ts"
   },
   "dependencies": {
     "@ensdomains/ensjs": "^4.2.0",
