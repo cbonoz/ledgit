@@ -6,7 +6,7 @@ import Link from "next/link"
 type Persona = "agent" | "human" | null
 
 const sponsors = [
-  { name: "Ledger", role: "Hardware signing", desc: "Every action requires physical approval on a Ledger device — the cryptographic signature proves a real human authorized it. Not a bot, not a replay, not a compromised API key. If the human doesn't press approve, the action doesn't happen." },
+  { name: "Ledger", role: "Hardware signing", desc: "Every high or medium risk action requires physical approval on a Ledger device — the cryptographic signature proves a real human authorized it. Not a bot, not a replay, not a compromised API key. If the human doesn't press approve, the action doesn't happen." },
   { name: "Hedera", role: "Immutable records + payments", desc: "Signed actions are recorded on Hedera HCS with a network-verified consensus timestamp and sequence number — no one can tamper with or reorder the trail. Also enables agentic audited payments: send HBAR directly from the CLI with the full audit trail attached. Optional encryption keeps sensitive payload data private while preserving public verifiability." },
   { name: "ENS", role: "Human-readable identities", desc: "Agents are identified by names like alice.ledgit.eth instead of cryptic addresses. The name resolves to the HCS topic — anyone can verify the trail without prior access. Subnames let you organize agents by team or role. If an agent is compromised, revoke its subname to cut off access instantly." },
 ]
