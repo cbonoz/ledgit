@@ -85,6 +85,20 @@ ledgit setup
 
 ---
 
+## Architecture
+
+![LEDGIT Architecture](docs/architecture.svg)
+
+The flow:
+
+1. **Agent** calls `ledgit propose` with action details and required fields
+2. **CLI** validates against the action schema and sends the request to the **Ledger** device
+3. **Human** reviews the action on their Ledger Stax and presses approve — the device returns a cryptographic signature
+4. **CLI** executes the action (HBAR transfer or contract call) on **Hedera**
+5. **CLI** submits the signed proof (action + signature + risk level) to **HCS** as an immutable message with consensus timestamp
+6. **Mirror Node API** serves the audit trail to the CLI (`ledgit verify`) and web dashboard
+7. **ENS text records** (`ledgit.hcs.topic`) make the HCS topic discoverable by agent name
+
 ## LEDGIT vs Hedera Agent Kit
 
 The [Hedera Agent Kit](https://github.com/hashgraph/hedera-agent-kit-js) is a LangChain toolkit for Hedera operations (transfers, tokens, HCS). LEDGIT is the human-in-the-loop audit layer.
