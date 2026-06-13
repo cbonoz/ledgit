@@ -2,7 +2,7 @@
 
 > The auditability CLI for named agents. Prove a human authorized every action.
 
-A CLI-first tool that creates cryptographically verifiable audit trails for AI agent actions using **Ledger** (signing), **Hedera HCS** (immutable records), and **ENS** (bring your own name — no subname service needed).
+A CLI-first tool that creates cryptographically verifiable audit trails for AI agent actions using **Ledger** (signing), **Hedera HCS** (immutable records), and **ENS** (bring your own name — no subname service, no dependency on us).
 
 ---
 
@@ -13,6 +13,7 @@ A CLI-first tool that creates cryptographically verifiable audit trails for AI a
 | **Human oversight** | None or weak (software prompt only) | Cryptographic human-in-the-loop via Ledger hardware |
 | **Auditability** | Basic logs (easy to fake, tamper, lose) | Immutable, ordered, cryptographically verifiable trail on Hedera HCS |
 | **Proof of authorization** | "The agent said it did X" | Provable: this specific human reviewed and signed on hardware |
+| **Agent identity** | Opaque addresses or temporary IDs | Your own ENS name — human-readable, portable, revocable |
 | **Regulatory readiness** | Almost impossible in regulated environments | Production-viable in banks, fintechs, and DAOs |
 | **Accountability** | Blame the model / prompt / "it's AI" | Clear chain of custody: Agent proposed → Human approved → Executed |
 | **Trust & safety** | High risk of rogue actions | Controlled, reviewed, fully traceable |

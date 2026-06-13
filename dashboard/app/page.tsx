@@ -8,7 +8,7 @@ type Persona = "agent" | "human" | null
 const sponsors = [
   { name: "Ledger", role: "Hardware signing", desc: "Every high or medium risk action requires physical approval on a Ledger device — the cryptographic signature proves a real human authorized it. Not a bot, not a replay, not a compromised API key. If the human doesn't press approve, the action doesn't happen." },
   { name: "Hedera", role: "Immutable records + payments", desc: "Signed actions are recorded on Hedera HCS with a network-verified consensus timestamp and sequence number — no one can tamper with or reorder the trail. Also enables agentic audited payments: send HBAR directly from the CLI with the full audit trail attached. Optional encryption keeps sensitive payload data private while preserving public verifiability." },
-  { name: "ENS", role: "Human-readable identities", desc: "Agents are identified by names like alice.ledgit.eth instead of cryptic addresses. The name resolves to the HCS topic — anyone can verify the trail without prior access. Subnames let you organize agents by team or role. If an agent is compromised, revoke its subname to cut off access instantly." },
+  { name: "ENS", role: "Bring your own ENS name", desc: "No subname service or platform dependency. Use any ENS name you already own as your agent's identity — set one text record and you're done. The name resolves to the HCS topic so anyone can verify the trail. Opaque hex addresses replaced with readable names like alice.acme-corp.eth." },
 ]
 
 export default function Home() {
@@ -39,7 +39,7 @@ export default function Home() {
           >
             <div className="text-2xl mb-1">👤</div>
             <div className="font-bold text-sm">I&apos;m a Human</div>
-            <div className="text-xs text-gray-400 mt-0.5">Review on Ledger, verify any agent</div>
+            <div className="text-xs text-gray-400 mt-0.5">Review on Ledger, bring your own ENS name</div>
           </button>
           <button
             onClick={() => setPersona(persona === "agent" ? null : "agent")}
@@ -170,7 +170,7 @@ export default function Home() {
               <div className="bg-gray-900 rounded-lg px-4 py-3 font-mono text-sm text-gray-100">
                 <div><span className="text-gray-500">$</span> ledgit setup</div>
                 <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700">
-                  Interactive setup: connects to Hedera, creates your first agent and HCS topic, generates action config. Bring your own ENS name or use a local identifier.
+                  Interactive setup: connects to Hedera, creates your first agent and HCS topic, generates action config. Bring your own ENS name or use a local identifier — no subname service needed.
                 </div>
               </div>
             </div>

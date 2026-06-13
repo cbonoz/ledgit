@@ -1,6 +1,6 @@
 # LEDGIT · Demo Script
 
-One of your AI agents just moved real money… can you prove a human authorized it?
+> One of your AI agents just moved real money… can you prove a human authorized it?
 
 ## The Scenario
 
@@ -11,7 +11,8 @@ different portfolios. The compliance officer needs to prove to auditors that
 Without LEDGIT, she'd sift through 3 separate bot logs with inconsistent
 formats, missing signatures, and no way to prove the records weren't tampered
 with. With LEDGIT, every agent produces a uniform, verifiable, self-discoverable
-audit trail.
+audit trail. Agents use the ENS name their operator assigned them — LEDGIT works
+with any ENS name you own, no subname service needed.
 
 ---
 
@@ -46,7 +47,7 @@ new action type is a JSON change, not a code change."*
 ledgit propose \
   --agent alice.ledgit.eth \
   --type token_swap \
-  --fields '{"amountIn":"5000","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
+  --fields '{"amountIn":"10000","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
 ```
 
 ```
@@ -54,11 +55,11 @@ ledgit propose \
   ───────────────────────────────
   Agent:       alice.ledgit.eth
   Type:        token_swap
-  Description: Swap 5000 USDC for ETH on Uniswap
-  Payload:     {"amountIn":"5000",...}
-  Timestamp:   2026-06-12T18:30:00.000Z
+  Description: Swap 10000 USDC for ETH on Uniswap
+  Payload:     {"amountIn":"10000",...}
+  Timestamp:   2026-06-13T13:52:40.000Z
 
-  Action ID: a1b2c3d4e5f6g7h8
+  Action ID: 7b8a94dc767086fc
 ```
 
 **Say:** *"The agent proposes a specific trade. The CLI auto-generates the
@@ -70,22 +71,25 @@ and flags the risk level. The human sees exactly what they're approving."*
 ## Step 3: Human Approves on Ledger (20 sec)
 
 ```bash
-ledgit record a1b2c3d4e5f6g7h8
+ledgit record 7b8a94dc767086fc
 ```
 
 ```
   ✅ Connected to Ledger (USB)
   Agent:       alice.ledgit.eth
-  HCS Topic:   0.0.9219368
+  HCS Topic:   0.0.9219676
+  Description: Swap 10000 USDC for ETH on Uniswap
+  Type:        token_swap
+  Risk:        high
 
   ⏳ Requesting signature on Ledger...
   ✅ Signature obtained from Ledger
-  Signature:   0xf56f8a0872ad3ecaa52822a8170d343b...
+  Signature:   0xead9209f36ca017f46237e2b50da385f...
 
   ⏳ Submitting to Hedera HCS...
   ✅ Recorded on Hedera HCS
-  Sequence:    142
-  Timestamp:   2026-06-12T18:30:15.000Z
+  Sequence:    2
+  Timestamp:   2026-06-13T13:51:45.000Z
 ```
 
 **Say (hold up the Ledger):** *"The human reviews the action *on the device* and
@@ -104,29 +108,30 @@ ledgit verify alice.ledgit.eth
 ```
   Audit Trail: alice.ledgit.eth
   ───────────────────────────────
-  Topic:       0.0.9219368
+  Topic:       0.0.9219676
 
-  ── Action #142 ──  🔴 HIGH
-  Timestamp:   18:30:15
-  Description: Swap 5000 USDC for ETH on Uniswap
-  Signature:   0xf56f8a0872... ✅ Ledger Signed
+  Links:
+  HashScan     https://hashscan.io/testnet/topic/0.0.9219676
+  Dashboard    https://ledgitdash.vercel.app/alice-ledgit-eth
 
-  ── Action #141 ──  🟡 MEDIUM
-  Timestamp:   18:25:00
-  Description: Update risk tolerance to conservative
-  Signature:   0xefgh5678... ✅ Ledger Signed
+  ── Action #3 ──  🔴 HIGH
+  Timestamp:   2026-06-13T13:55:45
+  Description: Send 2500 USDC to 0xVendor for invoice payment
+  Type:        usdc_transfer
+  Signature:   0x30c71ccb3787... ✅ Ledger Signed
 
-  ✅ 2 action(s) recorded
-```
+  ── Action #2 ──  🔴 HIGH
+  Timestamp:   2026-06-13T13:51:45
+  Description: Swap 10000 USDC for ETH on Uniswap
+  Type:        token_swap
+  Signature:   0xead9209f36ca... ✅ Ledger Signed
 
-```bash
-ledgit verify bob.ledgit.eth
-ledgit verify charlie.ledgit.eth
+  ✅ 3 action(s) recorded
 ```
 
 **Say:** *"Same command, same format, every agent. Whether you have 3 agents or
 300, the compliance officer gets a uniform, ordered, verifiable trail for every
-single one. No log spelunking, no format guessing."*
+single one. The ENS text record points to the HCS topic — no config needed."*
 
 ---
 
@@ -136,7 +141,7 @@ single one. No log spelunking, no format guessing."*
 ledgit dashboard alice.ledgit.eth
 ```
 
-Opens `https://ledgitdash.vercel.app/alice-ledgit-eth` — a visual timeline with
+Opens `https://ledgitdash.vercel.app` — a visual timeline with
 color-coded risk levels, clickable payload details, and signature badges.
 
 **Say:** *"Same data, two views — terminal for agents, browser for stakeholders.
@@ -163,13 +168,15 @@ The same flow handles the audit trail AND the actual payment."*
 
 ## 90-Second Demo Flow
 
-| :00 | `ledgit actions list` | Show configurable action types |
-| :15 | `ledgit propose ... token_swap` | Agent proposes a trade |
-| :35 | `ledgit record <id>` | Human approves on Ledger → HCS |
-| :55 | `ledgit verify alice.ledgit.eth` | Show ordered audit trail |
+| Time | Step | Visual |
+|------|------|--------|
+| :00 | `ledgit actions list` | Configurable action types |
+| :15 | `ledgit propose --type token_swap --fields '{...}'` | Proposal with risk badge |
+| :35 | `ledgit record <id>` | Ledger approval → HCS submission |
+| :55 | `ledgit verify alice.ledgit.eth` | Ordered trail with signatures |
 | :70 | `ledgit dashboard alice.ledgit.eth` | Browser opens visual timeline |
-| :85 | `ledgit send 0.0.5698412 1` | Execute real HBAR payment |
-| :90 | Wrap | *"Prove a human authorized every action."* |
+| :85 | `ledgit send 0.0.5698412 1` | Real HBAR payment executes |
+| :90 | Wrap — *"Prove a human authorized every action."* |
 
 ---
 
@@ -179,13 +186,13 @@ The same flow handles the audit trail AND the actual payment."*
 - AI agents are moving real money. Regulated companies cannot deploy them
   without proving human oversight.
 - Existing audit trails are ad-hoc, inconsistent, and missing critical data.
-- This is a $0 market today — every agent team will need this.
+- Every agent team will need this — it's a $0 market today.
 
 **Why LEDGIT wins:**
 - **Ledger:** Hardware proof of human approval, not just a log line
 - **Hedera HCS:** Immutable ordering with network-verified timestamps
-- **ENS:** Self-discoverable — anyone resolves the name and sees the trail
-- **Configurable schemas:** Standardized format regardless of action type
+- **ENS:** Bring your own name — no subname service or platform dependency
+- **Configurable schemas:** Standardized audit format regardless of action type
 - **CLI-first:** Designed for agents to call, humans to review
 
 **Scale argument:**
