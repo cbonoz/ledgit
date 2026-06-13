@@ -41,7 +41,7 @@
 
   <!-- Arrow CLI → HCS -->
   <line x1="340" y1="150" x2="190" y2="240" class="arrow-bold"/>
-  <text x="250" y="185" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">submitMessage()</text>
+  <text x="250" y="205" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">submitMessage()</text>
 
   <!-- Ledger Box -->
   <rect x="630" y="90" width="200" height="80" class="box"/>
@@ -83,15 +83,15 @@
 
   <!-- Arrow CLI → HBAR -->
   <line x1="430" y1="170" x2="425" y2="240" class="arrow"/>
-  <text x="428" y="195" class="sub" font-size="10" text-anchor="middle">transferHbar()</text>
+  <text x="428" y="205" class="sub" font-size="10" text-anchor="middle">transferHbar()</text>
 
   <!-- Arrow CLI → Contract -->
   <line x1="450" y1="170" x2="615" y2="240" class="arrow"/>
-  <text x="530" y="210" class="sub" font-size="10" text-anchor="middle">contractCall()</text>
+  <text x="530" y="205" class="sub" font-size="10" text-anchor="middle">contractCall()</text>
 
   <!-- Arrow CLI → Custom Action -->
   <line x1="470" y1="170" x2="795" y2="240" class="arrow"/>
-  <text x="640" y="195" class="sub" font-size="10" text-anchor="middle">execute</text>
+  <text x="640" y="205" class="sub" font-size="10" text-anchor="middle">execute</text>
 
   <!-- Mirror Node Box -->
   <rect x="340" y="420" width="240" height="80" class="box"/>
