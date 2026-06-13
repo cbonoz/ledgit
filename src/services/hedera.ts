@@ -7,7 +7,7 @@ import {
   AccountId,
 } from "@hashgraph/sdk"
 
-const HEDERA_NETWORK = "testnet"
+const HEDERA_NETWORK = process.env.HEDERA_NETWORK || "testnet"
 
 function getClient(): Client {
   const operatorId = process.env.HEDERA_OPERATOR_ID

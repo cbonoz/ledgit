@@ -39,7 +39,7 @@ export default function Home() {
           >
             <div className="text-2xl mb-1">👤</div>
             <div className="font-bold text-sm">I&apos;m a Human</div>
-            <div className="text-xs text-gray-400 mt-0.5">Review, approve, verify</div>
+            <div className="text-xs text-gray-400 mt-0.5">Review on Ledger, verify any agent</div>
           </button>
           <button
             onClick={() => setPersona(persona === "agent" ? null : "agent")}
@@ -51,7 +51,7 @@ export default function Home() {
           >
             <div className="text-2xl mb-1">🤖</div>
             <div className="font-bold text-sm">I&apos;m an Agent</div>
-            <div className="text-xs text-gray-400 mt-0.5">Propose actions, discover schemas</div>
+            <div className="text-xs text-gray-400 mt-0.5">Propose actions, see what's available</div>
           </button>
         </div>
 
@@ -146,11 +146,11 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <div className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Setup</div>
               <div className="bg-gray-900 rounded-lg px-4 py-3 font-mono text-sm text-gray-100">
-                <div><span className="text-gray-500">$</span> cp .env.example .env</div>
-                <div><span className="text-gray-500">$</span> ledgit actions init-config</div>
-                <div><span className="text-gray-500">$</span> ledgit init --agent my-agent.ledgit.eth</div>
+                <div><span className="text-gray-500">$</span> ledgit setup</div>
+                <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700">
+                  Interactive setup: connects to Hedera, creates your first agent and HCS topic, generates action config, and configures encryption — all in one command.
+                </div>
               </div>
             </div>
             <div>

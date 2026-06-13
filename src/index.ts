@@ -7,6 +7,7 @@ import { propose } from "./commands/propose.js"
 import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
 import { dashboard } from "./commands/dashboard.js"
+import { setup as runSetup } from "./commands/setup.js"
 import { connectLedger } from "./services/ledger.js"
 import { loadActionsConfig, writeDefaultConfig } from "./services/config.js"
 import * as out from "./services/output.js"
@@ -51,6 +52,13 @@ program
   .argument("<agent-ens>", "Agent ENS name to verify")
   .action(async (agentEns) => {
     await verify(agentEns)
+  })
+
+program
+  .command("setup")
+  .description("Walk through initial setup: .env, config, first HCS topic")
+  .action(async () => {
+    await runSetup()
   })
 
 program
