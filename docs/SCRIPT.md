@@ -22,19 +22,36 @@ resolves the name and sees the complete, verifiable history."*
 
 **Say:** *"The entire setup is documented on the page — clone, install, run one command, and your agent is ready to propose actions that require human approval."*
 
+## 0:15 — Risk Tiers at a Glance
+
+Run this in the terminal to show the color-coded risk system:
+
+```bash
+ledgit actions list
+```
+
+```
+  🔴 HBAR Transfer (hbar_transfer)      🔴 High risk — requires Ledger approval, recorded to HCS
+  🟡 Grant Role (grant_role)             🟡 Medium risk — requires Ledger approval, recorded to HCS
+  🟢 Read Agent Logs (read_logs)         🟢 Low risk — auto-approved, recorded to HCS
+
+  To add or edit action types, create or edit: .ledgit/config.json
+```
+
+**Say:** *"Every action type has a risk level, required fields, and a description template. High and medium require hardware approval on the Ledger. Low risk auto-approves. All are recorded immutably on Hedera HCS."*
+
 ## 0:30 — Run the CLI Demo
 
 Follow **`docs/DEMO.md`** for the full walkthrough:
 
 | # | Action | Time |
 |---|--------|------|
-| 1 | `ledgit actions list` — show configurable action types | :30 |
-| 2 | `ledgit propose --type usdc_transfer ...` — agent logs intent | :45 |
-| 3 | `ledgit record <id>` — approve on Ledger, recorded to HCS | 1:00 |
-| 4 | `ledgit contract 0.0.9224072 increment '[]'` — smart contract call | 1:20 |
-| 5 | `ledgit propose --type read_logs ...` — low risk, auto-approved | 1:35 |
-| 6 | `ledgit verify alice.ledgit.eth` — ordered trail with signatures | 1:50 |
-| 7 | `ledgit dashboard alice.ledgit.eth` — calendar view | 2:00 |
+| 1 | `ledgit actions list` — risk tiers and configurable types | :15 |
+| 2 | `ledgit propose --type hbar_transfer ...` — propose + approve + record | :45 |
+| 3 | `ledgit contract 0.0.9224072 increment '[]'` — smart contract call | 1:05 |
+| 4 | `ledgit propose --type read_logs ...` — low risk, auto-approved | 1:20 |
+| 5 | `ledgit verify alice.ledgit.eth` — ordered trail with signatures | 1:35 |
+| 6 | `ledgit dashboard alice.ledgit.eth` — calendar view | 1:50 |
 
 ## Key Talking Points
 
