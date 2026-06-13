@@ -32,6 +32,7 @@ program
   .description("Verifiable Human-Authorized Audit Trails for AI Agents")
   .version("0.1.0")
   .option("--json", "Output in JSON format")
+  .addHelpText("afterAll", "\n  FAQ: https://ledgitdash.vercel.app/faq\n")
   .hook("preAction", (thisCmd, actionCmd) => {
     if (program.opts().json) {
       out.setJsonMode(true)

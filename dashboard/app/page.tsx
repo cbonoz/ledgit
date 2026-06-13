@@ -224,6 +224,8 @@ export default function Home() {
             GitHub
           </a>
           <span>·</span>
+          <a href="/faq" className="hover:text-gray-600 transition-colors">FAQ</a>
+          <span>·</span>
           <span>ETHGlobal New York 2026</span>
         </p>
       </div>
