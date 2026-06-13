@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#1f2937"/>
+  <text x="60" y="50" font-family="monospace" font-size="18" font-weight="700" fill="#22c55e">$ ledgit actions list</text>
+
+  <text x="60" y="100" font-family="monospace" font-size="14" fill="#e5e7eb">Available Actions</text>
+  <text x="60" y="120" font-family="monospace" font-size="12" fill="#6b7280">───────────────────────────────</text>
+
+  <text x="60" y="150" font-family="monospace" font-size="14" fill="#ef4444">🔴 HBAR Transfer (hbar_transfer)</text>
+  <text x="80" y="170" font-family="monospace" font-size="12" fill="#9ca3af">Send {amount} HBAR to {to} for {reason}</text>
+  <text x="80" y="186" font-family="monospace" font-size="12" fill="#9ca3af">Fields: amount, to, reason</text>
+
+  <text x="60" y="216" font-family="monospace" font-size="14" fill="#ef4444">🔴 Token Swap (token_swap)</text>
+  <text x="80" y="236" font-family="monospace" font-size="12" fill="#9ca3af">Swap {amountIn} {tokenIn} for {tokenOut} on {dex}</text>
+  <text x="80" y="252" font-family="monospace" font-size="12" fill="#9ca3af">Fields: amountIn, tokenIn, tokenOut, dex</text>
+
+  <text x="60" y="282" font-family="monospace" font-size="14" fill="#f59e0b">🟡 Grant Role (grant_role)</text>
+  <text x="80" y="302" font-family="monospace" font-size="12" fill="#9ca3af">Grant '{role}' role to {address}</text>
+  <text x="80" y="318" font-family="monospace" font-size="12" fill="#9ca3af">Fields: role, address</text>
+
+  <text x="60" y="348" font-family="monospace" font-size="14" fill="#22c55e">🟢 Read Agent Logs (read_logs)</text>
+  <text x="80" y="368" font-family="monospace" font-size="12" fill="#9ca3af">Read {count} most recent log entries</text>
+  <text x="80" y="384" font-family="monospace" font-size="12" fill="#9ca3af">Fields: count</text>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#f9fafb"/>
+  <rect x="250" y="80" width="320" height="90" rx="16" fill="white" stroke="#f59e0b" stroke-width="2"/>
+  <text x="280" y="120" font-size="24">👤</text>
+  <text x="280" y="145" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#111827">I'm a Human</text>
+  <text x="280" y="160" font-family="system-ui,sans-serif" font-size="12" fill="#9ca3af">Review on Ledger, bring your own ENS name</text>
+  <rect x="630" y="80" width="320" height="90" rx="16" fill="#eef2ff" stroke="#818cf8" stroke-width="2"/>
+  <text x="660" y="120" font-size="24">🤖</text>
+  <text x="660" y="145" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#111827">I'm an Agent</text>
+  <text x="660" y="160" font-family="system-ui,sans-serif" font-size="12" fill="#9ca3af">Propose actions, see what's available</text>
+
+  <!-- Agent tab content -->
+  <rect x="200" y="200" width="800" height="500" rx="16" fill="#eef2ff" stroke="#a5b4fc" stroke-width="1"/>
+  <text x="230" y="240" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#3730a3">How agents use LEDGIT</text>
+  <text x="250" y="280" font-family="system-ui,sans-serif" font-size="14" fill="#4338ca">1. Your operator installs LEDGIT and registers you in .ledgit/config.json</text>
+  <text x="250" y="310" font-family="system-ui,sans-serif" font-size="14" fill="#4338ca">2. At startup, your agent calls ledgit tools schema to discover available actions</text>
+  <text x="250" y="340" font-family="system-ui,sans-serif" font-size="14" fill="#4338ca">3. When you need to execute an action, call ledgit propose --type &lt;action&gt; --fields '{...}'</text>
+  <text x="250" y="370" font-family="system-ui,sans-serif" font-size="14" fill="#4338ca">4. Wait for human approval on Ledger (high/medium risk) or auto-approved (low risk)</text>
+  <text x="250" y="400" font-family="system-ui,sans-serif" font-size="14" fill="#4338ca">5. Verify the trail: ledgit verify &lt;name&gt;</text>
+</svg>

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#1f2937"/>
+  <text x="60" y="50" font-family="monospace" font-size="18" font-weight="700" fill="#22c55e">$ ledgit verify alice.ledgit.eth</text>
+
+  <text x="60" y="90" font-family="monospace" font-size="14" fill="#e5e7eb">Audit Trail: alice.ledgit.eth</text>
+  <text x="60" y="110" font-family="monospace" font-size="12" fill="#6b7280">───────────────────────────────</text>
+
+  <text x="60" y="135" font-family="monospace" font-size="13" fill="#6b7280">Topic      </text><text x="180" y="135" font-family="monospace" font-size="13" fill="#e5e7eb">0.0.9219676</text>
+
+  <text x="60" y="165" font-family="monospace" font-size="12" fill="#6b7280">Links:</text>
+  <text x="60" y="185" font-family="monospace" font-size="12" fill="#6b7280">HashScan   </text><text x="180" y="185" font-family="monospace" font-size="12" fill="#3b82f6">https://hashscan.io/testnet/topic/0.0.9219676</text>
+  <text x="60" y="205" font-family="monospace" font-size="12" fill="#6b7280">ENS Profile</text><text x="180" y="205" font-family="monospace" font-size="12" fill="#3b82f6">https://sepolia.ens.app/name/alice.ledgit.eth</text>
+
+  <text x="60" y="240" font-family="monospace" font-size="12" fill="#6b7280">── Action #11 ──</text>
+  <text x="80" y="260" font-family="monospace" font-size="12" fill="#6b7280">Timestamp  </text><text x="200" y="260" font-family="monospace" font-size="12" fill="#9ca3af">1781370528.552971039</text>
+  <text x="80" y="278" font-family="monospace" font-size="12" fill="#6b7280">Action ID  </text><text x="200" y="278" font-family="monospace" font-size="12" fill="#e5e7eb">03b825ce72ecb513</text>
+  <text x="80" y="296" font-family="monospace" font-size="12" fill="#6b7280">Agent      </text><text x="200" y="296" font-family="monospace" font-size="12" fill="#e5e7eb">alice.ledgit.eth</text>
+  <text x="80" y="314" font-family="monospace" font-size="12" fill="#6b7280">Description</text><text x="200" y="314" font-family="monospace" font-size="12" fill="#e5e7eb">Send 1 HBAR to 0.0.3568415 for demo</text>
+  <text x="80" y="332" font-family="monospace" font-size="12" fill="#6b7280">Type       </text><text x="200" y="332" font-family="monospace" font-size="12" fill="#e5e7eb">hbar_transfer</text>
+  <text x="80" y="350" font-family="monospace" font-size="12" fill="#6b7280">Risk       </text><text x="200" y="350" font-family="monospace" font-size="12" fill="#ef4444">HIGH</text>
+  <text x="80" y="368" font-family="monospace" font-size="12" fill="#6b7280">Signature  </text><text x="200" y="368" font-family="monospace" font-size="12" fill="#22c55e">0x071ab67e24f8... ✅ Ledger Signed</text>
+
+  <text x="60" y="400" font-family="monospace" font-size="12" fill="#6b7280">── Action #12 ──</text>
+  <text x="80" y="420" font-family="monospace" font-size="12" fill="#6b7280">Timestamp  </text><text x="200" y="420" font-family="monospace" font-size="12" fill="#9ca3af">1781371165.562375000</text>
+  <text x="80" y="438" font-family="monospace" font-size="12" fill="#6b7280">Agent      </text><text x="200" y="438" font-family="monospace" font-size="12" fill="#e5e7eb">alice.ledgit.eth</text>
+  <text x="80" y="456" font-family="monospace" font-size="12" fill="#6b7280">Description</text><text x="200" y="456" font-family="monospace" font-size="12" fill="#e5e7eb">Called increment on 0.0.9224072</text>
+  <text x="80" y="474" font-family="monospace" font-size="12" fill="#6b7280">Type       </text><text x="200" y="474" font-family="monospace" font-size="12" fill="#e5e7eb">contract_call</text>
+  <text x="80" y="492" font-family="monospace" font-size="12" fill="#6b7280">Risk       </text><text x="200" y="492" font-family="monospace" font-size="12" fill="#f59e0b">MEDIUM</text>
+  <text x="80" y="510" font-family="monospace" font-size="12" fill="#6b7280">Signature  </text><text x="200" y="510" font-family="monospace" font-size="12" fill="#22c55e">0xe2ea7210ce61... ✅ Ledger Signed</text>
+
+  <text x="60" y="550" font-family="monospace" font-size="14" fill="#22c55e">✅ 15 action(s) recorded</text>
+</svg>

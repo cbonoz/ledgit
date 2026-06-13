@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#1f2937"/>
+  <text x="60" y="50" font-family="monospace" font-size="18" font-weight="700" fill="#22c55e">$ ledgit propose --agent alice.ledgit.eth --type hbar_transfer --fields '{"amount":"1","to":"0.0.3568415","reason":"demo"}'</text>
+
+  <text x="60" y="100" font-family="monospace" font-size="14" fill="#e5e7eb">Action Proposal (HIGH RISK)</text>
+  <text x="60" y="120" font-family="monospace" font-size="12" fill="#6b7280">───────────────────────────────</text>
+
+  <text x="60" y="150" font-family="monospace" font-size="13" fill="#6b7280">Agent      </text><text x="180" y="150" font-family="monospace" font-size="13" fill="#e5e7eb">alice.ledgit.eth</text>
+  <text x="60" y="170" font-family="monospace" font-size="13" fill="#6b7280">Type       </text><text x="180" y="170" font-family="monospace" font-size="13" fill="#e5e7eb">hbar_transfer</text>
+  <text x="60" y="190" font-family="monospace" font-size="13" fill="#6b7280">Label      </text><text x="180" y="190" font-family="monospace" font-size="13" fill="#e5e7eb">HBAR Transfer</text>
+  <text x="60" y="210" font-family="monospace" font-size="13" fill="#6b7280">Description</text><text x="180" y="210" font-family="monospace" font-size="13" fill="#e5e7eb">Send 1 HBAR to 0.0.3568415 for demo</text>
+  <text x="60" y="230" font-family="monospace" font-size="13" fill="#6b7280">Payload    </text><text x="180" y="230" font-family="monospace" font-size="13" fill="#9ca3af">{"amount":"1","to":"0.0.3568415","reason":"demo"}</text>
+  <text x="60" y="250" font-family="monospace" font-size="13" fill="#6b7280">Timestamp  </text><text x="180" y="250" font-family="monospace" font-size="13" fill="#9ca3af">2026-06-13T17:08:37.331Z</text>
+  <text x="60" y="270" font-family="monospace" font-size="12" fill="#6b7280">───────────────────────────────</text>
+  <text x="60" y="295" font-family="monospace" font-size="13" fill="#6b7280">Action ID  </text><text x="180" y="295" font-family="monospace" font-size="13" fill="#22c55e">03b825ce72ecb513</text>
+
+  <text x="60" y="330" font-family="monospace" font-size="14" fill="#22c55e">⏳ Requesting signature on Ledger...</text>
+  <text x="60" y="355" font-family="monospace" font-size="14" fill="#22c55e">✅ Connected to Ledger (USB)</text>
+  <text x="60" y="380" font-family="monospace" font-size="14" fill="#22c55e">✅ Signature obtained from Ledger</text>
+  <text x="60" y="400" font-family="monospace" font-size="13" fill="#6b7280">Signature  </text><text x="180" y="400" font-family="monospace" font-size="13" fill="#9ca3af">0x071ab67e24f80f8c87c28be9b016bf137cb60bfe...</text>
+  <text x="60" y="420" font-family="monospace" font-size="12" fill="#6b7280">───────────────────────────────</text>
+
+  <text x="60" y="450" font-family="monospace" font-size="14" fill="#22c55e">⏳ Submitting to Hedera HCS...</text>
+  <text x="60" y="475" font-family="monospace" font-size="14" fill="#22c55e">✅ Recorded on Hedera HCS</text>
+  <text x="60" y="495" font-family="monospace" font-size="13" fill="#6b7280">Sequence   </text><text x="180" y="495" font-family="monospace" font-size="13" fill="#e5e7eb">11</text>
+  <text x="60" y="515" font-family="monospace" font-size="13" fill="#6b7280">Timestamp  </text><text x="180" y="515" font-family="monospace" font-size="13" fill="#e5e7eb">1781370528.552971039</text>
+</svg>
