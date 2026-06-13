@@ -77,12 +77,12 @@ The [Hedera Agent Kit](https://github.com/hashgraph/hedera-agent-kit-js) is a La
 | Feature | Agent Kit | LEDGIT |
 |---------|-----------|--------|
 | **Blockchain ops** | Full suite | HBAR send + contract calls |
-| **Human approval** | Returns unsigned bytes | **Ledger hardware signing** |
-| **Audit trail** | HCS Audit Trail Hook | HCS + ENS + signature |
-| **Agent identity** | Account ID | **ENS name** (`alice.ledgit.eth`) |
-| **Risk levels** | None | Per-action type |
+| **Human approval** | Returns unsigned bytes (you handle signing) | **Hardware signing on Ledger device** — human reviews and presses approve |
+| **Audit trail** | Logs to HCS via hook | HCS + Ledger signature + ENS name + risk level |
+| **Agent identity** | Account ID | **ENS name** (`alice.ledgit.eth`) — human-readable, portable, revocable |
+| **Risk levels** | None | Per-action type, low-risk skips hardware |
 | **CLI** | N/A | propose → record → verify |
-| **Dashboard** | N/A | Calendar view + live |
+| **Dashboard** | N/A | Calendar view with live polling |
 
 **Compatible.** Use the Agent Kit for agent framework integration (LangChain, Vercel AI SDK), and LEDGIT for hardware signing and audit. The `ledgit tools schema` output can be loaded as a custom tool.
 
