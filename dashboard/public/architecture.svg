@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="650" viewBox="0 0 900 650">
+  <defs>
+    <style>
+      .box { fill: white; stroke: #d1d5db; stroke-width: 1.5; rx: 10; }
+      .label { font-family: system-ui, sans-serif; font-size: 13px; font-weight: 600; fill: #111827; }
+      .sub { font-family: system-ui, sans-serif; font-size: 11px; fill: #6b7280; }
+      .arrow { stroke: #9ca3af; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead); }
+      .arrow-bold { stroke: #4f46e5; stroke-width: 2; fill: none; marker-end: url(#arrowhead-blue); }
+      .badge { font-family: system-ui, sans-serif; font-size: 11px; font-weight: 600; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#9ca3af"/>
+    </marker>
+    <marker id="arrowhead-blue" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4f46e5"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="900" height="650" fill="#f9fafb" rx="12"/>
+
+  <!-- Title -->
+  <text x="450" y="35" class="label" font-size="16" text-anchor="middle" fill="#111827">LEDGIT Architecture</text>
+  <text x="450" y="55" class="sub" text-anchor="middle">Agent proposes → Human approves on Ledger → Executes on Hedera → Proof on HCS</text>
+
+  <!-- Agent Box -->
+  <rect x="60" y="90" width="180" height="80" class="box"/>
+  <text x="150" y="120" class="label" text-anchor="middle">🤖 AI Agent</text>
+  <text x="150" y="140" class="sub" text-anchor="middle">Alice (alice.ledgit.eth)</text>
+  <text x="150" y="155" class="sub" text-anchor="middle">Calls ledgit propose</text>
+
+  <!-- CLI Box -->
+  <rect x="340" y="90" width="180" height="80" class="box" stroke="#4f46e5"/>
+  <text x="430" y="120" class="label" text-anchor="middle" fill="#4f46e5">ledgit CLI</text>
+  <text x="430" y="140" class="sub" text-anchor="middle">Validates + signs + records</text>
+  <text x="430" y="155" class="sub" text-anchor="middle">ledgit tools schema</text>
+
+  <!-- Arrow Agent → CLI -->
+  <line x1="240" y1="130" x2="335" y2="130" class="arrow"/>
+  <text x="290" y="122" class="sub" font-size="10" text-anchor="middle">propose</text>
+
+  <!-- Ledger Box -->
+  <rect x="630" y="90" width="200" height="80" class="box"/>
+  <text x="730" y="120" class="label" text-anchor="middle">🔒 Ledger Stax</text>
+  <text x="730" y="140" class="sub" text-anchor="middle">Human reviews &amp; approves</text>
+  <text x="730" y="155" class="sub" text-anchor="middle">signPersonalMessage()</text>
+
+  <!-- Arrow CLI → Ledger -->
+  <line x1="520" y1="110" x2="625" y2="110" class="arrow-bold"/>
+  <text x="575" y="103" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">Request signature</text>
+
+  <!-- Arrow Ledger → CLI (return) -->
+  <line x1="625" y1="145" x2="520" y2="145" class="arrow"/>
+  <text x="575" y="158" class="sub" font-size="10" text-anchor="middle">{r, s, v} signature</text>
+
+  <!-- HCS Box -->
+  <rect x="60" y="250" width="240" height="90" class="box"/>
+  <text x="180" y="280" class="label" text-anchor="middle">📦 Hedera HCS</text>
+  <text x="180" y="300" class="sub" text-anchor="middle">Immutable ordered records</text>
+  <text x="180" y="315" class="sub" text-anchor="middle">Consensus timestamps</text>
+
+  <!-- HBAR Payment Box -->
+  <rect x="340" y="250" width="170" height="90" class="box"/>
+  <text x="425" y="280" class="label" text-anchor="middle">💸 HBAR Transfer</text>
+  <text x="425" y="300" class="sub" text-anchor="middle">TransferTransaction</text>
+  <text x="425" y="315" class="sub" text-anchor="middle">Sub-second finality</text>
+
+  <!-- Custom Action Box (new) -->
+  <rect x="530" y="250" width="170" height="90" class="box" stroke="#f59e0b" stroke-dasharray="5,3"/>
+  <text x="615" y="278" class="label" text-anchor="middle" fill="#d97706">⚙️ Custom Action</text>
+  <text x="615" y="296" class="sub" text-anchor="middle">Configurable in</text>
+  <text x="615" y="313" class="sub" text-anchor="middle">.ledgit/config.json</text>
+
+  <!-- Destination Contract Box (generic) -->
+  <rect x="720" y="250" width="150" height="90" class="box"/>
+  <text x="795" y="278" class="label" text-anchor="middle">📄 Any Contract</text>
+  <text x="795" y="296" class="sub" text-anchor="middle">EVM or native</text>
+  <text x="795" y="313" class="sub" text-anchor="middle">ContractExecuteTx</text>
+
+  <!-- Arrow CLI → HBAR -->
+  <line x1="430" y1="170" x2="425" y2="245" class="arrow-bold"/>
+  <text x="470" y="210" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">transferHbar()</text>
+
+  <!-- Arrow CLI → Custom Action -->
+  <line x1="440" y1="170" x2="580" y2="245" class="arrow"/>
+  <text x="515" y="210" class="sub" font-size="10" text-anchor="middle">propose</text>
+
+  <!-- Arrow CLI → Contract -->
+  <line x1="470" y1="170" x2="770" y2="245" class="arrow"/>
+  <text x="625" y="195" class="sub" font-size="10" text-anchor="middle">contractCall()</text>
+
+  <!-- Mirror Node Box -->
+  <rect x="340" y="420" width="240" height="80" class="box"/>
+  <text x="460" y="450" class="label" text-anchor="middle">🔍 Mirror Node API</text>
+  <text x="460" y="470" class="sub" text-anchor="middle">Query audit trail</text>
+
+  <!-- Dashboard Box -->
+  <rect x="60" y="420" width="220" height="80" class="box"/>
+  <text x="170" y="450" class="label" text-anchor="middle">🌐 Web Dashboard</text>
+  <text x="170" y="470" class="sub" text-anchor="middle">Calendar view + live polling</text>
+
+  <!-- ENS Box -->
+  <rect x="620" y="420" width="220" height="80" class="box"/>
+  <text x="730" y="450" class="label" text-anchor="middle">📛 ENS Text Records</text>
+  <text x="730" y="465" class="sub" text-anchor="middle">ledgit.hcs.topic</text>
+  <text x="730" y="480" class="sub" text-anchor="middle">→ topic ID lookup</text>
+
+  <!-- Arrow HCS → Mirror Node -->
+  <line x1="180" y1="340" x2="400" y2="415" class="arrow"/>
+
+  <!-- Verified badge - wider and taller -->
+  <rect x="200" y="555" width="500" height="50" rx="10" fill="#d1fae5" stroke="#34d399" stroke-width="1.5"/>
+  <text x="450" y="585" class="badge" text-anchor="middle" fill="#059669">✅ Human authorized → On-chain proof on HCS → Self-discoverable via ENS</text>
+</svg>

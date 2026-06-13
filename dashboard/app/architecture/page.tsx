@@ -40,6 +40,11 @@ export default function ArchitecturePage() {
         </div>
       </div>
 
+      {/* Architecture SVG diagram */}
+      <div className="mb-8 bg-white rounded-2xl border border-gray-200 p-4">
+        <img src="/architecture.svg" alt="LEDGIT Architecture Diagram" className="w-full h-auto" />
+      </div>
+
       {/* Steps */}
       <div className="space-y-6">
         {steps.map((step) => (
