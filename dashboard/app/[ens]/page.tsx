@@ -73,11 +73,32 @@ async function fetchFromMirrorNode(topicId: string): Promise<Action[]> {
   })
 }
 
-export default async function AgentPage({ params }: { params: Promise<{ ens: string }> }) {
+export default async function AgentPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ ens: string }>
+  searchParams: Promise<{ topic?: string }>
+}) {
   const { ens } = await params
+  const { topic: searchTopic } = await searchParams
 
-  const topicId = await resolveTopicId(ens)
-  if (!topicId) notFound()
+  const topicId = searchTopic || (await resolveTopicId(ens))
+  if (!topicId) {
+    return (
+      <div className="max-w-lg mx-auto px-4 py-20 text-center">
+        <h1 className="text-xl font-bold mb-4">No audit trail found for {ens}</h1>
+        <p className="text-gray-400 text-sm mb-6">
+          This ENS name doesn&apos;t have a <code className="bg-gray-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit.hcs.topic</code> text record set.
+        </p>
+        <div className="text-left bg-gray-50 rounded-xl p-4 text-sm text-gray-600 space-y-2 mb-6">
+          <p><strong>To view data directly, add ?topic=0.0.XXXXX to the URL.</strong></p>
+          <p className="text-xs text-gray-400">Or set the ENS text record on sepolia.ens.app to enable automatic resolution.</p>
+        </div>
+        <a href="/" className="text-indigo-600 text-sm hover:underline">Back to home</a>
+      </div>
+    )
+  }
 
   const actions = await fetchFromMirrorNode(topicId)
   return (
