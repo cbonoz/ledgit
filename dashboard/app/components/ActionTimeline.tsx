@@ -72,7 +72,7 @@ function ActionCard({ action }: { action: Action }) {
   const [open, setOpen] = useState(false)
   const seconds = Number(action.consensusTimestamp.split(".")[0])
   const ts = new Date(seconds * 1000).toLocaleString("en-US", {
-    month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
+    month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC",
   })
   const hasSig = action.signature && action.signature.length > 10
   const sigShort = hasSig ? action.signature!.slice(0, 10) + "..." + action.signature!.slice(-6) : "—"
@@ -226,10 +226,10 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
   for (const action of reversed) {
     const seconds = Number(action.consensusTimestamp.split(".")[0])
     const d = new Date(seconds * 1000)
-    const monthKey = d.toISOString().slice(0, 7) // "2026-06"
-    const monthLabel = d.toLocaleDateString("en-US", { month: "long", year: "numeric" })
+    const monthKey = d.toISOString().slice(0, 7)
+    const monthLabel = d.toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" })
     const dateKey = d.toISOString().split("T")[0]
-    const dayLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
+    const dayLabel = d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })
 
     let month = byMonth.find(m => m.monthKey === monthKey)
     if (!month) {
