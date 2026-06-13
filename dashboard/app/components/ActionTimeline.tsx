@@ -78,23 +78,24 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
   const rogueHigh = !hasSig && action.riskLevel === "high"
 
   return (
-    <div className={`relative pl-8 pb-8 last:pb-0 ${rogueHigh ? "opacity-90" : ""}`}>
-      <div className={`absolute -left-3 top-0 w-6 h-6 rounded-full ${rogueHigh ? "bg-red-100 border-red-500 ring-red-300" : color.bg} border-2 ${rogueHigh ? "border-red-500" : color.border} ring-4 ${rogueHigh ? "ring-red-300" : color.ring} flex items-center justify-center`}>
-        <div className={`w-2 h-2 rounded-full ${rogueHigh ? "bg-red-500" : color.dot}`} />
+    <div className="relative pl-8 pb-8 last:pb-0">
+      <div className={`absolute -left-3 top-0 w-6 h-6 rounded-full ${color.bg} border-2 ${color.border} ring-4 ${color.ring} flex items-center justify-center`}>
+        <div className={`w-2 h-2 rounded-full ${color.dot}`} />
       </div>
       <div
-        className={`${rogueHigh ? "bg-red-50 border-red-400" : color.bg} border-l-4 ${rogueHigh ? "border-red-500" : color.border} rounded-r-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer ${rogueHigh ? "border-dashed" : ""}`}
+        className={`${color.bg} border-l-4 ${rogueHigh ? "border-red-500 border-dashed" : color.border} rounded-r-xl p-4 shadow-sm hover:shadow-md transition-shadow cursor-pointer`}
         onClick={() => setOpen(!open)}
       >
         <div className="flex items-center justify-between mb-1">
           <span className="text-xs font-mono text-gray-400">#{action.sequenceNumber}</span>
-          {rogueHigh ? (
-            <span className="text-xs font-semibold text-red-700 bg-red-200 px-2 py-0.5 rounded-full">⚠️ UNVERIFIED</span>
-          ) : (
+          <div className="flex gap-1.5 items-center">
             <span className={`text-xs font-semibold ${color.label} ${color.labelBg} px-2 py-0.5 rounded-full`}>
               {action.riskLevel?.toUpperCase() || "LOW"}
             </span>
-          )}
+            {rogueHigh && (
+              <span className="text-xs font-semibold text-red-700 bg-red-200 px-2 py-0.5 rounded-full">⚠️ NO SIGNATURE</span>
+            )}
+          </div>
         </div>
         <div className="text-sm text-gray-500 mb-1">{ts}</div>
         <div className="font-semibold text-gray-800 mb-1">{action.description || "No description"}</div>
