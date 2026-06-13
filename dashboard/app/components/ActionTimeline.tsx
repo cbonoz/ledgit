@@ -177,9 +177,9 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
   const lastTs = useRef(actions.length > 0 ? actions[actions.length - 1].consensusTimestamp : "0")
   const topicId = data.topicId
 
-  const high = actions.filter(a => a.riskLevel === "high").length
-  const medium = actions.filter(a => a.riskLevel === "medium").length
-  const low = actions.filter(a => a.riskLevel === "low").length
+  const high = actions.filter(a => (a.riskLevel || "low") === "high").length
+  const medium = actions.filter(a => (a.riskLevel || "low") === "medium").length
+  const low = actions.filter(a => (a.riskLevel || "low") === "low").length
 
   const selectDay = (dateKey: string) => {
     setSelectedDate(dateKey)
