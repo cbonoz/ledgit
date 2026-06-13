@@ -65,6 +65,12 @@ export async function verify(agentEns: string): Promise<void> {
     out.divider()
   }
 
+  const slug = agentEns.replace(/[^a-zA-Z0-9-]/g, "-")
+  out.info("Links:")
+  out.keyValue("HashScan", `https://hashscan.io/testnet/topic/${topicId}`)
+  out.keyValue("Dashboard", `https://ledgitdash.vercel.app/${slug}`)
+  out.divider()
+
   out.success(`${messages.length} action(s) recorded`)
   out.divider()
 }
