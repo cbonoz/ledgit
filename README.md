@@ -18,7 +18,7 @@ A CLI-first tool that creates cryptographically verifiable audit trails for AI a
 | **Trust & safety** | High risk of rogue actions | Controlled, reviewed, fully traceable |
 | **Debugging** | Hard to reconstruct why something happened | Full timeline with signatures and context |
 
-**The bottom line:** Agents without LEDGIT are toys for experiments. Agents with LEDGIT become trustworthy enterprise tools.
+**The bottom line:** Agents without LEDGIT run on trust. Agents with LEDGIT run on proof.
 
 ---
 
