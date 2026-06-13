@@ -38,7 +38,7 @@ ledgit actions list
   To add or edit action types, create or edit: .ledgit/config.json
 ```
 
-**Say:** *"Every action type has a risk level, required fields, and a description template. High and medium require hardware approval on the Ledger. Low risk auto-approves. All are recorded immutably on Hedera HCS."*
+**Say:** *"Every action type has a risk level, required fields, and a description template. High and medium require hardware approval on the Ledger. Low risk auto-approves. All are recorded immutably on Hedera HCS. Sensitive payloads can also be encrypted with AES-256-GCM — the sequence numbers and timestamps stay public, but the content is private to key holders."*
 
 ## 0:30 — Run the CLI Demo
 
