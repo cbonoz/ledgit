@@ -1,8 +1,6 @@
 import { notFound } from "next/navigation"
 import { http, createPublicClient } from "viem"
 import { sepolia } from "viem/chains"
-import { readFileSync, existsSync } from "fs"
-import { join } from "path"
 import ActionTimeline from "../components/ActionTimeline"
 
 interface MirrorMessage {
@@ -22,11 +20,11 @@ interface Action {
   riskLevel?: string
 }
 
-interface DashboardData {
-  agent: string
-  topicId: string
-  generatedAt: string
-  actions: Action[]
+const DEFAULT_RISK: Record<string, string> = {
+  usdc_transfer: "high",
+  token_swap: "high",
+  grant_role: "medium",
+  update_agent_config: "medium",
 }
 
 async function resolveTopicId(ens: string): Promise<string | null> {
@@ -56,15 +54,12 @@ async function fetchFromMirrorNode(topicId: string): Promise<Action[]> {
       if (parsed.actionId) entry.actionId = String(parsed.actionId)
       if (parsed.agent) entry.agent = String(parsed.agent)
       if (parsed.signature) entry.signature = String(parsed.signature)
-      // Check top-level fields, then fall back to nested payload
       let desc = parsed.description ? String(parsed.description) : undefined
       let type = parsed.type ? String(parsed.type) : undefined
       let risk = parsed.riskLevel ? String(parsed.riskLevel) : undefined
       if ((!desc || !type) && parsed.payload) {
         try {
-          const inner = typeof parsed.payload === 'string'
-            ? JSON.parse(parsed.payload)
-            : parsed.payload as Record<string, unknown>
+          const inner = typeof parsed.payload === "string" ? JSON.parse(parsed.payload) : parsed.payload as Record<string, unknown>
           if (!desc && inner.description) desc = String(inner.description)
           if (!type && inner.type) type = String(inner.type)
           if (!risk && inner.riskLevel) risk = String(inner.riskLevel)
@@ -72,31 +67,15 @@ async function fetchFromMirrorNode(topicId: string): Promise<Action[]> {
       }
       if (desc) entry.description = desc
       if (type) entry.type = type
-      if (risk) entry.riskLevel = risk
-    } catch { /* skip unparseable */ }
+      entry.riskLevel = risk || (type && DEFAULT_RISK[type]) || "low"
+    } catch { /* skip */ }
     return entry
   })
-}
-
-function loadLocalFile(ens: string): DashboardData | null {
-  const slug = ens.replace(/[^a-zA-Z0-9-]/g, "-")
-  const path = join(process.cwd(), "data", `${slug}.json`)
-  if (!existsSync(path)) return null
-  try {
-    return JSON.parse(readFileSync(path, "utf-8")) as DashboardData
-  } catch {
-    return null
-  }
 }
 
 export default async function AgentPage({ params }: { params: Promise<{ ens: string }> }) {
   const { ens } = await params
 
-  // Try local file first (CLI-generated data)
-  const local = loadLocalFile(ens)
-  if (local) return <ActionTimeline data={local} />
-
-  // Fall back to live data from Hedera mirror node via ENS
   const topicId = await resolveTopicId(ens)
   if (!topicId) notFound()
 
