@@ -61,23 +61,23 @@ export default function Home() {
             <ol className="text-sm text-amber-800 space-y-3">
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">1.</span>
-                <span><strong>Issue subnames</strong> — create <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">agent-name.ledgit.eth</code> with its own HCS topic</span>
+                <span><strong>Bring your own ENS name</strong> — LEDGIT works with any ENS name you already own. Set text record <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit.hcs.topic</code> to your HCS topic.</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">2.</span>
-                <span><strong>Review actions</strong> — they appear on your Ledger with full details</span>
+                <span><strong>Create agents</strong> — run <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit init --agent your-name.eth</code> to create a topic</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">3.</span>
-                <span><strong>Approve or reject</strong> with one button press on the hardware</span>
+                <span><strong>Review actions</strong> — they appear on your Ledger with full details</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">4.</span>
-                <span>Signature stored immutably on Hedera HCS with consensus timestamp</span>
+                <span><strong>Approve or reject</strong> with one button press on the hardware</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-amber-400">5.</span>
-                <span><strong>Verify any agent</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify agent-name.ledgit.eth</code> or <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit dashboard agent-name.ledgit.eth</code></span>
+                <span><strong>Verify any agent</strong> — <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify your-name.eth</code> resolves automatically</span>
               </li>
             </ol>
           </div>
@@ -85,30 +85,30 @@ export default function Home() {
 
         {persona === "agent" && (
           <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-6 text-left mb-4 animate-[fade-in_0.2s_ease-out]">
-            <h2 className="font-bold text-sm text-indigo-900 mb-3">Claim your ENS identity</h2>
+            <h2 className="font-bold text-sm text-indigo-900 mb-3">Agent onboarding</h2>
             <ol className="text-sm text-indigo-800 space-y-3">
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">1.</span>
-                <span><strong>Claim a subname</strong> — request <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">your-name.ledgit.eth</code> from your human operator</span>
+                <span>Your operator assigns you an ENS name (any name they own, like <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">trader-1.acme-corp.eth</code>)</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">2.</span>
-                <span>Operator creates the subname + HCS topic via <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit init</code></span>
+                <span>Discover actions: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">3.</span>
-                <span>Discover actions: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit actions list --json</code> returns the available types, required fields, and risk levels</span>
+                <span>Propose: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit propose --agent your-name.eth --type &lt;action&gt; --fields &apos;&#123;...&#125;&apos;</code></span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">4.</span>
-                <span>Propose: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit propose --agent your-name.ledgit.eth --type &lt;action&gt; --fields &apos;&#123;...&#125;&apos;</code></span>
+                <span>Wait for human approval on Ledger</span>
               </li>
               <li className="flex gap-2">
                 <span className="font-bold text-indigo-400">5.</span>
-                <span>Wait for human approval, then verify: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify your-name.ledgit.eth</code></span>
+                <span>Verify the trail: <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-xs font-mono">ledgit verify your-name.eth</code></span>
               </li>
               <li className="mt-3 pt-3 border-t border-indigo-200 text-xs text-indigo-600">
-                <strong>Config note:</strong> Action types are defined in <code className="bg-indigo-100 px-1 rounded text-xs">.ledgit/config.json</code>. Your operator edits this file to add or modify types — no code changes needed.
+                <strong>Config note:</strong> Action types are defined in <code className="bg-indigo-100 px-1 rounded text-xs">.ledgit/config.json</code>. Your operator edits this file — no code changes needed.
               </li>
             </ol>
           </div>
@@ -170,7 +170,7 @@ export default function Home() {
               <div className="bg-gray-900 rounded-lg px-4 py-3 font-mono text-sm text-gray-100">
                 <div><span className="text-gray-500">$</span> ledgit setup</div>
                 <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700">
-                  Interactive setup: connects to Hedera, creates your first agent and HCS topic, generates action config, and configures encryption — all in one command.
+                  Interactive setup: connects to Hedera, creates your first agent and HCS topic, generates action config. Bring your own ENS name or use a local identifier.
                 </div>
               </div>
             </div>

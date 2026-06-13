@@ -65,7 +65,9 @@ export async function setup(): Promise<void> {
   // Step 4: Prompt for agent name and create topic
   console.log("")
   console.log("  ── First Agent ──")
-  const agentName = await prompt("  Enter your agent's ENS name (e.g. my-agent.ledgit.eth): ")
+  console.log("  LEDGIT works with any ENS name you own (e.g. myname.eth).")
+  console.log("  If you don't have one, just pick a local name.\n")
+  const agentName = await prompt("  Agent name: ")
 
   if (agentName) {
     const topicId = await createTopic(`ledgit:${agentName}`)
@@ -73,17 +75,26 @@ export async function setup(): Promise<void> {
     console.log("")
     out.success(`Agent ${agentName} created with topic ${topicId}`)
     out.info("Saved to .env")
+    console.log("")
+    console.log("  ── Optional: Link to ENS ──")
+    console.log(`  If you own an ENS name, set the text record:`)
+    console.log(`  sepolia.ens.app → your-name.eth → Add Record`)
+    console.log(`  ledgit.hcs.topic = ${topicId}`)
+    console.log(`  Then 'ledgit verify your-name.eth' resolves automatically.`)
   }
 
   // Done
   console.log("")
-  console.log("  ╔══════════════════════════════════════════╗")
-  console.log("  ║  Setup complete!                        ║")
-  console.log("  ║                                         ║")
-  console.log("  ║  Next:  ledgit propose ...              ║")
-  console.log("  ║         ledgit record  ...              ║")
-  console.log("  ║         ledgit verify  <agent>          ║")
-  console.log("  ║         ledgit --help                   ║")
-  console.log("  ╚══════════════════════════════════════════╝")
+  console.log("  ╔══════════════════════════════════════════════════╗")
+  console.log("  ║  Setup complete!                                ║")
+  console.log("  ║                                                 ║")
+  console.log("  ║  Next:  ledgit actions list                     ║")
+  console.log("  ║         ledgit propose --agent <name> ...        ║")
+  console.log("  ║         ledgit record  <action-id>               ║")
+  console.log("  ║         ledgit verify  <name>                    ║")
+  console.log("  ║                                                 ║")
+  console.log("  ║  Tip: Set ENS text record ledgit.hcs.topic on    ║")
+  console.log("  ║  your ENS name so verify resolves automatically.║")
+  console.log("  ╚══════════════════════════════════════════════════╝")
   console.log("")
 }

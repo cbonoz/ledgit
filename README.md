@@ -2,7 +2,7 @@
 
 > The auditability CLI for named agents. Prove a human authorized every action.
 
-A CLI-first tool that creates cryptographically verifiable audit trails for AI agent actions using **Ledger** (signing), **Hedera HCS** (immutable records), and **ENS** (identity + discovery).
+A CLI-first tool that creates cryptographically verifiable audit trails for AI agent actions using **Ledger** (signing), **Hedera HCS** (immutable records), and **ENS** (bring your own name — no subname service needed).
 
 ---
 
@@ -58,22 +58,42 @@ bun add -d ledgit@link:../path/to/ledgit
 bun run ledgit --help
 ```
 
-### Setup
+### Quick start with your own ENS name
 
 ```bash
-# Copy and edit the env file
-cp .env.example .env
-# Add your Hedera testnet credentials (free at https://portal.hedera.com)
+# 1. Pick any ENS name you own (e.g., myname.eth)
+# 2. Set its text record via sepolia.ens.app:
+#    ledgit.hcs.topic = <your-new-topic-id>
 
-# Create a default action config
-ledgit actions init-config
+# Initialize your agent's HCS topic
+ledgit init --agent myname.eth
 
-# Initialize an HCS topic for your agent
-ledgit init --agent trader-a.ledgit.eth
-# Save the topic ID in .env: LEDGIT_TOPIC_ID=0.0.1234567
+# Save the topic to your ENS text record (one-time setup)
+# sepolia.ens.app → myname.eth → Add Record → ledgit.hcs.topic = 0.0.XXXXX
+
+# See available action types
+ledgit actions list
+
+# Agent proposes a trade
+ledgit propose \
+  --agent myname.eth \
+  --type token_swap \
+  --fields '{"amountIn":"5000","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
+
+# Human approves on Ledger → recorded to HCS
+ledgit record <action-id>
+
+# View the audit trail — resolves via ENS automatically
+ledgit verify myname.eth
+
+# Open web dashboard
+ledgit dashboard myname.eth
+
+# Send real HBAR
+ledgit send 0.0.RECIPIENT 1
 ```
 
----
+LEDGIT doesn't require a subname service. Use any ENS name you already own.
 
 ## Quick Demo
 
