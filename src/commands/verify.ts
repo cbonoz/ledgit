@@ -1,6 +1,7 @@
 import { queryTopicMessages } from "../services/hedera.js"
 import { getLatestHcsTopicId } from "../services/ens.js"
 import { decrypt } from "../services/crypto.js"
+import { getHashscanUrl, getMirrorNodeUrl, getEnsAppUrl } from "../services/network.js"
 import * as out from "../services/output.js"
 
 export async function verify(agentEns: string): Promise<void> {
@@ -16,13 +17,12 @@ export async function verify(agentEns: string): Promise<void> {
     process.exit(1)
   }
 
-  const slug = agentEns.replace(/[^a-zA-Z0-9-]/g, "-")
   out.keyValue("Topic", topicId)
   out.info("Links:")
-  out.keyValue("HashScan Topic", `https://hashscan.io/testnet/topic/${topicId}`)
-  out.keyValue("Mirror Node", `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages`)
-  out.keyValue("ENS Profile", `https://sepolia.ens.app/name/${agentEns}`)
-  out.keyValue("Dashboard", `https://ledgitdash.vercel.app/${slug}`)
+  out.keyValue("HashScan Topic", `${getHashscanUrl()}/topic/${topicId}`)
+  out.keyValue("Mirror Node", `${getMirrorNodeUrl()}/api/v1/topics/${topicId}/messages`)
+  out.keyValue("ENS Profile", getEnsAppUrl(agentEns))
+  out.keyValue("Dashboard", `https://ledgitdash.vercel.app/${agentEns}`)
   out.divider()
 
   const messages = await queryTopicMessages(topicId)
@@ -88,7 +88,7 @@ export async function verify(agentEns: string): Promise<void> {
       if (type) out.keyValue("Type", type)
       out.keyValue("Risk", (risk || (type && DEFAULT_RISK[type]) || "low").toUpperCase())
     }
-    out.keyValue("View on HashScan", `https://hashscan.io/testnet/topic/${topicId}/${msg.sequenceNumber}`)
+    out.keyValue("View on HashScan", `${getHashscanUrl()}/topic/${topicId}/${msg.sequenceNumber}`)
     out.divider()
   }
 

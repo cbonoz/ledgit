@@ -10,6 +10,7 @@ import { dashboard } from "./commands/dashboard.js"
 import { setup as runSetup } from "./commands/setup.js"
 import { getLatestHcsTopicId } from "./services/ens.js"
 import { getDefaultAgent } from "./services/config.js"
+import { getHashscanUrl } from "./services/network.js"
 import { connectLedger, signWithLedger } from "./services/ledger.js"
 
 async function resolveTopic(agent?: string): Promise<string | null> {
@@ -98,7 +99,7 @@ program
 
 program
   .command("send")
-  .description("Send testnet HBAR to a Hedera account")
+  .description("Send HBAR to a Hedera account")
   .argument("<to>", "Recipient Hedera account ID (e.g. 0.0.12345)")
   .argument("<amount>", "Amount of HBAR to send (e.g. 1)")
   .action(async (to: string, amount: string) => {
@@ -113,7 +114,7 @@ program
     out.keyValue("Tx ID", result.txId)
     out.keyValue("Status", result.status)
     out.keyValue("Timestamp", result.timestamp)
-    const hashscanUrl = `https://hashscan.io/testnet/transaction/${result.timestamp}`
+    const hashscanUrl = `${getHashscanUrl()}/transaction/${result.timestamp}`
     out.keyValue("View on HashScan", hashscanUrl)
     // Record the execution result to HCS for audit trail
     const agent = getDefaultAgent() || process.env.LEDGIT_AGENT || "unknown"
@@ -167,7 +168,7 @@ program
     out.keyValue("Tx ID", result.txId)
     out.keyValue("Status", result.status)
     out.keyValue("Timestamp", result.timestamp)
-    const hashscanUrl = `https://hashscan.io/testnet/transaction/${result.timestamp}`
+    const hashscanUrl = `${getHashscanUrl()}/transaction/${result.timestamp}`
     out.keyValue("View on HashScan", hashscanUrl)
     const topicId = await resolveTopic()
     if (topicId) {
