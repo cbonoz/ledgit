@@ -28,12 +28,14 @@ export async function dashboard(agentEns: string): Promise<void> {
   const messages = await queryTopicMessages(topicId)
 
   const actions = messages.map((msg) => {
-    const entry: { sequenceNumber: number; consensusTimestamp: string; actionId?: string; agent?: string; description?: string; type?: string; signature?: string; riskLevel?: string; payload?: Record<string, unknown> } = {
+    const entry: { sequenceNumber: number; consensusTimestamp: string; actionId?: string; agent?: string; description?: string; type?: string; signature?: string; riskLevel?: string; encrypted?: boolean; payload?: Record<string, unknown> } = {
       sequenceNumber: msg.sequenceNumber,
       consensusTimestamp: msg.consensusTimestamp,
+      encrypted: false,
     }
     let rawMessage = msg.message
     if (rawMessage.startsWith("ledgit:enc:")) {
+      entry.encrypted = true
       const result = decrypt(rawMessage)
       if (result.ok) rawMessage = result.text
     }

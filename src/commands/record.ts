@@ -1,7 +1,8 @@
 import { readFileSync, existsSync } from "node:fs"
 import { join } from "node:path"
+import { createHash } from "node:crypto"
 import { submitMessage } from "../services/hedera.js"
-import { signWithLedger } from "../services/ledger.js"
+import { signWithLedger, connectLedger } from "../services/ledger.js"
 import { getLatestHcsTopicId, setEnsTextRecord } from "../services/ens.js"
 import { encrypt } from "../services/crypto.js"
 import * as out from "../services/output.js"
@@ -34,18 +35,27 @@ export async function record(actionId: string): Promise<void> {
     process.exit(1)
   }
 
+  const riskLevel = proposal?.riskLevel ? String(proposal.riskLevel) : null
   out.keyValue("Agent", agent)
   out.keyValue("HCS Topic", topicId)
   if (proposal?.description) out.keyValue("Description", String(proposal.description))
   if (proposal?.type) out.keyValue("Type", String(proposal.type))
-  if (proposal?.riskLevel) out.keyValue("Risk", String(proposal.riskLevel))
+  if (riskLevel) out.keyValue("Risk", riskLevel)
   out.divider()
 
   const payload = JSON.stringify({ actionId, agent, timestamp: Date.now() })
   const messageHex = Buffer.from(payload).toString("hex")
 
-  out.step("Requesting signature on Ledger")
-  const signature = await signWithLedger(messageHex)
+  // Low risk actions skip hardware approval
+  let signature: string
+  if (riskLevel === "low") {
+    out.info("Low risk action — no hardware signing required")
+    signature = "0x" + createHash("sha256").update(Buffer.from(messageHex, "hex")).digest("hex") + "".padStart(64, "f")
+  } else {
+    await connectLedger()
+    out.step("Requesting signature on Ledger")
+    signature = await signWithLedger(messageHex)
+  }
   out.keyValue("Signature", signature.slice(0, 42) + "...")
   out.divider()
 
@@ -53,9 +63,10 @@ export async function record(actionId: string): Promise<void> {
     actionId,
     agent,
     signature,
+    ledgerSigned: riskLevel !== "low",
     description: proposal?.description || null,
     type: proposal?.type || null,
-    riskLevel: proposal?.riskLevel || null,
+    riskLevel,
     payload: proposal ? JSON.stringify(proposal.payload) : payload,
     recordedAt: Date.now(),
   })

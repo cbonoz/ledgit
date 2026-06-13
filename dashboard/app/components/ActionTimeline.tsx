@@ -11,6 +11,7 @@ interface Action {
   type?: string
   signature?: string
   riskLevel?: string
+  encrypted?: boolean
   payload?: Record<string, unknown>
 }
 
@@ -256,6 +257,13 @@ export default function ActionTimeline({ data }: Props) {
               <div key={selectedDate}>
                 <h2 className="text-lg font-bold text-gray-700 mb-1">{month.monthLabel}</h2>
                 <h3 className="text-sm font-semibold text-gray-500 mb-4">{day.label}</h3>
+                {day.actions.some(a => a.encrypted) && (
+                  <div className="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-3 mb-4 text-xs text-indigo-700">
+                    Some actions on this day were encrypted with <code className="bg-indigo-100 px-1 rounded font-mono">ENCRYPTION_KEY</code>.
+                    Data is private to viewers with the key.{' '}
+                    <a href="https://github.com/cbonoz/ledgit#encryption" target="_blank" rel="noopener noreferrer" className="underline font-medium">Learn more</a>.
+                  </div>
+                )}
                 <div>
                   {day.actions.map((action) => (
                     <ActionCard key={action.sequenceNumber} action={action} />

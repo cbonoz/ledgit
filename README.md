@@ -135,8 +135,37 @@ Agents discover available types dynamically via `ledgit actions list --json`. Ad
 | `ledgit init` | Create a new HCS topic for an agent |
 | `ledgit send` | Execute a real HBAR transfer on Hedera testnet |
 | `ledgit actions list` | Discover available action types (supports `--json`) |
+---
+
+## Encryption
+
+Sensitive action payloads can be encrypted before HCS submission. The data remains
+publicly verifiable (order, timestamps, signatures) but the content is private to
+key holders.
+
+```bash
+# Generate a 32-byte (64 hex char) key
+openssl rand -hex 32
+
+# Add to .env
+echo "ENCRYPTION_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef" >> .env
+
+# All subsequent records will be encrypted
+ledgit record <action-id>
+```
+
+Verify still works — it decrypts using the same key:
+```bash
+ledgit verify alice.ledgit.eth
+# Shows "🔓 Decrypted" next to encrypted actions
+```
+
+Without the key, encrypted actions show as "🔒 Encrypted (key needed)" with no
+visible payload. The audit trail structure (sequence numbers, timestamps) remains
+public.
 
 ---
+
 ## Sponsors
 
 Built for **ETHGlobal New York 2026** — **Ledger**, **Hedera**, and **ENS** tracks.

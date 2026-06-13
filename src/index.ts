@@ -8,7 +8,6 @@ import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
 import { dashboard } from "./commands/dashboard.js"
 import { setup as runSetup } from "./commands/setup.js"
-import { connectLedger } from "./services/ledger.js"
 import { loadActionsConfig, writeDefaultConfig } from "./services/config.js"
 import * as out from "./services/output.js"
 
@@ -42,7 +41,6 @@ program
   .description("Sign a proposed action and record it on Hedera HCS")
   .argument("<action-id>", "Action ID from the propose step")
   .action(async (actionId) => {
-    await connectLedger()
     await record(actionId)
   })
 
