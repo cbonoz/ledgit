@@ -65,7 +65,7 @@ ledgit actions list
 ```bash
 ledgit propose \
   --type usdc_transfer \
-  --fields '{"amount":"1","to":"0.0.RECIPIENT","reason":"test payment"}'
+  --fields '{"amount":"1","to":"0.0.9224072","reason":"test payment"}'
 ```
 
 **Expected output:**
@@ -74,7 +74,7 @@ ledgit propose \
   ───────────────────────────────
   Agent:       alice.ledgit.eth
   Type:        usdc_transfer
-  Description: Send 1 testnet HBAR to 0.0.RECIPIENT for test payment
+  Description: Send 1 testnet HBAR to 0.0.9224072 for test payment
   Action ID:   df1caafa99360951
 ```
 
@@ -91,7 +91,7 @@ ledgit propose \
 ledgit record df1caafa99360951
 
 # Then execute the real HBAR transfer
-ledgit send 0.0.RECIPIENT 1
+ledgit send 0.0.9224072 1
 ```
 
 **On your Ledger Stax:** Review the action details. **Press Approve.**
@@ -214,7 +214,7 @@ Opens your browser. Click on **Saturday, June 13** to see today's actions.
 
 ---
 
-## Step 6 — The Rogue Action (optional, 30s)
+## Step 6 — The Rogue Action (30s)
 
 **You say:** *"What happens if an agent acts without human approval?"*
 
