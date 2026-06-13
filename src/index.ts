@@ -176,6 +176,7 @@ program
         type: "contract_call",
         description: `Called ${functionName} on ${contractId}`,
         riskLevel: "medium",
+        signature,
         agent,
         contractId,
         function: functionName,
