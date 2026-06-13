@@ -131,12 +131,27 @@ function ActionCard({ action }: { action: Action }) {
 export default function ActionTimeline({ data }: Props) {
   const [live, setLive] = useState(false)
   const [actions, setActions] = useState<Action[]>(data.actions)
+  const [selectedDate, setSelectedDate] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null
+    const params = new URLSearchParams(window.location.search)
+    return params.get("date") || null
+  })
   const lastTs = useRef(actions.length > 0 ? actions[actions.length - 1].consensusTimestamp : "0")
   const topicId = data.topicId
 
   const high = actions.filter(a => a.riskLevel === "high").length
   const medium = actions.filter(a => a.riskLevel === "medium").length
   const low = actions.filter(a => a.riskLevel === "low").length
+
+  const selectDay = (dateKey: string) => {
+    setSelectedDate(dateKey)
+    window.history.replaceState(null, "", `?date=${dateKey}`)
+  }
+
+  const clearDay = () => {
+    setSelectedDate(null)
+    window.history.replaceState(null, "", window.location.pathname)
+  }
 
   const poll = useCallback(async () => {
     try {
@@ -229,6 +244,27 @@ export default function ActionTimeline({ data }: Props) {
           <p className="font-medium">No actions recorded yet</p>
           <p className="text-sm mt-1">Propose and record an action to see it here</p>
         </div>
+      ) : selectedDate ? (
+        <div>
+          <button onClick={clearDay} className="text-xs text-indigo-600 hover:underline mb-4 cursor-pointer">
+            &larr; All days
+          </button>
+          {byMonth.map(month => {
+            const day = month.days.find(d => d.dateKey === selectedDate)
+            if (!day) return null
+            return (
+              <div key={selectedDate}>
+                <h2 className="text-lg font-bold text-gray-700 mb-1">{month.monthLabel}</h2>
+                <h3 className="text-sm font-semibold text-gray-500 mb-4">{day.label}</h3>
+                <div>
+                  {day.actions.map((action) => (
+                    <ActionCard key={action.sequenceNumber} action={action} />
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
       ) : (
         <div className="space-y-10">
           {byMonth.map(month => (
@@ -236,18 +272,30 @@ export default function ActionTimeline({ data }: Props) {
               <h2 className="text-lg font-bold text-gray-700 mb-4 sticky top-0 bg-gray-50 py-3 z-10 border-b border-gray-200">
                 {month.monthLabel}
               </h2>
-              <div className="space-y-6">
+              <div className="grid gap-3">
                 {month.days.map(day => (
-                  <div key={day.dateKey}>
-                    <h3 className="text-sm font-semibold text-gray-500 mb-3">
-                      {day.label}
-                    </h3>
-                    <div>
-                      {day.actions.map((action) => (
-                        <ActionCard key={action.sequenceNumber} action={action} />
-                      ))}
+                  <button
+                    key={day.dateKey}
+                    onClick={() => selectDay(day.dateKey)}
+                    className="w-full text-left bg-white rounded-xl border border-gray-200 p-4 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold text-gray-800 text-sm">{day.label}</span>
+                      <span className="text-xs text-gray-400">{day.actions.length} action{day.actions.length !== 1 ? "s" : ""}</span>
                     </div>
-                  </div>
+                    <div className="flex gap-1.5 mt-2">
+                      {["high", "medium", "low"].map(risk => {
+                        const count = day.actions.filter(a => (a.riskLevel || "low") === risk).length
+                        if (count === 0) return null
+                        const colors = { high: "bg-red-100 text-red-700", medium: "bg-amber-100 text-amber-700", low: "bg-emerald-100 text-emerald-700" }
+                        return (
+                          <span key={risk} className={`text-xs px-2 py-0.5 rounded-full font-medium ${colors[risk as keyof typeof colors]}`}>
+                            {count} {risk}
+                          </span>
+                        )
+                      })}
+                    </div>
+                  </button>
                 ))}
               </div>
             </div>
