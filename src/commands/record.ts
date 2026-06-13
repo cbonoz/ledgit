@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from "node:fs"
+import { readFileSync, readdirSync, statSync, existsSync } from "node:fs"
 import { join } from "node:path"
 import { createHash } from "node:crypto"
 import { submitMessage } from "../services/hedera.js"
@@ -17,10 +17,25 @@ function loadProposal(actionId: string): Record<string, unknown> | null {
   }
 }
 
-export async function record(actionId: string): Promise<void> {
-  out.heading("Recording Action: " + actionId)
+function findLatestActionId(): string {
+  const dir = join(process.cwd(), ".ledgit", "proposals")
+  if (!existsSync(dir)) return ""
+  const files = readdirSync(dir)
+    .filter(f => f.endsWith(".json"))
+    .map(f => ({ name: f, time: statSync(join(dir, f)).mtimeMs }))
+    .sort((a, b) => b.time - a.time)
+  return files.length > 0 ? files[0].name.replace(".json", "") : ""
+}
 
-  const proposal = loadProposal(actionId)
+export async function record(actionId?: string): Promise<void> {
+  const resolvedId = actionId || findLatestActionId()
+  if (!resolvedId) {
+    out.error("No action ID provided and no recent proposals found. Run 'ledgit propose' first.")
+    process.exit(1)
+  }
+
+  out.heading("Recording Action: " + resolvedId)
+  const proposal = loadProposal(resolvedId)
 
   const agent = proposal?.agent
     ? String(proposal.agent)
@@ -63,6 +78,7 @@ export async function record(actionId: string): Promise<void> {
     actionId,
     agent,
     signature,
+    signedMessage: messageHex,
     ledgerSigned: riskLevel !== "low",
     description: proposal?.description || null,
     type: proposal?.type || null,

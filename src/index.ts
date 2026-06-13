@@ -51,7 +51,7 @@ program
 program
   .command("record")
   .description("Sign a proposed action and record it on Hedera HCS")
-  .argument("<action-id>", "Action ID from the propose step")
+  .argument("[action-id]", "Action ID from propose (auto-detects latest if omitted)")
   .action(async (actionId) => {
     await record(actionId)
   })
