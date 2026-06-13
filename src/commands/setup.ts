@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, appendFileSync, copyFileSync } from "node:fs"
+import { existsSync, readFileSync, appendFileSync, copyFileSync, writeFileSync } from "node:fs"
 import { join } from "node:path"
 import { createInterface } from "node:readline"
 import { createTopic } from "../services/hedera.js"
@@ -72,6 +72,19 @@ export async function setup(): Promise<void> {
   if (agentName) {
     const topicId = await createTopic(`ledgit:${agentName}`)
     appendFileSync(envPath, `\nLEDGIT_AGENT=${agentName}\nLEDGIT_TOPIC_ID=${topicId}`)
+    // Register agent in config file
+    const configPath = join(cwd, ".ledgit", "config.json")
+    if (existsSync(configPath)) {
+      try {
+        const cfg = JSON.parse(readFileSync(configPath, "utf-8"))
+        if (!cfg.agents) cfg.agents = []
+        if (!cfg.agents.find((a: any) => a.name === agentName)) {
+          cfg.agents.push({ name: agentName, topicId })
+          writeFileSync(configPath, JSON.stringify(cfg, null, 2) + "\n")
+          out.info("Agent registered in .ledgit/config.json")
+        }
+      } catch { /* skip */ }
+    }
     console.log("")
     out.success(`Agent ${agentName} created with topic ${topicId}`)
     out.info("Saved to .env")

@@ -69,7 +69,11 @@ export function loadActionsConfig(): LedgitConfig {
     try {
       const raw = readFileSync(configPath, "utf-8")
       const user = JSON.parse(raw) as LedgitConfig
-      cachedConfig = { actions: [...defaultConfig.actions, ...(user.actions || [])] }
+      const userTypes = new Set((user.actions || []).map((a) => a.type))
+      cachedConfig = {
+        agents: user.agents || [],
+        actions: [...defaultConfig.actions.filter((a) => !userTypes.has(a.type)), ...(user.actions || [])],
+      }
       return cachedConfig
     } catch {
       out.warn("Could not parse config at " + configPath + ", using defaults")
