@@ -103,7 +103,7 @@ export async function setup(): Promise<void> {
   console.log("  ║                                                 ║")
   console.log("  ║  Next:  ledgit actions list                     ║")
   console.log("  ║         ledgit propose --type <action> ...        ║")
-  console.log("  ║         ledgit record  <action-id>                 ║")
+  console.log("  ║         (propose auto-signs on Ledger & records)  ║")
   console.log("  ║         ledgit verify  <name>                      ║")
   console.log("  ║         ledgit tools schema  # agent integration  ║")
   console.log("  ║                                                   ║")
