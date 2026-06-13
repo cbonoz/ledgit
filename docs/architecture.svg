@@ -108,7 +108,16 @@
   <!-- Arrow HCS → Mirror Node -->
   <line x1="180" y1="340" x2="400" y2="415" class="arrow"/>
 
-  <!-- Verified badge - wider and taller -->
+  <!-- Arrow Mirror Node → Dashboard -->
+  <line x1="340" y1="460" x2="285" y2="460" class="arrow"/>
+
+  <!-- Arrow Mirror Node → ENS -->
+  <line x1="585" y1="460" x2="615" y2="460" class="arrow"/>
+
+  <!-- Arrow ENS → Mirror Node (ENS resolves topic, mirror queries it) -->
+  <path d="M 730 420 L 730 395 L 460 395 L 460 415" class="arrow" stroke-dasharray="4,3"/>
+
+  <!-- Verified badge -->
   <rect x="200" y="555" width="500" height="50" rx="10" fill="#d1fae5" stroke="#34d399" stroke-width="1.5"/>
   <text x="450" y="585" class="badge" text-anchor="middle" fill="#059669">✅ Human authorized → On-chain proof on HCS → Self-discoverable via ENS</text>
 </svg>
