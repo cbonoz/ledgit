@@ -38,6 +38,14 @@ resolves the name and sees the complete, verifiable history."*
 
 **Say:** *"The entire setup is documented on the page — clone, install, run one command, and your agent is ready to propose actions that require human approval."*
 
+**To verify your ENS name is hooked up correctly:**
+
+```bash
+ledgit verify yourname.eth
+```
+
+If your ENS text record is set, this resolves automatically and shows your agent's complete audit trail. If it's not set, the CLI tells you what's missing. No config files needed — the name is the lookup.
+
 **Optionally, open the architecture diagram:**
 
 ```

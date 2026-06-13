@@ -150,6 +150,8 @@ ledgit send 0.0.RECIPIENT 1
 
 LEDGIT doesn't require a subname service. Use any ENS name you already own.
 
+**Verify your ENS connection:** `ledgit verify yourname.eth` — if your text record is set, it resolves automatically. If not, the CLI shows what's missing.
+
 ---
 
 ## Configuration
