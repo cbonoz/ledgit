@@ -7,8 +7,8 @@ type Persona = "agent" | "human" | null
 
 const sponsors = [
   { name: "Ledger", role: "Hardware signing", desc: "Every action must be reviewed and approved on a Ledger device. The cryptographic signature proves a real human authorized it — not a bot, not a replay." },
-  { name: "Hedera", role: "Immutable ordering", desc: "Signed actions are recorded on Hedera HCS with a network-verified consensus timestamp and sequence number. The trail cannot be tampered with or reordered." },
-  { name: "ENS", role: "Self-discoverability", desc: "Agents are identified by ENS names like alice.ledgit.eth. The name resolves to the HCS topic — anyone can verify the trail without prior access." },
+  { name: "Hedera", role: "Immutable ordering", desc: "Signed actions are recorded on Hedera HCS with a network-verified consensus timestamp and sequence number. The trail cannot be tampered with or reordered. Optional encryption keeps sensitive payload data private while preserving public verifiability." },
+  { name: "ENS", role: "Human-readable identities", desc: "Agents are identified by names like alice.ledgit.eth instead of cryptic addresses. The name resolves to the HCS topic — anyone can verify the trail without prior access. No more copying and pasting hex strings." },
 ]
 
 export default function Home() {
