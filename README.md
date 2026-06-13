@@ -66,8 +66,27 @@ bun src/index.ts --help
 
 ```bash
 ledgit setup
-# Interactive: creates .env, prompts for Hedera creds, creates action config, creates first HCS topic
 ```
+
+---
+
+## LEDGIT vs Hedera Agent Kit
+
+The [Hedera Agent Kit](https://github.com/hashgraph/hedera-agent-kit-js) is a LangChain toolkit for Hedera operations (transfers, tokens, HCS). LEDGIT is the human-in-the-loop audit layer.
+
+| Feature | Agent Kit | LEDGIT |
+|---------|-----------|--------|
+| **Blockchain ops** | Full suite | HBAR send + contract calls |
+| **Human approval** | Returns unsigned bytes | **Ledger hardware signing** |
+| **Audit trail** | HCS Audit Trail Hook | HCS + ENS + signature |
+| **Agent identity** | Account ID | **ENS name** (`alice.ledgit.eth`) |
+| **Risk levels** | None | Per-action type |
+| **CLI** | N/A | propose → record → verify |
+| **Dashboard** | N/A | Calendar view + live |
+
+**Compatible.** Use the Agent Kit for agent framework integration (LangChain, Vercel AI SDK), and LEDGIT for hardware signing and audit. The `ledgit tools schema` output can be loaded as a custom tool.
+
+---
 
 ## Quick Start
 

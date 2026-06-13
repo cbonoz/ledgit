@@ -52,13 +52,12 @@ ledgit actions list
 
 ## Step 2 — Agent Proposes an Action (30s)
 
-**Set the scene:** *"Alice — one of our trading agents at Acme Corp — decides to execute a trade. In production, she'd call the CLI autonomously. I'll run it to show what that looks like."*
+**Set the scene:** *"Alice — one of our trading agents — wants to send 1 testnet HBAR to a vendor. She calls propose to log the intent for the audit trail."*
 
 ```bash
 ledgit propose \
-  --agent alice.ledgit.eth \
-  --type token_swap \
-  --fields '{"amountIn":"10000","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
+  --type usdc_transfer \
+  --fields '{"amount":"1","to":"0.0.RECIPIENT","reason":"test payment"}'
 ```
 
 **Expected output:**
@@ -66,21 +65,25 @@ ledgit propose \
   Action Proposal (HIGH RISK)
   ───────────────────────────────
   Agent:       alice.ledgit.eth
-  Type:        token_swap
-  Description: Swap 10000 USDC for ETH on Uniswap
-  Action ID:   7b8a94dc767086fc
+  Type:        usdc_transfer
+  Description: Send 1 testnet HBAR to 0.0.RECIPIENT for test payment
+  Action ID:   df1caafa99360951
 ```
 
-**You say:** *"The CLI auto-generated the description from the template and flagged it as high risk. A human needs to approve this on their Ledger."*
+**You say:** *"The propose step logs the intent for the compliance trail. The actual HBAR transfer will happen when the human approves."*
 
 ---
 
-## Step 3 — Human Approves on Ledger (30s)
+## Step 3 — Human Approves & HBAR Moves (30s)
 
-**You say:** *"The proposal is submitted. Now it's waiting for me."*
+**You say:** *"The proposal is logged. Now I approve on my Ledger, and the HBAR transfer executes."*
 
 ```bash
-ledgit record 7b8a94dc767086fc
+# Record the action → human signs on Ledger
+ledgit record df1caafa99360951
+
+# Then execute the real HBAR transfer
+ledgit send 0.0.RECIPIENT 1
 ```
 
 **On your Ledger Stax:** Review the action details. **Press Approve.**
@@ -88,14 +91,17 @@ ledgit record 7b8a94dc767086fc
 **Expected output:**
 ```
   ✅ Signature obtained from Ledger
-  Signature:   0xead9209f36ca...
+  Signature:   0xf126cb285d68...
 
   ✅ Recorded on Hedera HCS
-  Sequence:    2
-  Timestamp:   2026-06-13T13:51:45.000Z
+  Sequence:    6
+
+  ✅ Transfer complete
+  Status:      SUCCESS
+  View on HashScan https://hashscan.io/testnet/transaction/...
 ```
 
-**You say:** *"I pressed approve. The signature is captured and submitted to Hedera HCS with a verifiable consensus timestamp. The proof is now on the hashgraph — immutable, ordered, and timestamped."*
+**You say:** *"The signature is captured, the action is recorded on HCS, and the HBAR actually moved. Two proofs in one flow — the audit trail and the execution."*
 
 ---
 

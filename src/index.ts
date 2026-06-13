@@ -2,7 +2,7 @@
 
 import "dotenv/config"
 import { Command } from "commander"
-import { createTopic, transferHbar, contractCall } from "./services/hedera.js"
+import { createTopic, transferHbar, contractCall, submitMessage } from "./services/hedera.js"
 import { propose } from "./commands/propose.js"
 import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
@@ -101,7 +101,26 @@ program
     out.keyValue("Tx ID", result.txId)
     out.keyValue("Status", result.status)
     out.keyValue("Timestamp", result.timestamp)
-    out.keyValue("View on HashScan", `https://hashscan.io/testnet/transaction/${result.timestamp}`)
+    const hashscanUrl = `https://hashscan.io/testnet/transaction/${result.timestamp}`
+    out.keyValue("View on HashScan", hashscanUrl)
+    // Record the execution result to HCS for audit trail
+    const topicId = process.env.LEDGIT_TOPIC_ID
+    if (topicId) {
+      const agent = process.env.LEDGIT_AGENT || "unknown"
+      const execRecord = JSON.stringify({
+        type: "hbar_transfer",
+        agent,
+        to,
+        amount: hbar,
+        txId: result.txId,
+        status: result.status,
+        timestamp: result.timestamp,
+        hashscan: hashscanUrl,
+        recordedAt: Date.now(),
+      })
+      await submitMessage(topicId, execRecord)
+      out.info("Execution proof recorded to HCS")
+    }
     out.divider()
   })
 
@@ -130,7 +149,26 @@ program
     out.keyValue("Tx ID", result.txId)
     out.keyValue("Status", result.status)
     out.keyValue("Timestamp", result.timestamp)
-    out.keyValue("View on HashScan", `https://hashscan.io/testnet/transaction/${result.timestamp}`)
+    const hashscanUrl = `https://hashscan.io/testnet/transaction/${result.timestamp}`
+    out.keyValue("View on HashScan", hashscanUrl)
+    const topicId = process.env.LEDGIT_TOPIC_ID
+    if (topicId) {
+      const agent = process.env.LEDGIT_AGENT || "unknown"
+      const execRecord = JSON.stringify({
+        type: "contract_call",
+        agent,
+        contractId,
+        function: functionName,
+        args: parsed,
+        txId: result.txId,
+        status: result.status,
+        timestamp: result.timestamp,
+        hashscan: hashscanUrl,
+        recordedAt: Date.now(),
+      })
+      await submitMessage(topicId, execRecord)
+      out.info("Execution proof recorded to HCS")
+    }
     out.divider()
   })
 

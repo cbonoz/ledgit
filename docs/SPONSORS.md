@@ -119,7 +119,7 @@ ledgit verify alice.ledgit.eth
 
 | Prize | Amount | Fit |
 |-------|--------|-----|
-| **AI & Agentic Payments on Hedera** | $6,000 | Strong — HCS audit trails + HBAR payments via `ledgit send` |
+| **AI & Agentic Payments on Hedera** | $6,000 | Strong — HCS audit trails + HBAR payments via `ledgit send`. Complements the Agent Kit's LangChain tools with hardware signing. |
 | **No Solidity Allowed — Build with Hedera SDKs** | $3,000 | Qualifies — uses `@hashgraph/sdk`, HCS + HTS, no Solidity |
 | **Best ENS Integration for AI Agents** | $5,000 | Strong — ENS names as agent identity with text record resolution |
 | **Most Creative Use of ENS** | $5,000 | Possible — storing HCS topic pointers in text records for agent discovery |
