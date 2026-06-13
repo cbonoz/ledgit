@@ -96,7 +96,7 @@ The [Hedera Agent Kit](https://github.com/hashgraph/hedera-agent-kit-js) is a La
 | **Audit trail** | Logs to HCS via hook | HCS + Ledger signature + ENS name + risk level |
 | **Agent identity** | Account ID | **ENS name** (`alice.ledgit.eth`) — human-readable, portable, revocable |
 | **Risk levels** | None | Per-action type, low-risk skips hardware |
-| **CLI** | N/A | propose → record → verify |
+| **CLI** | N/A | propose (all-in-one), verify, verify-sig, dashboard |
 | **Dashboard** | N/A | Calendar view with live polling |
 
 **Compatible.** Use the Agent Kit for agent framework integration (LangChain, Vercel AI SDK), and LEDGIT for hardware signing and audit. The `ledgit tools schema` output can be loaded as a custom tool.
@@ -117,14 +117,11 @@ ledgit init --agent myname.eth
 # See available action types
 ledgit actions list
 
-# Agent proposes a trade
+# Agent proposes — signs on Ledger + records to HCS automatically
 ledgit propose \
   --agent myname.eth \
-  --type token_swap \
-  --fields '{"amountIn":"5000","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
-
-# Human approves on Ledger → recorded to HCS
-ledgit record <action-id>
+  --type hbar_transfer \
+  --fields '{"amount":"1","to":"0.0.RECIPIENT","reason":"test payment"}'
 
 # View the audit trail — resolves via ENS automatically
 ledgit verify myname.eth
@@ -177,9 +174,10 @@ Agents discover available types dynamically via `ledgit actions list --json`. Ad
 | Command | Description |
 |---------|-------------|
 | `ledgit setup` | Interactive first-run: creates env, config, topic |
-| `ledgit propose` | Agent proposes an action with structured, validated fields |
+| `ledgit propose` | All-in-one: propose, sign on Ledger, and record to HCS |
 | `ledgit record` | Human signs on Ledger, action recorded immutably on HCS |
 | `ledgit verify` | Display ordered audit trail from HCS — resolves via ENS |
+| `ledgit verify-sig` | Recover the signer address from a Ledger signature |
 | `ledgit dashboard` | Open visual timeline in browser |
 | `ledgit init` | Create a new HCS topic for an agent |
 | `ledgit send` | Execute a real HBAR transfer on Hedera testnet |
