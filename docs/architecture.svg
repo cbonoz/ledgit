@@ -79,15 +79,15 @@
 
   <!-- Arrow CLI → HBAR -->
   <line x1="430" y1="170" x2="425" y2="245" class="arrow-bold"/>
-  <text x="470" y="210" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">transferHbar()</text>
+  <text x="425" y="200" class="sub" font-size="10" text-anchor="middle" fill="#4f46e5">transferHbar()</text>
 
   <!-- Arrow CLI → Contract -->
   <line x1="440" y1="170" x2="590" y2="245" class="arrow"/>
-  <text x="520" y="210" class="sub" font-size="10" text-anchor="middle">contractCall()</text>
+  <text x="595" y="200" class="sub" font-size="10" text-anchor="middle">contractCall()</text>
 
   <!-- Arrow CLI → Custom Action -->
   <line x1="460" y1="170" x2="765" y2="245" class="arrow"/>
-  <text x="615" y="195" class="sub" font-size="10" text-anchor="middle">propose</text>
+  <text x="780" y="200" class="sub" font-size="10" text-anchor="middle">propose</text>
 
   <!-- Mirror Node Box -->
   <rect x="340" y="420" width="240" height="80" class="box"/>

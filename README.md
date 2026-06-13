@@ -87,7 +87,7 @@ ledgit setup
 
 ## Architecture
 
-See the full architecture diagram at **[ledgitdash.vercel.app/architecture](https://ledgitdash.vercel.app/architecture)** — includes step-by-step flow, component interaction, and tech stack overview.
+See the full architecture diagram at **[ledgitdash.vercel.app/architecture](https://ledgitdash.vercel.app/architecture)** — includes step-by-step flow, component interaction, and tech stack overview. Raw SVG: [`docs/architecture.svg`](docs/architecture.svg).
 
 ## LEDGIT vs Hedera Agent Kit
 
