@@ -4,18 +4,60 @@
 
 A CLI-first tool that creates cryptographically verifiable audit trails for AI agent actions using **Ledger** (signing), **Hedera HCS** (immutable records), and **ENS** (identity + discovery).
 
+---
+
 ## Install
 
+**Prerequisites:** [Bun](https://bun.sh) or [Node.js](https://nodejs.org) 20+
+
+### Option 1: Global CLI (recommended)
+
 ```bash
-# Clone and install deps
 git clone https://github.com/cbonoz/ledgit.git
 cd ledgit
 bun install
-
-# Install globally
 npm link
-# Now `ledgit` is available from anywhere
+
+# Verify it works
+ledgit --version
+ledgit --help
 ```
+
+Now `ledgit` is available from any directory on your machine.
+
+### Option 2: Run without installing
+
+```bash
+git clone https://github.com/cbonoz/ledgit.git
+cd ledgit
+bun install
+bun src/index.ts --help
+```
+
+### Option 3: From another project
+
+```bash
+cd your-project
+bun add -d ledgit@link:../path/to/ledgit
+bun run ledgit --help
+```
+
+### Setup
+
+```bash
+# Copy and edit the env file
+cp .env.example .env
+# Add your Hedera testnet credentials (free at https://portal.hedera.com)
+
+# Create a default action config
+ledgit actions init-config
+
+# Initialize an HCS topic for your agent
+ledgit init --agent trader-a.ledgit.eth
+# Save the topic ID in .env: LEDGIT_TOPIC_ID=0.0.1234567
+```
+
+---
 
 ## Quick Demo
 
@@ -24,7 +66,10 @@ npm link
 ledgit actions list
 
 # Agent proposes a trade
-ledgit propose --agent trader-a.ledgit.eth --type token_swap --fields '...'
+ledgit propose \
+  --agent trader-a.ledgit.eth \
+  --type token_swap \
+  --fields '{"amountIn":"5000","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
 
 # Human approves on Ledger → recorded to HCS
 ledgit record <action-id>
@@ -39,21 +84,28 @@ ledgit dashboard trader-a.ledgit.eth
 ledgit send 0.0.RECIPIENT 1
 ```
 
+---
+
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `ledgit propose` | Agent proposes an action with structured fields |
-| `ledgit record` | Human signs on Ledger → recorded to HCS |
+| `ledgit propose` | Agent proposes an action with structured, validated fields |
+| `ledgit record` | Human signs on Ledger, action recorded immutably on HCS |
 | `ledgit verify` | Display ordered audit trail from HCS |
 | `ledgit dashboard` | Open visual timeline in browser |
-| `ledgit init` | Create HCS topic for an agent |
-| `ledgit send` | Execute HBAR transfer on Hedera |
-| `ledgit actions list` | Discover available action types |
+| `ledgit init` | Create a new HCS topic for an agent |
+| `ledgit send` | Execute a real HBAR transfer on Hedera testnet |
+| `ledgit actions list` | Discover available action types (supports `--json`) |
+| `ledgit actions init-config` | Create a default `.ledgit/config.json` |
+
+---
 
 ## Why This Exists
 
 AI agents are moving real money, but regulated companies cannot deploy them without answering: *"Can you prove a human authorized this?"* LEDGIT provides the answer — every single time — with cryptographic proof, immutable ordering, and self-discoverable identity.
+
+---
 
 ## Sponsors
 
