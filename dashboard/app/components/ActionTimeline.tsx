@@ -181,6 +181,10 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
   const medium = actions.filter(a => (a.riskLevel || "low") === "medium").length
   const low = actions.filter(a => (a.riskLevel || "low") === "low").length
 
+  const [showAll, setShowAll] = useState(false)
+  const now = new Date()
+  const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
+
   const selectDay = (dateKey: string) => {
     setSelectedDate(dateKey)
     window.history.replaceState(null, "", `?date=${dateKey}`)
@@ -312,7 +316,9 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
         </div>
       ) : (
         <div className="space-y-10">
-          {byMonth.map(month => (
+          {byMonth
+            .filter(m => showAll || m.monthKey === currentMonthKey)
+            .map(month => (
             <div key={month.monthKey}>
               <h2 className="text-lg font-bold text-gray-700 mb-4 sticky top-0 bg-gray-50 py-3 z-10 border-b border-gray-200">
                 {month.monthLabel}
