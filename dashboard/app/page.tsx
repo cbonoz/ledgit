@@ -116,15 +116,36 @@ export default function Home() {
 
         {persona === null && (
           <div className="bg-white rounded-2xl border border-gray-200 p-6 text-left shadow-sm mb-4">
-            <h2 className="font-bold text-xs text-gray-400 uppercase tracking-widest mb-3">Why LEDGIT</h2>
-            <p className="text-sm text-gray-700 leading-relaxed mb-3">
-              AI agents are moving real money, but regulated companies cannot answer one critical question:
-            </p>
-            <blockquote className="text-sm font-semibold text-gray-900 bg-gray-50 rounded-lg px-4 py-3 mb-3 border-l-4 border-indigo-400">
-              &ldquo;Can you prove a human actually authorized this action?&rdquo;
-            </blockquote>
-            <p className="text-sm text-gray-700 leading-relaxed">
-              LEDGIT answers that question every time — with hardware signing, immutable records, and self-discoverable identity.
+            <h2 className="font-bold text-xs text-gray-400 uppercase tracking-widest mb-3">Without vs With LEDGIT</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="border-b border-gray-100">
+                    <th className="text-left font-medium text-gray-400 pb-2 pr-3"></th>
+                    <th className="text-left font-medium text-red-400 pb-2 pr-3">Without</th>
+                    <th className="text-left font-medium text-emerald-600 pb-2">With LEDGIT</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {[
+                    { aspect: "Human oversight", bad: "None or weak prompts", good: "Hardware-signed approval" },
+                    { aspect: "Audit trail", bad: "Basic logs, easy to fake", good: "Immutable on Hedera HCS" },
+                    { aspect: "Proof", bad: "&ldquo;The agent said so&rdquo;", good: "Provable human signature" },
+                    { aspect: "Regulatory", bad: "Not viable", good: "Enterprise-ready" },
+                    { aspect: "Accountability", bad: "Blame the AI", good: "Chain of custody" },
+                    { aspect: "Safety", bad: "Rogue action risk", good: "Controlled &amp; traceable" },
+                  ].map((r) => (
+                    <tr key={r.aspect}>
+                      <td className="py-2 pr-3 font-medium text-gray-700">{r.aspect}</td>
+                      <td className="py-2 pr-3 text-gray-400">{r.bad}</td>
+                      <td className="py-2 text-emerald-700 font-medium">{r.good}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-gray-400 mt-4 pt-3 border-t border-gray-100">
+              Agents <span className="text-red-400">without</span> LEDGIT are toys for experiments. Agents <span className="text-emerald-600 font-medium">with</span> LEDGIT become trustworthy enterprise tools.
             </p>
           </div>
         )}
