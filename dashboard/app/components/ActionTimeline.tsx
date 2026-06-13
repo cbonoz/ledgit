@@ -177,11 +177,8 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
   const lastTs = useRef(actions.length > 0 ? actions[actions.length - 1].consensusTimestamp : "0")
   const topicId = data.topicId
 
-  const high = actions.filter(a => (a.riskLevel || "low") === "high").length
-  const medium = actions.filter(a => (a.riskLevel || "low") === "medium").length
-  const low = actions.filter(a => (a.riskLevel || "low") === "low").length
-
   const [showAll, setShowAll] = useState(false)
+  const [loadingAll, setLoadingAll] = useState(false)
   const now = new Date()
   const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`
 
@@ -227,6 +224,35 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
       }
     } catch { /* ignore */ }
   }, [topicId])
+
+  const loadAll = useCallback(async () => {
+    setLoadingAll(true)
+    setShowAll(true)
+    let cursor = actions.length > 0 ? actions[actions.length - 1].consensusTimestamp : "0"
+    let hasMore = actions.length >= 50
+    while (hasMore) {
+      try {
+        const url = `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages?timestamp=gt:${cursor}&limit=50&order=asc`
+        const res = await fetch(url)
+        if (!res.ok) break
+        const body = await res.json() as { messages?: { sequence_number: number; consensus_timestamp: string; message: string }[]; links?: { next?: string } }
+        if (!body.messages?.length) break
+        const newActions: Action[] = body.messages.map(m => ({
+          sequenceNumber: m.sequence_number,
+          consensusTimestamp: m.consensus_timestamp,
+          ...parseMessage(atob(m.message)),
+        }))
+        cursor = newActions[newActions.length - 1].consensusTimestamp
+        setActions(prev => {
+          const existing = new Set(prev.map(a => a.sequenceNumber))
+          const unique = newActions.filter(a => !existing.has(a.sequenceNumber))
+          return unique.length > 0 ? [...prev, ...unique] : prev
+        })
+        hasMore = body.messages.length >= 50 && !!body.links?.next
+      } catch { break }
+    }
+    setLoadingAll(false)
+  }, [topicId, actions.length])
 
   useEffect(() => {
     if (!live) return
@@ -364,10 +390,11 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
           {!showAll && actions.length > monthActions.length && (
             <div className="text-center pt-4">
               <button
-                onClick={() => setShowAll(true)}
-                className="text-xs text-indigo-600 hover:text-indigo-800 font-medium bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-full transition-colors cursor-pointer"
+                onClick={loadAll}
+                disabled={loadingAll}
+                className="text-xs text-indigo-600 hover:text-indigo-800 font-medium bg-indigo-50 hover:bg-indigo-100 px-4 py-2 rounded-full transition-colors cursor-pointer disabled:opacity-50"
               >
-                Load all {actions.length} actions
+                {loadingAll ? "Loading..." : `Load all ${actions.length}+ actions`}
               </button>
             </div>
           )}
