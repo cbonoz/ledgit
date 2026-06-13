@@ -22,7 +22,7 @@ export async function dashboard(agentEns: string): Promise<void> {
   out.keyValue("Topic", topicId)
   out.divider()
 
-  const slug = agentEns.replace(/[^a-zA-Z0-9-]/g, "-")
+  const slug = agentEns
   const localUrl = `http://localhost:${DASHBOARD_PORT}/${slug}`
   const hostedUrl = `${DASHBOARD_HOSTED}/${slug}`
 
