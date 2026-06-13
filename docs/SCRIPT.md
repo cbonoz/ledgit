@@ -88,7 +88,7 @@ cryptographic proof with human context.
 before it executes. Hardware proof + immutable records + self-discoverable identity.
 
 **Why it's different:**
-- **Ledger:** Physical hardware signing, not a checkbox or log line
+- **Ledger:** Physical hardware signing providing true human-in-the-loop approval, not a checkbox or log line
 - **Hedera HCS:** Sub-second finality, sub-cent fees, immutable ordering
 - **ENS:** Bring your own name — no platform dependency, no subname service
 - **Risk tiers:** High = Ledger required, low = auto-approved, configurable per action
