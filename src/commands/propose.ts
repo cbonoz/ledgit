@@ -3,7 +3,7 @@ import { join } from "node:path"
 import { createHash } from "node:crypto"
 import type { ActionProposal } from "../types.js"
 import { getActionConfig, fillTemplate, validateFields, requireAgent, getDefaultAgent } from "../services/config.js"
-import { submitMessage } from "../services/hedera.js"
+import { submitMessage, transferHbar } from "../services/hedera.js"
 import { connectLedger, signWithLedger } from "../services/ledger.js"
 import { getLatestHcsTopicId, setEnsTextRecord } from "../services/ens.js"
 import { encrypt } from "../services/crypto.js"
@@ -136,6 +136,27 @@ export async function propose(
   out.success("Recorded on Hedera HCS")
   out.keyValue("Sequence", result.sequenceNumber)
   out.keyValue("Timestamp", result.timestamp)
+
+  // Execute HBAR transfer if this is an hbar_transfer action
+  let execTxId: string | undefined
+  let execTs: string | undefined
+  if (type === "hbar_transfer" && payloadObj.to && payloadObj.amount) {
+    const to = String(payloadObj.to)
+    const amount = parseFloat(String(payloadObj.amount))
+    if (!isNaN(amount) && amount > 0) {
+      out.step("Executing HBAR transfer")
+      try {
+        const xfer = await transferHbar(to, amount)
+        execTxId = xfer.txId
+        execTs = xfer.timestamp
+        out.success("HBAR transfer complete")
+        out.keyValue("Tx ID", execTxId)
+        out.divider()
+      } catch {
+        out.warn("HBAR transfer failed — action still recorded to HCS")
+      }
+    }
+  }
   out.divider()
 
   await setEnsTextRecord(resolvedAgent, "ledgit.hcs.sequence", String(result.sequenceNumber))
