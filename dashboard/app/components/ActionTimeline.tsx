@@ -7,6 +7,7 @@ interface Action {
   sequenceNumber: number
   consensusTimestamp: string
   actionId?: string
+  agent?: string
   description?: string
   type?: string
   signature?: string
