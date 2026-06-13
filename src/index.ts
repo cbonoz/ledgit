@@ -217,6 +217,10 @@ actionsCmd
       console.log("")
     }
     console.log("  ───────────────────────────────────")
+    console.log("  🔴 High risk — requires approval on Ledger device")
+    console.log("  🟡 Medium risk — requires approval on Ledger device")
+    console.log("  🟢 Low risk — auto-approved, logged to HCS")
+    console.log("")
     console.log("  To add or edit action types, create or edit:")
     console.log("  .ledgit/config.json")
     console.log("  Or run: ledgit actions init-config")

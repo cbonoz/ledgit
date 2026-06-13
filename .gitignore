@@ -8,3 +8,4 @@ dashboard/.next/
 .ledgit/config.json
 docs/SPONSOR_SUBMISSIONS.md
 docs/JUDGE_DEMO_TOOLS.md
+.DS_Store
