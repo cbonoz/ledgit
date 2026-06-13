@@ -15,6 +15,15 @@ by ENS names like `chrisb.acmeco.eth` instead of cryptic addresses — the name
 Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
 **ENS** (bring your own name — no subname service needed).
 
+### Risk tiers at a glance
+
+| | Flow | Ledger? |
+|---|---|---|
+| 🔴 **High risk** (HBAR transfer, swap) | Propose → approve on Ledger → execute → HCS | ✅ Required |
+| 🟡 **Medium risk** (grant role, update config) | Propose → approve on Ledger → execute → HCS | ✅ Required |
+| 🟢 **Low risk** (read logs, check balance) | Propose → auto-approved → HCS | ❌ Skipped |
+| 💀 **Rogue action** (outside LEDGIT) | Sent directly, no audit trail | ❌ Invisible to auditors |
+
 ---
 
 ## The Value
