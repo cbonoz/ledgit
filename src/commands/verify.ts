@@ -55,7 +55,7 @@ export async function verify(agentEns: string): Promise<void> {
     }
 
     const DEFAULT_RISK: Record<string, string> = {
-      usdc_transfer: "high",
+      hbar_transfer: "high",
       token_swap: "high",
       grant_role: "medium",
       update_agent_config: "medium",

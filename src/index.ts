@@ -40,7 +40,7 @@ program
   .command("propose")
   .description("Propose a new agent action for human review")
   .option("--agent <ens>", "Agent ENS name (defaults to LEDGIT_AGENT in .env)")
-  .requiredOption("--type <type>", "Action type (e.g. usdc_transfer, token_swap)")
+  .requiredOption("--type <type>", "Action type (e.g. hbar_transfer, token_swap)")
   .option("--description <text>", "Human-readable description (auto-generated from template if omitted)")
   .option("--payload <json>", "JSON payload with action details")
   .option("--fields <json>", "JSON object of field values (alternative to --payload, uses action config)")

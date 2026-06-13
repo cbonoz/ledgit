@@ -8,9 +8,9 @@ const defaultConfig: LedgitConfig = {
   agents: [],
   actions: [
     {
-      type: "usdc_transfer",
-      label: "USDC Transfer",
-      descriptionTemplate: "Send {amount} USDC to {to} for {reason}",
+      type: "hbar_transfer",
+      label: "HBAR Transfer",
+      descriptionTemplate: "Send {amount} HBAR to {to} for {reason}",
       fields: ["amount", "to", "reason"],
       riskLevel: "high",
     },
