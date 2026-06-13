@@ -214,25 +214,7 @@ Opens your browser. Click on **Saturday, June 13** to see today's actions.
 
 ---
 
-## Step 6 — Send Real Value (15s)
-
-```bash
-ledgit send 0.0.3568415 1
-```
-
-**Expected output:**
-```
-  ✅ Transfer complete
-  Tx ID:     0.0.3568415@1781314810.626823782
-  Status:    SUCCESS
-  View on HashScan https://hashscan.io/testnet/transaction/...
-```
-
-**You say:** *"LEDGIT doesn't just record actions — it executes them on Hedera. The audit trail AND the payment in one flow."*
-
----
-
-## Step 7 — The Rogue Action (optional, 30s)
+## Step 6 — The Rogue Action (optional, 30s)
 
 **You say:** *"What happens if an agent acts without human approval?"*
 
