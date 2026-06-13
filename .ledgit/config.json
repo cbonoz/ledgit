@@ -1,0 +1,32 @@
+{
+  "actions": [
+    {
+      "type": "usdc_transfer",
+      "label": "USDC Transfer",
+      "descriptionTemplate": "Send {amount} USDC to {to} for {reason}",
+      "fields": ["amount", "to", "reason"],
+      "riskLevel": "high"
+    },
+    {
+      "type": "token_swap",
+      "label": "Token Swap",
+      "descriptionTemplate": "Swap {amountIn} {tokenIn} for {tokenOut} on {dex}",
+      "fields": ["amountIn", "tokenIn", "tokenOut", "dex"],
+      "riskLevel": "high"
+    },
+    {
+      "type": "grant_role",
+      "label": "Grant Role",
+      "descriptionTemplate": "Grant '{role}' role to {address}",
+      "fields": ["role", "address"],
+      "riskLevel": "medium"
+    },
+    {
+      "type": "update_agent_config",
+      "label": "Update Agent Config",
+      "descriptionTemplate": "Update {parameter} to {value}",
+      "fields": ["parameter", "value"],
+      "riskLevel": "medium"
+    }
+  ]
+}
