@@ -4,3 +4,4 @@ dist/
 *.log
 dashboard/data/
 dashboard/.next/
+.ledgit/proposals/

@@ -3,12 +3,6 @@
 import { useState } from "react"
 import Link from "next/link"
 
-const sponsors = [
-  { name: "Ledger", role: "Human signing" },
-  { name: "Hedera", role: "Immutable ordering" },
-  { name: "ENS", role: "Discoverability" },
-]
-
 type Persona = "agent" | "human" | null
 
 export default function Home() {
@@ -129,25 +123,35 @@ export default function Home() {
         )}
 
         <div className="bg-white rounded-2xl border border-gray-200 p-7 text-left shadow-sm mb-6">
-          <h2 className="font-semibold text-xs text-gray-400 uppercase tracking-widest mb-3">Sponsors</h2>
-          <div className="grid grid-cols-3 gap-3">
-            {sponsors.map((s) => (
-              <div key={s.name} className="bg-gray-50 rounded-lg px-3 py-2.5 text-center">
-                <div className="text-sm font-semibold text-gray-900">{s.name}</div>
-                <div className="text-xs text-gray-400 mt-0.5">{s.role}</div>
+          <h2 className="font-semibold text-xs text-gray-400 uppercase tracking-widest mb-3">Install LEDGIT</h2>
+          <div className="space-y-3 text-sm">
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="font-semibold text-gray-700 mb-1">Prerequisites</div>
+              <div className="text-xs text-gray-500">Node.js 20+ or <a href="https://bun.sh" className="text-indigo-600 hover:underline">Bun</a></div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Install</div>
+              <div className="bg-gray-900 rounded-lg px-4 py-3 font-mono text-sm text-gray-100">
+                <div><span className="text-gray-500">$</span> git clone https://github.com/cbonoz/ledgit.git</div>
+                <div><span className="text-gray-500">$</span> cd ledgit && bun install</div>
+                <div><span className="text-gray-500">$</span> npm link</div>
+                <div><span className="text-gray-500">$</span> ledgit --version</div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl border border-gray-200 p-7 text-left shadow-sm">
-          <h2 className="font-semibold text-xs text-gray-400 uppercase tracking-widest mb-3">Open an Audit Trail</h2>
-          <p className="text-sm text-gray-500 mb-3">Run from your terminal:</p>
-          <div className="bg-gray-900 rounded-lg px-4 py-3 font-mono text-sm text-gray-100 flex items-center justify-between">
-            <span>
-              <span className="text-gray-500">$</span> ledgit dashboard{' '}
-              <span className="text-indigo-300">alice.ledgit.eth</span>
-            </span>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">Setup</div>
+              <div className="bg-gray-900 rounded-lg px-4 py-3 font-mono text-sm text-gray-100">
+                <div><span className="text-gray-500">$</span> cp .env.example .env</div>
+                <div><span className="text-gray-500">$</span> ledgit actions init-config</div>
+                <div><span className="text-gray-500">$</span> ledgit init --agent my-agent.ledgit.eth</div>
+              </div>
+            </div>
+            <div>
+              <div className="text-xs text-gray-400 mb-2 font-medium uppercase tracking-wide">View an audit trail</div>
+              <div className="bg-gray-900 rounded-lg px-4 py-3 font-mono text-sm text-gray-100">
+                <div><span className="text-gray-500">$</span> ledgit dashboard{' '}<span className="text-indigo-300">alice.ledgit.eth</span></div>
+              </div>
+            </div>
           </div>
         </div>
 
