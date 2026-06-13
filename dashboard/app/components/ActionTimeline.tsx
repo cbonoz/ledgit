@@ -70,9 +70,9 @@ function parseMessage(raw: string): Partial<Action> {
 
 function ActionCard({ action }: { action: Action }) {
   const [open, setOpen] = useState(false)
-  const seconds = Number(action.consensusTimestamp.split(".")[0])
-  const ts = new Date(seconds * 1000).toLocaleString("en-US", {
-    month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "UTC",
+  const d = new Date(Number(action.consensusTimestamp.split(".")[0]) * 1000)
+  const ts = d.toLocaleString("en-US", {
+    month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit",
   })
   const hasSig = action.signature && action.signature.length > 10
   const sigShort = hasSig ? action.signature!.slice(0, 10) + "..." + action.signature!.slice(-6) : "—"
