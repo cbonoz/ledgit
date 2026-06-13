@@ -75,7 +75,7 @@ function ActionCard({ action, topicId }: { action: Action; topicId: string }) {
   })
   const hasSig = action.signature && action.signature.length > 10
   const sigShort = hasSig ? action.signature!.slice(0, 10) + "..." + action.signature!.slice(-6) : "—"
-  const rogueHigh = !hasSig && action.riskLevel === "high"
+  const rogueHigh = !hasSig && (action.riskLevel === "high" || action.riskLevel === "medium")
 
   return (
     <div className="relative pl-8 pb-8 last:pb-0">
