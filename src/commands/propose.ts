@@ -7,6 +7,7 @@ import { submitMessage, transferHbar } from "../services/hedera.js"
 import { connectLedger, signWithLedger } from "../services/ledger.js"
 import { getLatestHcsTopicId, setEnsTextRecord } from "../services/ens.js"
 import { encrypt } from "../services/crypto.js"
+import { getHashscanUrl } from "../services/network.js"
 import * as out from "../services/output.js"
 
 const PROPOSALS_DIR = join(process.cwd(), ".ledgit", "proposals")
@@ -114,6 +115,26 @@ export async function propose(
   out.keyValue("Signature", signature.slice(0, 42) + "...")
   out.divider()
 
+  // Execute HBAR transfer if applicable, before recording to HCS
+  let execHashscan: string | undefined
+  if (type === "hbar_transfer" && payloadObj.to && payloadObj.amount) {
+    const to = String(payloadObj.to)
+    const amount = parseFloat(String(payloadObj.amount))
+    if (!isNaN(amount) && amount > 0) {
+      out.step("Executing HBAR transfer")
+      try {
+        const xfer = await transferHbar(to, amount)
+        execHashscan = `${getHashscanUrl()}/transaction/${xfer.timestamp}`
+        out.success("HBAR transfer complete")
+        out.keyValue("Execution Tx", execHashscan)
+        out.divider()
+      } catch (e) {
+        out.error("HBAR transfer failed: " + (e as Error).message)
+        process.exit(1)
+      }
+    }
+  }
+
   const recordPayload = JSON.stringify({
     actionId,
     agent: resolvedAgent,
@@ -124,6 +145,7 @@ export async function propose(
     type,
     riskLevel,
     payload: JSON.stringify(payloadObj),
+    hashscan: execHashscan || null,
     recordedAt: Date.now(),
   })
 
@@ -136,27 +158,6 @@ export async function propose(
   out.success("Recorded on Hedera HCS")
   out.keyValue("Sequence", result.sequenceNumber)
   out.keyValue("Timestamp", result.timestamp)
-
-  // Execute HBAR transfer if this is an hbar_transfer action
-  let execTxId: string | undefined
-  let execTs: string | undefined
-  if (type === "hbar_transfer" && payloadObj.to && payloadObj.amount) {
-    const to = String(payloadObj.to)
-    const amount = parseFloat(String(payloadObj.amount))
-    if (!isNaN(amount) && amount > 0) {
-      out.step("Executing HBAR transfer")
-      try {
-        const xfer = await transferHbar(to, amount)
-        execTxId = xfer.txId
-        execTs = xfer.timestamp
-        out.success("HBAR transfer complete")
-        out.keyValue("Tx ID", execTxId)
-        out.divider()
-      } catch {
-        out.warn("HBAR transfer failed — action still recorded to HCS")
-      }
-    }
-  }
   out.divider()
 
   await setEnsTextRecord(resolvedAgent, "ledgit.hcs.sequence", String(result.sequenceNumber))
