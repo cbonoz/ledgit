@@ -78,7 +78,7 @@ function ActionCard({ action, topicId, etherscanUrl }: { action: Action; topicId
   const needsSig = action.riskLevel === "high" || action.riskLevel === "medium"
   const compliant = hasSig || action.riskLevel === "low"
   const unverified = needsSig && !hasSig
-  const bgColor = compliant ? "bg-emerald-50" : action.riskLevel === "high" ? "bg-red-50" : "bg-amber-50"
+  const bgColor = "bg-white"
   const borderColor = compliant ? "border-emerald-400" : action.riskLevel === "high" ? "border-red-400" : "border-amber-400"
   const dotColor = compliant ? "bg-emerald-400" : action.riskLevel === "high" ? "bg-red-400" : "bg-amber-400"
   const badgeBg = compliant ? "bg-emerald-100 text-emerald-700" : action.riskLevel === "high" ? "bg-red-100 text-red-700" : "bg-amber-100 text-amber-700"
@@ -268,7 +268,7 @@ export default function ActionTimeline({ data, etherscanUrl = "https://sepolia.e
           }`}
         >
           {live && <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />}
-          {live ? "Live" : "Go Live"}
+          {live ? "Live" : "Enable Live Updates"}
         </button>
       </div>
 
