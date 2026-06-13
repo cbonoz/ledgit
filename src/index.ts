@@ -8,7 +8,18 @@ import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
 import { dashboard } from "./commands/dashboard.js"
 import { setup as runSetup } from "./commands/setup.js"
+import { getLatestHcsTopicId } from "./services/ens.js"
+import { getDefaultAgent } from "./services/config.js"
 import { connectLedger, signWithLedger } from "./services/ledger.js"
+
+async function resolveTopic(agent?: string): Promise<string | null> {
+  const name = agent || getDefaultAgent()
+  if (name) {
+    const topicId = await getLatestHcsTopicId(name)
+    if (topicId) return topicId
+  }
+  return process.env.LEDGIT_TOPIC_ID || null
+}
 import { loadActionsConfig, writeDefaultConfig } from "./services/config.js"
 import * as out from "./services/output.js"
 
@@ -105,9 +116,9 @@ program
     const hashscanUrl = `https://hashscan.io/testnet/transaction/${result.timestamp}`
     out.keyValue("View on HashScan", hashscanUrl)
     // Record the execution result to HCS for audit trail
-    const topicId = process.env.LEDGIT_TOPIC_ID
+    const agent = getDefaultAgent() || process.env.LEDGIT_AGENT || "unknown"
+    const topicId = await resolveTopic(agent)
     if (topicId) {
-      const agent = process.env.LEDGIT_AGENT || "unknown"
       const execRecord = JSON.stringify({
         type: "hbar_transfer",
         agent,
@@ -157,9 +168,9 @@ program
     out.keyValue("Timestamp", result.timestamp)
     const hashscanUrl = `https://hashscan.io/testnet/transaction/${result.timestamp}`
     out.keyValue("View on HashScan", hashscanUrl)
-    const topicId = process.env.LEDGIT_TOPIC_ID
+    const topicId = await resolveTopic()
     if (topicId) {
-      const agent = process.env.LEDGIT_AGENT || "unknown"
+      const agent = getDefaultAgent() || process.env.LEDGIT_AGENT || "unknown"
       const execRecord = JSON.stringify({
         type: "contract_call",
         agent,

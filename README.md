@@ -15,6 +15,12 @@ by ENS names like `chrisb.acmeco.eth` instead of cryptic addresses — the name
 Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
 **ENS** (bring your own name — no subname service needed).
 
+### Live demo
+
+| Agent | HCS Audit Trail | Web Dashboard |
+|-------|----------------|---------------|
+| `alice.ledgit.eth` | [HashScan](https://hashscan.io/testnet/topic/0.0.9219676/messages) | [ledgitdash.vercel.app](https://ledgitdash.vercel.app/alice.ledgit.eth) |
+
 ### Risk tiers at a glance
 
 | | Flow | Ledger? |
