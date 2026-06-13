@@ -2,6 +2,21 @@
 
 > A 2-minute walkthrough. Start at the dashboard, then run the CLI demo.
 
+## The Problem — Why Existing Tools Fail
+
+**Say:** *"AI agents are starting to move real money — executing trades, sending payments, managing treasury. But every regulated company hits the same wall: 'Can you prove a human actually authorized this?'"*
+
+**Existing approaches fall short:**
+
+| Approach | Why It Fails |
+|----------|-------------|
+| **Basic logs** | Easy to fake, tamper, or delete. No cryptographic proof of human intent. |
+| **Software prompts** | "Are you sure?" can be bypassed, automated, or ignored by the agent. No hardware root of trust. |
+| **Multi-sig wallets** | Designed for humans, not agents. No audit trail of *why* a transaction was approved. |
+| **Blockchain explorers** | Show transactions but not the human reasoning or approval context behind them. |
+
+**Say:** *"LEDGIT bridges the gap between autonomous agents and enterprise compliance. It gives regulators cryptographic proof that a human approved every high-stakes action — with immutable records and self-discoverable identity."*
+
 ## 0:00 — Open the Dashboard
 
 ```
@@ -57,6 +72,8 @@ Follow **`docs/DEMO.md`** for the full walkthrough:
 
 **The problem:** AI agents are moving real money. Regulated companies cannot
 deploy them without answering: *"Can you prove a human authorized this?"*
+Existing audit tools (logs, software prompts, multi-sig) all fail at providing
+cryptographic proof with human context.
 
 **The solution:** LEDGIT is an approval gateway — every action must pass through
 before it executes. Hardware proof + immutable records + self-discoverable identity.
@@ -67,6 +84,7 @@ before it executes. Hardware proof + immutable records + self-discoverable ident
 - **ENS:** Bring your own name — no platform dependency, no subname service
 - **Risk tiers:** High = Ledger required, low = auto-approved, configurable per action
 - **CLI-first:** Agents call it via `ledgit tools schema`, humans review on device
+- **Encryption:** AES-256-GCM for sensitive payloads — public ordering, private content
 
 **The ask:** *"Check out the repo at github.com/cbonoz/ledgit, run the demo,
 and consider how this enables enterprise adoption of AI agents."*
