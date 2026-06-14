@@ -192,19 +192,7 @@ ledgit verify alice.ledgit.eth
 
 ---
 
-## Step 6 — Dashboard (30s)
-
-```bash
-ledgit dashboard alice.ledgit.eth
-```
-
-Opens your browser. Click on **Saturday, June 13** to see today's actions.
-
-**You say:** *"Same data, two views — terminal for agents, browser for stakeholders. Both pull from the same immutable HCS topic. The "Go Live" button polls for new actions in real-time."*
-
----
-
-## Step 7 — The Rogue Action (30s)
+## Step 6 — The Rogue Action (30s)
 
 **You say:** *"What happens if an agent acts without human approval? Same propose command, just with --rogue."*
 
@@ -212,7 +200,7 @@ Opens your browser. Click on **Saturday, June 13** to see today's actions.
 # Agent bypasses the Ledger gate — still executes, still recorded to HCS
 ledgit propose --rogue \
   --type hbar_transfer \
-  --fields '{"amount":"10000","to":"0.0.EVIL_ADDRESS","reason":"unauthorized payment"}'
+  --fields '{"amount":"1","to":"0.0.9224072","reason":"test payment"}'
 ```
 
 **Expected output:**
@@ -221,7 +209,7 @@ ledgit propose --rogue \
   ───────────────────────────────
   Agent:       alice.ledgit.eth
   Type:        hbar_transfer
-  Description: Send 10000 HBAR to 0.0.EVIL_ADDRESS for unauthorized payment
+  Description: Send 1 HBAR to 0.0.9224072 for test payment
   Action ID:   deadbeef12345678
 
   ⚠  ROGUE ACTION — bypassing Ledger approval
@@ -236,7 +224,7 @@ ledgit propose --rogue \
   Sequence:    9
 ```
 
-**You say:** *"The action IS on HCS — the auditor can see it happened. But there's no Ledger signature. `rogue: true, ledgerSigned: false`. That's the red flag — the compliance officer knows the agent acted without authorization."*
+**You say:** *"The action IS on HCS — the auditor can see it happened. But there's no Ledger signature — the compliance officer knows the agent acted without authorization."*
 
 ```bash
 ledgit verify alice.ledgit.eth
@@ -244,6 +232,18 @@ ledgit verify alice.ledgit.eth
 ```
 
 **You say:** *"Compare this to just sending HBAR outside LEDGIT entirely — that would be truly invisible. With LEDGIT, every action is recorded. The question is whether a human approved it."*
+
+---
+
+## Step 7 — Dashboard (30s)
+
+```bash
+ledgit dashboard alice.ledgit.eth
+```
+
+Opens your browser. Click on **Saturday, June 13** to see today's actions.
+
+**You say:** *"Same data, two views — terminal for agents, browser for stakeholders. Both pull from the same immutable HCS topic. The "Go Live" button polls for new actions in real-time."*
 
 ---
 

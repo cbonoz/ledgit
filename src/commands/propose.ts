@@ -101,10 +101,8 @@ export async function propose(
     process.exit(1)
   }
 
-  const msgPayload = JSON.stringify({ actionId, agent: resolvedAgent, timestamp: Date.now() })
-  const messageHex = Buffer.from(msgPayload).toString("hex")
-
-  let signature: string
+  let signature: string | null = null
+  let messageHex: string | null = null
   const skipLedger = riskLevel === "low" || rogue
   if (skipLedger) {
     if (rogue) {
@@ -114,13 +112,16 @@ export async function propose(
     } else {
       out.info("Low risk action — no hardware signing required")
     }
-    signature = "0x" + createHash("sha256").update(Buffer.from(messageHex, "hex")).digest("hex") + "".padStart(64, "f")
   } else {
+    const msgPayload = JSON.stringify({ actionId, agent: resolvedAgent, timestamp: Date.now() })
+    messageHex = Buffer.from(msgPayload).toString("hex")
     out.step("Requesting signature on Ledger")
     await connectLedger()
     signature = await signWithLedger(messageHex)
   }
-  out.keyValue("Signature", signature.slice(0, 42) + "...")
+  if (signature) {
+    out.keyValue("Signature", signature.slice(0, 42) + "...")
+  }
   out.divider()
 
   // Execute action handler if one exists for this type

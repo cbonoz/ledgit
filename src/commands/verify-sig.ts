@@ -42,28 +42,21 @@ export async function verifySig(agentEns: string, actionId: string): Promise<voi
   const signature = parsed?.signature ? String(parsed.signature) : null
   const signedMessage = parsed?.signedMessage ? String(parsed.signedMessage) : null
 
-  if (!signature || !signedMessage) {
-    out.error("No signature data found for this action.")
-    process.exit(1)
-  }
-
-  const isSoftware = signature.endsWith("fff")
   out.heading(`Signature Verification — Action #${found.sequenceNumber}`)
   out.keyValue("Action ID", actionId)
-  out.keyValue("Signature", signature.slice(0, 42) + "...")
 
-  if (isSoftware) {
-    const parsed = JSON.parse(found.message) as Record<string, unknown>
+  if (!signature || !signedMessage) {
     if (parsed.rogue === true) {
       out.warn("⚠ Rogue action — no Ledger signature available for verification")
       out.warn("   The action executed without human approval on hardware.")
     } else {
-      out.info("Software-generated signature — cannot recover address.")
-      out.info("This action was auto-approved (low risk) or used software fallback.")
+      out.info("No signature recorded — action was auto-approved (low risk).")
     }
     out.divider()
     return
   }
+
+  out.keyValue("Signature", signature.slice(0, 42) + "...")
 
   try {
     const { recoverMessageAddress } = await import("viem")
