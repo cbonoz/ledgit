@@ -113,29 +113,41 @@ export async function contractCall(
 
 export async function queryTopicMessages(
   topicId: string,
-  limit = 50
+  limit = 100
 ): Promise<
   { sequenceNumber: number; consensusTimestamp: string; message: string }[]
 > {
   const network = HEDERA_NETWORK === "mainnet" ? "mainnet" : "testnet"
-  const url = `https://${network}.mirrornode.hedera.com/api/v1/topics/${topicId}/messages?limit=${limit}&order=asc`
+  const allMessages: { sequenceNumber: number; consensusTimestamp: string; message: string }[] = []
+  let url: string | null = `https://${network}.mirrornode.hedera.com/api/v1/topics/${topicId}/messages?limit=${limit}&order=asc`
 
-  const res = await fetch(url)
-  if (!res.ok) {
-    throw new Error(`Mirror node returned ${res.status}: ${res.statusText}`)
+  while (url) {
+    const res = await fetch(url)
+    if (!res.ok) {
+      throw new Error(`Mirror node returned ${res.status}: ${res.statusText}`)
+    }
+
+    const body = await res.json() as {
+      messages?: {
+        sequence_number: number
+        consensus_timestamp: string
+        message: string
+      }[]
+      links?: { next: string | null }
+    }
+
+    if (body.messages) {
+      for (const m of body.messages) {
+        allMessages.push({
+          sequenceNumber: m.sequence_number,
+          consensusTimestamp: m.consensus_timestamp,
+          message: atob(m.message),
+        })
+      }
+    }
+
+    url = body.links?.next || null
   }
 
-  const body = await res.json() as {
-    messages?: {
-      sequence_number: number
-      consensus_timestamp: string
-      message: string
-    }[]
-  }
-
-  return (body.messages || []).map((m) => ({
-    sequenceNumber: m.sequence_number,
-    consensusTimestamp: m.consensus_timestamp,
-    message: atob(m.message),
-  }))
+  return allMessages
 }

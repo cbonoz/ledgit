@@ -41,11 +41,16 @@ async function resolveTopicId(ens: string): Promise<string | null> {
 }
 
 async function fetchFromMirrorNode(topicId: string): Promise<Action[]> {
-  const url = `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages?limit=50&order=asc`
-  const res = await fetch(url, { next: { revalidate: 30 } })
-  if (!res.ok) return []
-  const body = await res.json() as { messages?: MirrorMessage[] }
-  return (body.messages || []).map((m) => {
+  const allMessages: MirrorMessage[] = []
+  let url: string | null = `https://testnet.mirrornode.hedera.com/api/v1/topics/${topicId}/messages?limit=100&order=asc`
+  while (url) {
+    const res = await fetch(url, { next: { revalidate: 30 } })
+    if (!res.ok) break
+    const body = await res.json() as { messages?: MirrorMessage[]; links?: { next: string | null } }
+    if (body.messages) allMessages.push(...body.messages)
+    url = body.links?.next || null
+  }
+  return allMessages.map((m) => {
     const entry: Action = {
       sequenceNumber: m.sequence_number,
       consensusTimestamp: m.consensus_timestamp,
