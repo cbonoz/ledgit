@@ -99,45 +99,9 @@ ledgit propose \
 
 ---
 
-## Step 3 — Same Flow, Different Action (15s)
+## Step 3 — Smart Contract Call (30s)
 
-**You say:** *"Every action type goes through the same pipeline — validate, gate on Ledger, call the handler, record to HCS."*
-
-```bash
-ledgit propose \
-  --type token_swap \
-  --fields '{"amountIn":"100","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
-```
-
-**On your Ledger Stax:** Review and **Approve.**
-
-**Expected output:**
-```
-  Action Proposal (HIGH RISK)
-  ───────────────────────────────
-  Agent:       alice.ledgit.eth
-  Type:        token_swap
-  Description: Swap 100 USDC for ETH on Uniswap
-  Action ID:   a1b2c3d4e5f6a7b8
-
-  ⏳ Requesting signature on Ledger...
-  ✅ Signature obtained from Ledger
-
-  ⏳ Executing token_swap...
-  Swap 100 USDC for ETH on Uniswap
-
-  ⏳ Submitting to Hedera HCS...
-  ✅ Recorded on Hedera HCS
-  Sequence:    7
-```
-
-**You say:** *"Token swap, HBAR transfer, contract call — same flow, same audit trail. The handler for each type knows how to execute; propose just orchestrates."*
-
----
-
-## Step 3b — Smart Contract Call (30s)
-
-**You say:** *"Contract calls also go through propose, using the `contract_call` handler with Ledger approval."*
+**You say:** *"Next, Alice calls a smart contract to increment a counter. Same pipeline — different handler."*
 
 ```bash
 ledgit propose \
@@ -166,14 +130,14 @@ ledgit propose \
 
   ⏳ Submitting to Hedera HCS...
   ✅ Recorded on Hedera HCS
-  Sequence:    8
+  Sequence:    7
 ```
 
 **You say:** *"Same pipeline as the HBAR transfer — the contract_call handler executes the Hedera contract call, propose captures the Ledger signature, and everything goes to HCS."*
 
 ---
 
-## Step 3c — Low-Risk Actions Auto-Approved (15s)
+## Step 4 — Low-Risk Action Auto-Approved (15s)
 
 **You say:** *"Not every action needs hardware approval. Low-risk actions skip the Ledger entirely."*
 
@@ -181,10 +145,6 @@ ledgit propose \
 ledgit propose \
   --type read_logs \
   --fields '{"count":"10"}'
-```
-
-```bash
-ledgit record <action-id>
 ```
 
 **Expected output:**
@@ -199,7 +159,7 @@ ledgit record <action-id>
 
 ---
 
-## Step 4 — View the Audit Trail (30s)
+## Step 5 — View the Audit Trail (30s)
 
 ```bash
 ledgit verify alice.ledgit.eth
@@ -210,25 +170,29 @@ ledgit verify alice.ledgit.eth
   Audit Trail: alice.ledgit.eth
   Topic:       0.0.9219676
 
-  ── Action #2 ──  🔴 HIGH
-  Description: Swap 10000 USDC for ETH on Uniswap
+  ── Action #N ──  🔴 HIGH
+  Description: Send 1 HBAR to 0.0.9224072 for test payment
+  Signature:   0xf126cb285d68... ✅ Ledger Signed
+
+  ── Action #N ──  🟡 MEDIUM
+  Description: Call increment on 0.0.9224072 with args []
   Signature:   0xead9209f36ca... ✅ Ledger Signed
 
-  ── Action #1 ──
-  Signature:   0x760c44bec2...
+  ── Action #N ──  🟢 LOW
+  Description: Read 10 most recent log entries
 
   Links:
   HashScan     https://hashscan.io/testnet/topic/0.0.9219676
   Dashboard    https://ledgitdash.vercel.app/alice-ledgit-eth
 
-  ✅ 2 action(s) recorded
+  ✅ 4 action(s) recorded
 ```
 
 **You say:** *"Every action is ordered by sequence number with a consensus timestamp. Each entry includes the cryptographic signature from the Ledger. You can click the links to see the raw data on HashScan or the visual dashboard."*
 
 ---
 
-## Step 5 — Dashboard (30s)
+## Step 6 — Dashboard (30s)
 
 ```bash
 ledgit dashboard alice.ledgit.eth
@@ -240,7 +204,7 @@ Opens your browser. Click on **Saturday, June 13** to see today's actions.
 
 ---
 
-## Step 6 — The Rogue Action (30s)
+## Step 7 — The Rogue Action (30s)
 
 **You say:** *"What happens if an agent acts without human approval? Same propose command, just with --rogue."*
 

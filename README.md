@@ -220,13 +220,11 @@ Run `ledgit actions list` to see available types.
 | Command | Description |
 |---------|-------------|
 | `ledgit setup` | Interactive first-run: creates env, config, topic |
-| `ledgit propose` | All-in-one: propose, sign on Ledger, execute via action handler, and record to HCS |
-| `ledgit record` | Human signs on Ledger, action recorded immutably on HCS |
+| `ledgit propose` | All-in-one: validate, gate on Ledger (or `--rogue`), execute via action handler, record to HCS |
 | `ledgit verify` | Display ordered audit trail from HCS — resolves via ENS |
 | `ledgit verify-sig` | Recover the signer address from a Ledger signature |
 | `ledgit dashboard` | Open visual timeline in browser |
 | `ledgit init` | Create a new HCS topic for an agent |
-| `ledgit send` | Execute a real HBAR transfer on Hedera testnet |
 | `ledgit actions list` | Discover available action types (supports `--json`) |
 | `ledgit tools schema` | Generate an OpenAI/Claude-compatible tool definition for your agent |
 
@@ -279,8 +277,8 @@ openssl rand -hex 32
 # Add to .env
 echo "ENCRYPTION_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef" >> .env
 
-# All subsequent records will be encrypted
-ledgit record <action-id>
+# All subsequent proposals will be encrypted
+ledgit propose --type hbar_transfer --fields '...'
 ```
 
 Verify still works — it decrypts using the same key:
@@ -299,9 +297,9 @@ public.
 
 | Prize | Sponsor | Category | Our Fit |
 |-------|---------|----------|---------|
-| AI & Agentic Payments | **Hedera** ($6,000) | AI agent with HCS audit trail + HBAR payments | Agent proposes → human approves → recorded on HCS. `ledgit send` executes payments. |
+| AI & Agentic Payments | **Hedera** ($6,000) | AI agent with HCS audit trail + HBAR payments | Agent proposes → human approves → recorded on HCS. `ledgit propose --type hbar_transfer` executes payments. |
 | No Solidity Allowed | **Hedera** ($3,000) | Hedera SDK only (no Solidity) | Uses `@hashgraph/sdk` with HCS + HTS. No smart contracts. |
-| AI Agents x Ledger | **Ledger** ($10,000) | Human-in-the-loop via hardware signing | `ledgit record` requires physical Ledger approval for high/medium risk actions. |
+| AI Agents x Ledger | **Ledger** ($10,000) | Human-in-the-loop via hardware signing | `ledgit propose` requires physical Ledger approval for high/medium risk actions. |
 | Best ENS for AI Agents | **ENS** ($5,000) | ENS as agent identity layer | Agents named by ENS (e.g. `chrisb.acmeco.eth`). Topic discovery via text records. |
 | Integrate ENS | **ENS** ($6,000) | Any functional ENS integration | Text record resolution for HCS topic lookup. Pool prize. |
 

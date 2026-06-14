@@ -4,6 +4,7 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "LEDGIT · Audit Dashboard",
   description: "Verifiable Human-Authorized Audit Trails for AI Agents",
+  icons: { icon: "/icon.svg" },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

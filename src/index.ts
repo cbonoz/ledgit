@@ -2,27 +2,13 @@
 
 import "dotenv/config"
 import { Command } from "commander"
-import { createTopic, transferHbar, contractCall, submitMessage } from "./services/hedera.js"
+import { createTopic } from "./services/hedera.js"
 import { propose } from "./commands/propose.js"
-import { record } from "./commands/record.js"
 import { verify } from "./commands/verify.js"
 import { dashboard } from "./commands/dashboard.js"
 import { verifySig } from "./commands/verify-sig.js"
 import { setup as runSetup } from "./commands/setup.js"
-import { getLatestHcsTopicId } from "./services/ens.js"
-import { getDefaultAgent } from "./services/config.js"
-import { getHashscanUrl } from "./services/network.js"
-import { connectLedger, signWithLedger } from "./services/ledger.js"
-
-async function resolveTopic(agent?: string): Promise<string | null> {
-  const name = agent || getDefaultAgent()
-  if (name) {
-    const topicId = await getLatestHcsTopicId(name)
-    if (topicId) return topicId
-  }
-  return process.env.LEDGIT_TOPIC_ID || null
-}
-import { loadActionsConfig, writeDefaultConfig } from "./services/config.js"
+import { loadActionsConfig, writeDefaultConfig, getDefaultAgent } from "./services/config.js"
 import * as out from "./services/output.js"
 
 const program = new Command()
@@ -50,14 +36,6 @@ program
   .option("--rogue", "Bypass Ledger approval even for high/medium risk — marks the audit record as unauthorized")
   .action(async (opts) => {
     await propose(opts.agent, opts.type, opts.description, opts.payload, opts.fields, opts.rogue)
-  })
-
-program
-  .command("record")
-  .description("Record a previously proposed action (propose does this automatically)")
-  .argument("[action-id]", "Action ID (auto-detects latest if omitted)")
-  .action(async (actionId) => {
-    await record(actionId)
   })
 
 program
@@ -111,103 +89,6 @@ program
     out.divider()
     out.info("Then set ENS text record:")
     out.keyValue("ledgit.hcs.topic", topicId)
-    out.divider()
-  })
-
-program
-  .command("send")
-  .description("Send HBAR to a Hedera account")
-  .argument("<to>", "Recipient Hedera account ID (e.g. 0.0.12345)")
-  .argument("<amount>", "Amount of HBAR to send (e.g. 1)")
-  .action(async (to: string, amount: string) => {
-    const hbar = parseFloat(amount)
-    if (isNaN(hbar) || hbar <= 0) {
-      out.error("Amount must be a positive number")
-      process.exit(1)
-    }
-    out.heading(`Sending ${hbar} HBAR to ${to}`)
-    const result = await transferHbar(to, hbar)
-    out.success("Transfer complete")
-    out.keyValue("Tx ID", result.txId)
-    out.keyValue("Status", result.status)
-    out.keyValue("Timestamp", result.timestamp)
-    const hashscanUrl = `${getHashscanUrl()}/transaction/${result.timestamp}`
-    out.keyValue("View on HashScan", hashscanUrl)
-    // Record the execution result to HCS for audit trail
-    const agent = getDefaultAgent() || process.env.LEDGIT_AGENT || "unknown"
-    const topicId = await resolveTopic(agent)
-    if (topicId) {
-      const execRecord = JSON.stringify({
-        type: "hbar_transfer",
-        description: `Sent ${hbar} HBAR to ${to}`,
-        agent,
-        to,
-        amount: hbar,
-        txId: result.txId,
-        status: result.status,
-        timestamp: result.timestamp,
-        hashscan: hashscanUrl,
-        recordedAt: Date.now(),
-      })
-      await submitMessage(topicId, execRecord)
-      out.info("Execution proof recorded to HCS")
-    }
-    out.divider()
-  })
-
-program
-  .command("contract")
-  .description("Call a smart contract function on Hedera (with Ledger approval)")
-  .argument("<contract-id>", "Hedera contract ID (e.g. 0.0.12345)")
-  .argument("<function>", "Function name (e.g. transfer)")
-  .argument("<args>", "JSON array of arguments")
-  .action(async (contractId: string, functionName: string, args: string) => {
-    let parsed: Record<string, unknown>[]
-    try {
-      parsed = JSON.parse(args)
-    } catch {
-      out.error("Args must be a valid JSON array")
-      process.exit(1)
-    }
-    if (!Array.isArray(parsed)) {
-      out.error("Args must be a JSON array")
-      process.exit(1)
-    }
-    out.heading(`Contract call: ${functionName} on ${contractId}`)
-    out.step("Requesting Ledger approval")
-    await connectLedger()
-    const msgHex = Buffer.from(JSON.stringify({ contractId, function: functionName, args: parsed })).toString("hex")
-    const signature = await signWithLedger(msgHex)
-    out.keyValue("Signature", signature.slice(0, 42) + "...")
-    out.step("Calling contract")
-    const result = await contractCall(contractId, functionName, parsed)
-    out.success("Contract call executed")
-    out.keyValue("Tx ID", result.txId)
-    out.keyValue("Status", result.status)
-    out.keyValue("Timestamp", result.timestamp)
-    const hashscanUrl = `${getHashscanUrl()}/transaction/${result.timestamp}`
-    out.keyValue("View on HashScan", hashscanUrl)
-    const topicId = await resolveTopic()
-    if (topicId) {
-      const agent = getDefaultAgent() || process.env.LEDGIT_AGENT || "unknown"
-      const execRecord = JSON.stringify({
-        type: "contract_call",
-        description: `Called ${functionName} on ${contractId}`,
-        riskLevel: "medium",
-        signature,
-        agent,
-        contractId,
-        function: functionName,
-        args: parsed,
-        txId: result.txId,
-        status: result.status,
-        timestamp: result.timestamp,
-        hashscan: hashscanUrl,
-        recordedAt: Date.now(),
-      })
-      await submitMessage(topicId, execRecord)
-      out.info("Execution proof recorded to HCS")
-    }
     out.divider()
   })
 
