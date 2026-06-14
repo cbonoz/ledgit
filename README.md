@@ -1,25 +1,36 @@
 # LEDGIT
 
-> The auditability CLI for named agents. Prove a human authorized every action.
+> Add identity-linked audit trails to any AI agent in 3 CLI subcommands. Prove a human authorized every high-stakes action.
 
-LEDGIT is an **approval gateway** for AI agents. It sits between an agent's
-decision and its execution — every high or medium risk action must pass through
-before it happens. The human reviews on their Ledger, approves, and the
-cryptographic proof is stored immutably on Hedera HCS. Anyone resolves the
-agent's ENS name and sees the complete, verifiable history.
+Every AI agent needs an audit trail — but existing options are either
+unstructured logs (easy to fake) or on-chain multisigs (expensive and slow).
+LEDGIT fills the gap: a single CLI that agents call to **validate, gate,
+execute, and record** actions with cryptographic proof on Hedera HCS — all at
+~$1/mo for 10k actions.
 
-No config files, no databases, no centralized registry. Agents are identified
-by ENS names like `chrisb.acmeco.eth` instead of cryptic addresses — the name
-*is* the audit trail lookup.
+Agents are identified by ENS names like `aliceb.acmeco.eth` instead of opaque
+addresses — the name *is* the audit trail lookup. No config files, no databases,
+no centralized registry. Bring your own ENS name or use a local identifier.
 
-Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
-**ENS** (bring your own name — no subname service needed).
+Built with **Ledger** (hardware signing for human approval), **Hedera HCS**
+(immutable records), **ENS** (bring your own domains).
 
-### Live demo
+### How it works
+
+1. **Setup** — `ledgit setup` creates `.env` (Hedera credentials), `~/.ledgit/config.json` (action types + risk levels), and an HCS topic for your agent
+2. **Agent loads the tool at startup** — agent framework loads `ledgit tools schema` output as a tool definition, giving the agent awareness of available action types and their field schemas
+3. **Before executing, agent asks the CLI** — agent calls `ledgit propose --type <action> --fields '{...}'` — CLI validates fields, checks the risk level, gates on Ledger approval if high/medium risk (or auto-approves low risk), executes the action handler, and records the full cryptographic proof to HCS
+4. **Verify** — `ledgit verify myname.eth` or `ledgit dashboard myname.eth` displays the complete, ordered audit trail with signatures
+
+Every action — whether human-approved or auto-approved — is recorded immutably on Hedera HCS. High/medium risk actions carry a Ledger signature proving human authorization; low-risk actions are logged with the agent's attestation.
+
+Start: https://ledgitdash.vercel.app
+
+### Example audit logs
 
 | Agent | HCS Audit Trail | Web Dashboard |
 |-------|----------------|---------------|
-| `alice.ledgit.eth` | [HashScan](https://hashscan.io/testnet/topic/0.0.9219676/messages) | [ledgitdash.vercel.app](https://ledgitdash.vercel.app/alice.ledgit.eth) |
+| `alice.ledgit.eth` | [HashScan](https://hashscan.io/testnet/topic/0.0.9219676/messages) | [ledgitdash.vercel.app/alice.ledgit.eth](https://ledgitdash.vercel.app/alice.ledgit.eth) |
 
 ### Risk tiers at a glance
 
@@ -179,7 +190,7 @@ and an optional **action handler** that executes the actual work. When you run
 3. Calls the **handler** registered for that type
 4. Records the full proof (signature + execution result) to HCS
 
-New action types need a config entry **and** a handler function in
+New action types need a config entry (schema + risk level) **and** a handler function registered in
 `src/services/actions.ts`:
 
 ```json
@@ -293,6 +304,16 @@ public.
 
 ---
 
+## Tech used
+
+| Sponsor | What we use it for |
+|---------|-------------------|
+| **Ledger** | `@ledgerhq/hw-app-eth` + `hw-transport-node-hid` — hardware signing of every high/medium risk action. Human reviews and approves on-device before execution. |
+| **Hedera** | `@hashgraph/sdk` — HCS for immutable, ordered message records; HTS and SDK for HBAR transfers and contract calls. |
+| **ENS** | `@ensdomains/ensjs` — agent identity via ENS names (`alice.ledgit.eth`). Text records (`ledgit.hcs.topic`) enable automatic audit trail resolution. |
+
+---
+
 ## Prizes & Sponsors
 
 | Prize | Sponsor | Category | Our Fit |
@@ -304,3 +325,4 @@ public.
 | Integrate ENS | **ENS** ($6,000) | Any functional ENS integration | Text record resolution for HCS topic lookup. Pool prize. |
 
 Built for **ETHGlobal New York 2026**.
+

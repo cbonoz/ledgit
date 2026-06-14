@@ -3,7 +3,7 @@ import "./globals.css"
 
 export const metadata: Metadata = {
   title: "LEDGIT · Audit Dashboard",
-  description: "Verifiable Human-Authorized Audit Trails for AI Agents",
+  description: "Identity-linked audit trails for every AI agent — 3 CLI commands",
   icons: { icon: "/icon.svg" },
 }
 

@@ -25,7 +25,7 @@ export default function Home() {
         </Link>
         <h1 className="text-3xl font-bold mb-1 tracking-tight">LEDGIT</h1>
         <p className="text-gray-400 text-sm mb-6">
-          Verifiable Human-Authorized Audit Trails for AI Agents
+          Identity-linked audit trails for every AI agent · 3 CLI commands
         </p>
 
         <div className="grid grid-cols-2 gap-3 mb-6">
