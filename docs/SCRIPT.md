@@ -14,7 +14,7 @@
 | **Software prompts** | "Are you sure?" can be bypassed, automated, or ignored by the agent. No hardware root of trust. |
 | **Multi-sig wallets** | Designed for humans, not agents. No audit trail of *why* a transaction was approved. |
 | **Blockchain explorers** | Show transactions but not the human reasoning or approval context behind them. |
-| **Agentic logging platforms** (LangSmith, W&B, MLflow) | Track prompt inputs and outputs but no hardware-backed human approval, immutable records, or on-chain agent identity. |
+| **Agentic logging platforms** (LangSmith, W&B, MLflow) | Often Paid. Track prompt inputs and outputs but no hardware-backed human approval, immutable records, or on-chain agent identity. |
 
 **Say:** *"LEDGIT bridges the gap between autonomous agents and enterprise compliance. It gives regulators cryptographic proof that a human approved every high-stakes action — with immutable records and self-discoverable identity."*
 
