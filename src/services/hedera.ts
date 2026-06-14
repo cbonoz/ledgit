@@ -74,6 +74,15 @@ export async function transferHbar(
   }
 }
 
+export async function sendHbar(
+  toAccountId: string,
+  amount: number
+): Promise<{ txId: string; status: string; timestamp: string; hashscanUrl: string }> {
+  const result = await transferHbar(toAccountId, amount)
+  const hashscanUrl = `https://hashscan.io/${HEDERA_NETWORK}/transaction/${result.timestamp}`
+  return { ...result, hashscanUrl }
+}
+
 export async function contractCall(
   contractId: string,
   functionName: string,

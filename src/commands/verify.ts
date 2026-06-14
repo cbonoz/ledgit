@@ -67,9 +67,16 @@ export async function verify(agentEns: string): Promise<void> {
     if (parsed) {
       if (parsed.actionId) out.keyValue("Action ID", String(parsed.actionId))
       if (parsed.agent) out.keyValue("Agent", String(parsed.agent))
-      if (parsed.signature) {
+      const isRogue = parsed.rogue === true
+      const hasLedgerSig = parsed.ledgerSigned === true
+      if (isRogue) {
+        out.warn("⚠ No Ledger signature (rogue action)")
+      } else if (parsed.signature && hasLedgerSig) {
         const sig = String(parsed.signature)
-        out.keyValue("Signature", sig.slice(0, 42) + "...")
+        out.keyValue("Signature", `${sig.slice(0, 42)}... ✅ Ledger Signed`)
+      } else if (parsed.signature) {
+        const sig = String(parsed.signature)
+        out.keyValue("Signature", `${sig.slice(0, 42)}...`)
       }
       let desc = parsed.description ? String(parsed.description) : undefined
       let type = parsed.type ? String(parsed.type) : undefined

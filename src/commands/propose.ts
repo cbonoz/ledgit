@@ -3,11 +3,11 @@ import { join } from "node:path"
 import { createHash } from "node:crypto"
 import type { ActionProposal } from "../types.js"
 import { getActionConfig, fillTemplate, validateFields, requireAgent, getDefaultAgent } from "../services/config.js"
-import { submitMessage, transferHbar } from "../services/hedera.js"
+import { submitMessage } from "../services/hedera.js"
 import { connectLedger, signWithLedger } from "../services/ledger.js"
 import { getLatestHcsTopicId, setEnsTextRecord } from "../services/ens.js"
+import { getActionHandler, type ExecutionResult } from "../services/actions.js"
 import { encrypt } from "../services/crypto.js"
-import { getHashscanUrl } from "../services/network.js"
 import * as out from "../services/output.js"
 
 const PROPOSALS_DIR = join(process.cwd(), ".ledgit", "proposals")
@@ -22,7 +22,8 @@ export async function propose(
   type: string,
   description: string | undefined,
   payload: string | undefined,
-  fields: string | undefined
+  fields: string | undefined,
+  rogue?: boolean
 ): Promise<void> {
   const resolvedAgent = agent || getDefaultAgent()
   if (!resolvedAgent) {
@@ -104,8 +105,15 @@ export async function propose(
   const messageHex = Buffer.from(msgPayload).toString("hex")
 
   let signature: string
-  if (riskLevel === "low") {
-    out.info("Low risk action — no hardware signing required")
+  const skipLedger = riskLevel === "low" || rogue
+  if (skipLedger) {
+    if (rogue) {
+      out.warn("⚠  ROGUE ACTION — bypassing Ledger approval")
+      out.warn("   This action will appear in the audit trail without a human signature.")
+      out.divider()
+    } else {
+      out.info("Low risk action — no hardware signing required")
+    }
     signature = "0x" + createHash("sha256").update(Buffer.from(messageHex, "hex")).digest("hex") + "".padStart(64, "f")
   } else {
     out.step("Requesting signature on Ledger")
@@ -115,23 +123,25 @@ export async function propose(
   out.keyValue("Signature", signature.slice(0, 42) + "...")
   out.divider()
 
-  // Execute HBAR transfer if applicable, before recording to HCS
-  let execHashscan: string | undefined
-  if (type === "hbar_transfer" && payloadObj.to && payloadObj.amount) {
-    const to = String(payloadObj.to)
-    const amount = parseFloat(String(payloadObj.amount))
-    if (!isNaN(amount) && amount > 0) {
-      out.step("Executing HBAR transfer")
-      try {
-        const xfer = await transferHbar(to, amount)
-        execHashscan = `${getHashscanUrl()}/transaction/${xfer.timestamp}`
-        out.success("HBAR transfer complete")
-        out.keyValue("Execution Tx", execHashscan)
-        out.divider()
-      } catch (e) {
-        out.error("HBAR transfer failed: " + (e as Error).message)
-        process.exit(1)
+  // Execute action handler if one exists for this type
+  let execResult: ExecutionResult | undefined
+  const handler = getActionHandler(type)
+  if (handler) {
+    out.step(`Executing ${type}`)
+    try {
+      execResult = await handler(payloadObj)
+      if (execResult.hashscanUrl) {
+        out.success("Execution complete")
+        if (execResult.txId) out.keyValue("Tx ID", execResult.txId)
+        if (execResult.status) out.keyValue("Status", execResult.status)
+        out.keyValue("Execution Tx", execResult.hashscanUrl)
+      } else if (execResult.description) {
+        out.info(execResult.description)
       }
+      out.divider()
+    } catch (e) {
+      out.error("Execution failed: " + (e as Error).message)
+      process.exit(1)
     }
   }
 
@@ -140,12 +150,15 @@ export async function propose(
     agent: resolvedAgent,
     signature,
     signedMessage: messageHex,
-    ledgerSigned: riskLevel !== "low",
+    ledgerSigned: !skipLedger,
+    rogue: rogue || false,
     description,
     type,
     riskLevel,
     payload: JSON.stringify(payloadObj),
-    hashscan: execHashscan || null,
+    hashscan: execResult?.hashscanUrl || null,
+    txId: execResult?.txId || null,
+    status: execResult?.status || null,
     recordedAt: Date.now(),
   })
 

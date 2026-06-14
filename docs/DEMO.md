@@ -7,10 +7,10 @@
 
 | | Action | Ledger? |
 |---|---|---|
-| 🔴 | Propose → approve on Ledger → send HBAR → HCS | ✅ Required |
-| 🔴 | Propose → approve on Ledger → call contract → HCS | ✅ Required |
-| 🟢 | Propose → auto-approved → HCS | ❌ Skipped |
-| 💀 | Send HBAR directly (no LEDGIT) | Invisible to auditors |
+| 🔴 | `propose` → approve on Ledger → handler executes → HCS | ✅ Required |
+| 🟡 | `propose` → approve on Ledger → handler executes → HCS | ✅ Required |
+| 🟢 | `propose` → auto-approved → HCS | ❌ Skipped |
+| 💀 | `propose --rogue` — bypasses Ledger, records as unauthorized | ❌ No human signature |
 
 ## The Setup
 
@@ -60,90 +60,116 @@ ledgit actions list
 
 ## Step 2 — Agent Proposes an Action (30s)
 
-**Set the scene:** *"Alice — one of our trading agents — wants to send 1 testnet HBAR to a vendor. She calls propose to log the intent for the audit trail."*
+**Set the scene:** *"Alice — one of our trading agents — wants to send 1 testnet HBAR to a vendor. She calls propose — it validates, signs on Ledger, executes the transfer, and records to HCS in one shot."*
 
 ```bash
 ledgit propose \
-  --type usdc_transfer \
+  --type hbar_transfer \
   --fields '{"amount":"1","to":"0.0.9224072","reason":"test payment"}'
-```
-
-**Expected output:**
-```
-  Action Proposal (HIGH RISK)
-  ───────────────────────────────
-  Agent:       alice.ledgit.eth
-  Type:        usdc_transfer
-  Description: Send 1 testnet HBAR to 0.0.9224072 for test payment
-  Action ID:   df1caafa99360951
-```
-
-**You say:** *"The propose step logs the intent for the compliance trail. The actual HBAR transfer will happen when the human approves."*
-
----
-
-## Step 3 — Human Approves & HBAR Moves (30s)
-
-**You say:** *"The proposal is logged. Now I approve on my Ledger, and the HBAR transfer executes."*
-
-```bash
-# Record the action → human signs on Ledger
-ledgit record df1caafa99360951
-
-# Then execute the real HBAR transfer
-ledgit send 0.0.9224072 1
 ```
 
 **On your Ledger Stax:** Review the action details. **Press Approve.**
 
 **Expected output:**
 ```
+  Action Proposal (HIGH RISK)
+  ───────────────────────────────
+  Agent:       alice.ledgit.eth
+  Type:        hbar_transfer
+  Description: Send 1 HBAR to 0.0.9224072 for test payment
+  Action ID:   df1caafa99360951
+
+  ⏳ Requesting signature on Ledger...
+  ✅ Connected to Ledger (USB)
   ✅ Signature obtained from Ledger
-  Signature:   0xf126cb285d68...
+  Signature    0xf126cb285d68...
 
+  ⏳ Executing hbar_transfer...
+  ✅ Execution complete
+  Tx ID        0.0.3568415@123456789.123456789
+  Status       SUCCESS
+  Execution Tx https://hashscan.io/testnet/transaction/...
+
+  ⏳ Submitting to Hedera HCS...
   ✅ Recorded on Hedera HCS
-  Sequence:    6
-
-  ✅ Transfer complete
-  Status:      SUCCESS
-  View on HashScan https://hashscan.io/testnet/transaction/...
+  Sequence     6
 ```
 
-**You say:** *"The signature is captured, the action is recorded on HCS, and the HBAR actually moved. Two proofs in one flow — the audit trail and the execution."*
+**You say:** *"The propose step logs the intent, captures the human signature, executes the transfer, and stores the proof on HCS — all in one command."*
 
 ---
 
-## Step 3b — Smart Contract Interaction (30s)
+## Step 3 — Same Flow, Different Action (15s)
 
-**You say:** *"Now Alice calls a smart contract to increment a counter. Same flow — propose, approve, execute."*
+**You say:** *"Every action type goes through the same pipeline — validate, gate on Ledger, call the handler, record to HCS."*
 
 ```bash
 ledgit propose \
   --type token_swap \
-  --fields '{"action":"increment","contract":"Counter"}'
-```
-
-```bash
-ledgit record <action-id>
-
-# Then execute the contract call
-ledgit contract 0.0.9224072 increment '[]'
+  --fields '{"amountIn":"100","tokenIn":"USDC","tokenOut":"ETH","dex":"Uniswap"}'
 ```
 
 **On your Ledger Stax:** Review and **Approve.**
 
 **Expected output:**
 ```
+  Action Proposal (HIGH RISK)
+  ───────────────────────────────
+  Agent:       alice.ledgit.eth
+  Type:        token_swap
+  Description: Swap 100 USDC for ETH on Uniswap
+  Action ID:   a1b2c3d4e5f6a7b8
+
+  ⏳ Requesting signature on Ledger...
   ✅ Signature obtained from Ledger
+
+  ⏳ Executing token_swap...
+  Swap 100 USDC for ETH on Uniswap
+
+  ⏳ Submitting to Hedera HCS...
   ✅ Recorded on Hedera HCS
   Sequence:    7
-
-  ✅ Contract call executed
-  Status:      SUCCESS
-  View on HashScan https://hashscan.io/testnet/transaction/...
 ```
 
-**You say:** *"HBAR transfer and a smart contract call — both went through the same human-in-the-loop flow, both recorded on HCS."*
+**You say:** *"Token swap, HBAR transfer, contract call — same flow, same audit trail. The handler for each type knows how to execute; propose just orchestrates."*
+
+---
+
+## Step 3b — Smart Contract Call (30s)
+
+**You say:** *"Contract calls also go through propose, using the `contract_call` handler with Ledger approval."*
+
+```bash
+ledgit propose \
+  --type contract_call \
+  --fields '{"contract":"0.0.9224072","function":"increment","args":[]}'
+```
+
+**On your Ledger Stax:** Review and **Approve.**
+
+**Expected output:**
+```
+  Action Proposal (MEDIUM RISK)
+  ───────────────────────────────
+  Agent:       alice.ledgit.eth
+  Type:        contract_call
+  Description: Call increment on 0.0.9224072 with args []
+  Action ID:   9a8b7c6d5e4f3a2b
+
+  ⏳ Requesting signature on Ledger...
+  ✅ Signature obtained from Ledger
+
+  ⏳ Executing contract_call...
+  ✅ Execution complete
+  Tx ID        0.0.3568415@123456791.123456791
+  Status       SUCCESS
+
+  ⏳ Submitting to Hedera HCS...
+  ✅ Recorded on Hedera HCS
+  Sequence:    8
+```
+
+**You say:** *"Same pipeline as the HBAR transfer — the contract_call handler executes the Hedera contract call, propose captures the Ledger signature, and everything goes to HCS."*
 
 ---
 
@@ -216,21 +242,44 @@ Opens your browser. Click on **Saturday, June 13** to see today's actions.
 
 ## Step 6 — The Rogue Action (30s)
 
-**You say:** *"What happens if an agent acts without human approval?"*
+**You say:** *"What happens if an agent acts without human approval? Same propose command, just with --rogue."*
 
 ```bash
-# This sends HBAR directly — no proposal, no Ledger
-ledgit send 0.0.EVIL_ADDRESS 10000
+# Agent bypasses the Ledger gate — still executes, still recorded to HCS
+ledgit propose --rogue \
+  --type hbar_transfer \
+  --fields '{"amount":"10000","to":"0.0.EVIL_ADDRESS","reason":"unauthorized payment"}'
 ```
 
-**You say:** *"Now look at the audit trail — there's no record of this on HCS because it skipped LEDGIT entirely. The compliance officer sees the legitimate actions with signatures and this payment doesn't appear at all. That's the red flag."*
+**Expected output:**
+```
+  Action Proposal (HIGH RISK)
+  ───────────────────────────────
+  Agent:       alice.ledgit.eth
+  Type:        hbar_transfer
+  Description: Send 10000 HBAR to 0.0.EVIL_ADDRESS for unauthorized payment
+  Action ID:   deadbeef12345678
+
+  ⚠  ROGUE ACTION — bypassing Ledger approval
+  ⚠  This action will appear in the audit trail without a human signature.
+
+  ⏳ Executing hbar_transfer...
+  ✅ Execution complete
+  Status       SUCCESS
+
+  ⏳ Submitting to Hedera HCS...
+  ✅ Recorded on Hedera HCS
+  Sequence:    9
+```
+
+**You say:** *"The action IS on HCS — the auditor can see it happened. But there's no Ledger signature. `rogue: true, ledgerSigned: false`. That's the red flag — the compliance officer knows the agent acted without authorization."*
 
 ```bash
 ledgit verify alice.ledgit.eth
-# Shows: only the 2 approved actions. Rogue payment is invisible.
+# Shows: all actions including the rogue one, but with "⚠ No Ledger signature"
 ```
 
-**You say:** *"Every action not recorded on HCS is invisible to auditors. That's why you want every action going through LEDGIT — so nothing slips through."*
+**You say:** *"Compare this to just sending HBAR outside LEDGIT entirely — that would be truly invisible. With LEDGIT, every action is recorded. The question is whether a human approved it."*
 
 ---
 

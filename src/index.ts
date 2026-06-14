@@ -47,8 +47,9 @@ program
   .option("--description <text>", "Human-readable description (auto-generated from template if omitted)")
   .option("--payload <json>", "JSON payload with action details")
   .option("--fields <json>", "JSON object of field values (alternative to --payload, uses action config)")
+  .option("--rogue", "Bypass Ledger approval even for high/medium risk — marks the audit record as unauthorized")
   .action(async (opts) => {
-    await propose(opts.agent, opts.type, opts.description, opts.payload, opts.fields)
+    await propose(opts.agent, opts.type, opts.description, opts.payload, opts.fields, opts.rogue)
   })
 
 program

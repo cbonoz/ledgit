@@ -53,8 +53,14 @@ export async function verifySig(agentEns: string, actionId: string): Promise<voi
   out.keyValue("Signature", signature.slice(0, 42) + "...")
 
   if (isSoftware) {
-    out.info("Software-generated signature — cannot recover address.")
-    out.info("This action was auto-approved (low risk) or used software fallback.")
+    const parsed = JSON.parse(found.message) as Record<string, unknown>
+    if (parsed.rogue === true) {
+      out.warn("⚠ Rogue action — no Ledger signature available for verification")
+      out.warn("   The action executed without human approval on hardware.")
+    } else {
+      out.info("Software-generated signature — cannot recover address.")
+      out.info("This action was auto-approved (low risk) or used software fallback.")
+    }
     out.divider()
     return
   }

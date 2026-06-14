@@ -28,7 +28,7 @@ Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
 | 🔴 **High risk** (transfer, swap, contract call) | Propose → approve on Ledger → execute → HCS | ✅ Required |
 | 🟡 **Medium risk** (grant role, update config) | Propose → approve on Ledger → execute → HCS | ✅ Required |
 | 🟢 **Low risk** (read logs, check balance) | Propose → auto-approved → HCS | ❌ Skipped |
-| 💀 **Rogue action** (outside LEDGIT) | Sent directly, no audit trail | ❌ Invisible to auditors |
+| 💀 **Rogue action** (`--rogue` flag) | Propose with `--rogue` — bypasses Ledger, still recorded to HCS as unauthorized | ❌ No human signature |
 
 ---
 
@@ -46,6 +46,18 @@ Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
 | **Debugging** | Hard to reconstruct why something happened | Full timeline with signatures and context |
 
 **The bottom line:** Agents without LEDGIT run on trust. Agents with LEDGIT run on proof.
+
+```
+ledgit propose --type hbar_transfer --fields '{"to":"0.0.RECIPIENT","amount":"1"}'
+  → Validates fields against action config
+  → Gates on Ledger: 🔴 high risk → human approves on hardware
+  → Executes handler: sends 1 HBAR via Hedera SDK
+  → Records to HCS: actionId + signature + execution proof + ENS sequence
+
+ledgit propose --rogue --type hbar_transfer --fields '...'
+  → Same pipeline, but skips the Ledger gate
+  → HCS record shows rogue: true, ledgerSigned: false — auditor sees unauthorized action
+```
 
 **Where existing platforms fall short:**
 
@@ -132,20 +144,23 @@ ledgit init --agent myname.eth
 # See available action types
 ledgit actions list
 
-# Agent proposes — signs on Ledger + records to HCS automatically
+# Agent proposes — validates, gates on Ledger, calls handler, records to HCS
 ledgit propose \
   --agent myname.eth \
   --type hbar_transfer \
   --fields '{"amount":"1","to":"0.0.RECIPIENT","reason":"test payment"}'
+
+# Bypass Ledger approval (rogue) — record shows lack of human authorization
+ledgit propose --rogue \
+  --agent myname.eth \
+  --type hbar_transfer \
+  --fields '{"amount":"10000","to":"0.0.EVIL","reason":"unauthorized"}'
 
 # View the audit trail — resolves via ENS automatically
 ledgit verify myname.eth
 
 # Open web dashboard
 ledgit dashboard myname.eth
-
-# Send real HBAR
-ledgit send 0.0.RECIPIENT 1
 ```
 
 LEDGIT doesn't require a subname service. Use any ENS name you already own.
@@ -156,21 +171,19 @@ LEDGIT doesn't require a subname service. Use any ENS name you already own.
 
 ## Configuration
 
-Action types define what the agent logs to the audit trail — they're descriptive
-labels for human review, not execution commands. The numbers (amounts, recipients)
-are metadata captured for the audit record. Actual value transfer happens via
-`ledgit send` (HBAR) or `ledgit contract` (smart contracts).
+Action types define what the agent can do — each type has a JSON config entry
+and an optional **action handler** that executes the actual work. When you run
+`ledgit propose`, the CLI:
+1. Validates fields against the config
+2. Gates on Ledger approval (if risk level requires it)
+3. Calls the **handler** registered for that type
+4. Records the full proof (signature + execution result) to HCS
 
-Default types include USDC Transfer, Token Swap, Grant Role, and Update Agent
-Config — each with required fields, risk level, and a description template.
+New action types need a config entry **and** a handler function in
+`src/services/actions.ts`:
 
-To create the file (writes to `~/.ledgit/config.json`):
-```bash
-ledgit actions init-config
-```
-
-To add or modify types, edit `~/.ledgit/config.json`:
 ```json
+// .ledgit/config.json
 {
   "actions": [
     {
@@ -184,14 +197,30 @@ To add or modify types, edit `~/.ledgit/config.json`:
 }
 ```
 
-Agents discover available types dynamically via `ledgit actions list --json`. Adding a new action type is a JSON change, not a code change.
+```typescript
+// src/services/actions.ts
+const myCustomAction: ActionHandler = async (payload) => {
+  const result = await doSomething(payload.param, payload.target)
+  return { txId: result.txId, status: result.status, hashscanUrl: result.hashscanUrl }
+}
+```
+
+The handler registry is decoupled from the CLI pipeline — adding a new
+executable action is one config entry + one handler function.
+
+To create the default config file:
+```bash
+ledgit actions init-config
+```
+
+Run `ledgit actions list` to see available types.
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
 | `ledgit setup` | Interactive first-run: creates env, config, topic |
-| `ledgit propose` | All-in-one: propose, sign on Ledger, and record to HCS |
+| `ledgit propose` | All-in-one: propose, sign on Ledger, execute via action handler, and record to HCS |
 | `ledgit record` | Human signs on Ledger, action recorded immutably on HCS |
 | `ledgit verify` | Display ordered audit trail from HCS — resolves via ENS |
 | `ledgit verify-sig` | Recover the signer address from a Ledger signature |
