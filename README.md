@@ -1,19 +1,30 @@
 # LEDGIT
 
-> Add identity-linked audit trails to any AI agent in 3 CLI subcommands. Prove a human authorized every high-stakes action.
+> Add identity-linked audit trails to any AI agent. Prove a human authorized every high-stakes action.
 
-Every AI agent needs an audit trail — but existing options are either
-unstructured logs (easy to fake) or on-chain multisigs (expensive and slow).
-LEDGIT fills the gap: a single CLI that agents call to **validate, gate,
-execute, and record** actions with cryptographic proof on Hedera HCS — all at
-~$1/mo for 10k actions.
+The biggest blocker to real-world agent adoption: *"Your agent just moved real
+money — can you prove a human actually reviewed and authorized it?"*
 
-Agents are identified by ENS names like `aliceb.acmeco.eth` instead of opaque
-addresses — the name *is* the audit trail lookup. No config files, no databases,
-no centralized registry. Bring your own ENS name or use a local identifier.
+LEDGIT is a CLI-first compliance toolkit that brings enterprise-grade trust and
+auditability to fleets of AI agents. An agent proposes an action → a human
+reviews and approves on a Ledger hardware device → the action executes →
+the full event (proposal, Ledger signature, execution receipt) is recorded
+immutably in chronological order on Hedera HCS.
 
-Built with **Ledger** (hardware signing for human approval), **Hedera HCS**
-(immutable records), **ENS** (bring your own domains).
+Each agent gets a clean ENS identity (e.g. `trader-a.acme.eth`). ENS text
+records act as the discovery layer, pointing to the HCS topic and latest
+sequence number. Logged actions are configurable via `config.json`, letting
+enterprises define their own high-stakes operations with custom field schemas,
+risk tiers, and execution handlers. `ledgit dashboard` opens a clean visual
+timeline of the entire audit trail.
+
+The result: a tamper-proof, cryptographically verifiable chain of custody
+that compliance teams, auditors, and regulators can trust instantly — at
+~$1/mo for 10k actions. No databases, no centralized registry. Your ENS name
+is the audit trail lookup.
+
+Built with **Ledger** (hardware signing), **Hedera HCS** (immutable records),
+**ENS** (bring your own name — no subname service needed).
 
 ### How it works
 
@@ -24,7 +35,7 @@ Built with **Ledger** (hardware signing for human approval), **Hedera HCS**
 
 Every action — whether human-approved or auto-approved — is recorded immutably on Hedera HCS. High/medium risk actions carry a Ledger signature proving human authorization; low-risk actions are logged with the agent's attestation.
 
-Start: https://ledgitdash.vercel.app
+Live site and try here: https://ledgitdash.vercel.app
 
 ### Example audit logs
 
